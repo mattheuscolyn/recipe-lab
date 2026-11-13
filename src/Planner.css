@@ -1,0 +1,36 @@
+.selected-card { border-color: var(--sage-dark); box-shadow: inset 0 0 0 1px var(--sage-dark); }
+.card-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.card-actions button { border: 0; background: transparent; color: var(--orange); font-size: 13px; font-weight: 600; }
+.card-actions .select-recipe { padding: 8px 12px; border: 1px solid var(--sage-dark); border-radius: 3px; color: var(--sage-dark); }
+.card-actions .select-recipe[aria-pressed='true'] { background: var(--sage-dark); color: var(--cream); }
+.ingredients small { display: block; margin-top: 4px; color: #77746c; font-size: 11px; }
+.source-note a { color: var(--sage-dark); font-weight: 600; }
+.planner { padding: 80px clamp(24px, 6vw, 92px) 110px; background: #e8e4d8; border-top: 1px solid var(--line); }
+.planner-heading { display: flex; justify-content: space-between; align-items: end; gap: 30px; }
+.planner-heading h2 { margin: 0; font: 600 50px/1 Georgia, serif; }
+.planner-heading > p { max-width: 260px; color: #706e66; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.serving-controls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 40px 0; }
+.serving-controls label { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 16px; background: var(--cream); font-weight: 600; }
+.serving-controls span { white-space: nowrap; color: #706e66; font-size: 12px; font-weight: 400; }
+.serving-controls input { width: 54px; padding: 6px; border: 1px solid var(--line); background: white; }
+.cost-summary { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); background: var(--cream); margin-bottom: 22px; }
+.cost-summary div { display: grid; gap: 6px; padding: 22px; border-right: 1px solid var(--line); }
+.cost-summary div:last-child { border: 0; }
+.cost-summary span { color: #77746c; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.cost-summary strong { font: 600 30px Georgia, serif; }
+.cost-summary small { color: #89857a; }
+.grocery-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.grocery-list article { padding: 22px; background: var(--cream); border: 1px solid var(--line); }
+.grocery-list article.unresolved { border-left: 4px solid var(--orange); }
+.grocery-total { display: flex; justify-content: space-between; gap: 20px; }
+.grocery-total h3 { margin: 0; font: 600 21px Georgia, serif; }
+.grocery-total p { color: var(--sage-dark); font-weight: 600; text-align: right; }
+.grocery-total small { display: block; color: #827e73; font: 11px sans-serif; }
+.grocery-list details { margin: 14px 0; font-size: 12px; }
+.grocery-list summary { cursor: pointer; color: #69675f; }
+.grocery-list details ul { padding-left: 18px; }
+.grocery-list details li { margin: 10px 0; }
+.grocery-list details small { display: block; color: #8a867c; }
+.price-math { display: flex; justify-content: space-between; gap: 15px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--sage-dark); font-size: 11px; }
+.no-price { margin: 12px 0 0; color: #8c3e24; font-size: 11px; }
+@media (max-width: 760px) { .planner-heading { align-items: start; flex-direction: column; } .serving-controls, .cost-summary, .grocery-list { grid-template-columns: 1fr; } .cost-summary div { border-right: 0; border-bottom: 1px solid var(--line); } .card-actions, .price-math { align-items: start; flex-direction: column; } }

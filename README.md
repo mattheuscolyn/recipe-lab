@@ -1,8 +1,8 @@
 # Recipe Lab
 
-Recipe Lab is a private, local-first prototype for turning reviewed source material into structured, testable recipes. The first release includes a React/TypeScript/Vite catalog, schema v1, runtime validation with Zod, and automated tests.
+Recipe Lab is a private, local-first prototype for turning reviewed source material into structured, testable recipes. Milestone 1B adds schema v2 ingredient normalization, a five-real-recipe hard-case pilot, and inspectable grocery/package math.
 
-> **Review gate:** all included recipes are synthetic draft fixtures. No public deployment is configured or approved. Review source rights, recipe accuracy, and the application before adding any hosting integration.
+> **Review gate:** the five pilot recipes are source-reviewed, not kitchen-tested or cleared for public republication. No public deployment is configured or approved. The four synthetic v1 fixtures remain preserved but excluded.
 
 ## Quick start
 
@@ -17,18 +17,21 @@ Open the local URL printed by Vite. Use `npm run check` before every pull reques
 
 ## What works
 
-- Browse four schema-validated draft recipes.
-- Search titles, descriptions, categories, tags, and ingredient names.
-- Filter by tag and inspect ingredients and method in a detail dialog.
-- Reject malformed recipes, inconsistent timings, duplicate identifiers, non-sequential steps, and incomplete review metadata.
+- Browse five schema-v2 source-reviewed recipes from five publishers.
+- Select up to three recipes, scale servings, and inspect normalized grocery contributions.
+- Keep dimensional conversions, ingredient variants, unresolved quantities, and missing prices explicit.
+- Compare estimated checkout, consumed cost, package count, and remainder without claiming optimization.
+- Preserve the four flawed schema-v1 fixtures with a documented defect report.
 
 ## Project map
 
 ```text
-src/data/recipes.ts          Draft fixture data; validated during import
-src/domain/recipe.ts         Versioned Zod schema and TypeScript types
-src/domain/validation.ts     Record and collection validation pipeline
-src/App.tsx                  Local catalog prototype
+src/data/pilotCatalog.ts     Real pilot recipes, canonical data, price fixtures
+src/data/recipes.ts          Preserved schema-v1 synthetic fixtures
+src/domain/catalog.ts        Schema-v2 Zod contracts
+src/domain/grocery.ts        Serving, consolidation, package calculations
+src/domain/ingestion.ts      Offline JSON-LD staging/review helpers
+src/App.tsx                  Catalog and grocery demonstration
 docs/SCHEMA.md               Schema contract and evolution policy
 docs/ACCEPTANCE.md           Acceptance criteria and review checklist
 ```

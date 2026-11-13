@@ -1,25 +1,13 @@
-# Acceptance criteria
+# Issue #3 acceptance report
 
-## Prototype acceptance
-
-- [x] Application starts locally with `npm run dev` and builds with `npm run build`.
-- [x] Catalog shows every valid fixture with title, description, timing, yield, tags, and ingredient count.
-- [x] Search matches at least titles and ingredient names; tag filters can be applied and reset.
-- [x] A recipe detail view exposes ingredients, ordered method, timing, source, and review status.
-- [x] Layout remains usable at desktop and mobile widths.
-- [x] Schema v1 rejects invalid IDs/slugs, empty core fields, non-positive amounts, invalid timing, non-sequential steps, duplicate ingredient IDs/tags, and incomplete review state.
-- [x] Collection validation rejects duplicate recipe IDs and slugs and reports record paths.
-- [x] Automated tests cover successful validation, representative failure modes, search, filtering, reset, and detail opening.
-- [x] CI runs lint, tests, and build for pushes and pull requests.
-- [x] Documentation explains setup, standards, schema, review policy, and acceptance criteria.
-
-## Required before any public deployment
-
-- [ ] Confirm ownership or reuse rights for every source and asset.
-- [ ] Complete editorial/source review and kitchen testing; no records remain `draft`.
-- [ ] Review accessibility with keyboard, screen reader, contrast, and reduced-motion checks.
-- [ ] Complete dependency, secret, privacy, and threat-model review.
-- [ ] Decide hosting, data retention, analytics, error reporting, and privacy policy.
-- [ ] Obtain explicit application owner approval in a tracked review.
-
-There is intentionally no deployment workflow, hosting configuration, production environment, analytics SDK, or public URL in this repository.
+- [x] Versioned v2 contracts separate canonical ingredients, source requirements, and package offers.
+- [x] Source quantities and original factual lines remain traceable.
+- [x] Unit dimensions and variants reject unsafe conversions; `1 cup + 2 tbsp = 1.125 cups` is tested.
+- [x] Five hard-case real recipes from five publishers validate before collection scales.
+- [x] Honest count and 20-item blocked report replace fabricated records.
+- [x] Ad hoc JSON-LD staging suggests aliases and fails unresolved review.
+- [x] UI selects up to three recipes, adjusts servings, consolidates groceries, and exposes source contributions.
+- [x] Price demo separates checkout, consumption, and unused package quantity.
+- [x] Tests cover conversions, aliases, serving multipliers, consolidation, rounding, missing price, approximate input, ingestion failures, and legacy defects.
+- [ ] Twenty additional source-reviewed records await the owner-approved expansion gate in `DATA_QUALITY.md`.
+- [ ] Kitchen testing, legal review, and public deployment remain blocked.
