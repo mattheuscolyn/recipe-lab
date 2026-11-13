@@ -13,6 +13,8 @@
 .serving-controls label { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 16px; background: var(--cream); font-weight: 600; }
 .serving-controls span { white-space: nowrap; color: #706e66; font-size: 12px; font-weight: 400; }
 .serving-controls input { width: 54px; padding: 6px; border: 1px solid var(--line); background: white; }
+.optional-toggle { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 18px; font-size: 13px; font-weight: 600; }
+.planning-note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--orange); background: #f1eee5; }
 .cost-summary { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); background: var(--cream); margin-bottom: 22px; }
 .cost-summary div { display: grid; gap: 6px; padding: 22px; border-right: 1px solid var(--line); }
 .cost-summary div:last-child { border: 0; }

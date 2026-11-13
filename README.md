@@ -1,8 +1,8 @@
 # Recipe Lab
 
-Recipe Lab is a private, local-first prototype for turning reviewed source material into structured, testable recipes. Milestone 1B adds schema v2 ingredient normalization, a five-real-recipe hard-case pilot, and inspectable grocery/package math.
+Recipe Lab is a private, local-first prototype for turning reviewed source material into structured, testable recipes. Milestone 1B now includes 25 real recipes, schema-v2 ingredient normalization, and inspectable grocery/package math.
 
-> **Review gate:** the five pilot recipes are source-reviewed, not kitchen-tested or cleared for public republication. No public deployment is configured or approved. The four synthetic v1 fixtures remain preserved but excluded.
+> **Review gate:** the 25 pilot recipes are source-reviewed, not kitchen-tested or cleared for public republication. No public deployment is configured or approved. The four synthetic v1 fixtures remain preserved but excluded.
 
 ## Quick start
 
@@ -17,8 +17,9 @@ Open the local URL printed by Vite. Use `npm run check` before every pull reques
 
 ## What works
 
-- Browse five schema-v2 source-reviewed recipes from five publishers.
-- Select up to three recipes, scale servings, and inspect normalized grocery contributions.
+- Browse 25 schema-v2 source-reviewed recipes from five publishers.
+- Select up to three recipes, scale planning portions independently from source output, and inspect normalized grocery contributions.
+- Include optional ingredients explicitly, inspect chosen alternatives and source ranges, and distinguish canned net from assumed usable mass.
 - Keep dimensional conversions, ingredient variants, unresolved quantities, and missing prices explicit.
 - Compare estimated checkout, consumed cost, package count, and remainder without claiming optimization.
 - Preserve the four flawed schema-v1 fixtures with a documented defect report.

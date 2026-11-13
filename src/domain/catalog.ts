@@ -14,6 +14,12 @@ export const quantitySchema = z.object({
   approximate: z.boolean().default(false),
 })
 
+export const quantityRangeSchema = z.object({
+  min: z.number().positive().finite(),
+  max: z.number().positive().finite(),
+  unit: unitCodeSchema,
+}).refine(({ min, max }) => max >= min, { message: 'Range maximum must be at least its minimum', path: ['max'] })
+
 export const canonicalIngredientSchema = z.object({
   id: id('ingredient'),
   displayName: text('Display name', 100),
@@ -37,9 +43,24 @@ export const recipeRequirementSchema = z.object({
   optional: z.boolean().default(false),
   confidence: z.enum(['reviewed', 'needs-review']),
   reviewNote: text('Review note', 240).nullable().default(null),
+  sourceRange: quantityRangeSchema.nullable().default(null),
+  alternatives: z.array(z.object({
+    label: text('Alternative label', 160),
+    canonicalIngredientId: id('ingredient'),
+    variantId: id('variant'),
+    quantity: quantitySchema.nullable(),
+  })).default([]),
+  sourcePackage: z.object({
+    count: z.number().int().positive(),
+    netQuantityEach: quantitySchema,
+    usableQuantityEach: quantitySchema.nullable(),
+    yieldAssumption: text('Yield assumption', 240).nullable(),
+  }).nullable().default(null),
 }).superRefine((line, context) => {
   if ((line.quantity === null) === (line.nonQuantified === null)) context.addIssue({ code: 'custom', path: ['quantity'], message: 'Provide exactly one of quantity or nonQuantified' })
   if (line.confidence === 'needs-review' && !line.reviewNote) context.addIssue({ code: 'custom', path: ['reviewNote'], message: 'Ambiguous requirements need a review note' })
+  if (line.sourceRange && (!line.quantity || !line.quantity.approximate)) context.addIssue({ code: 'custom', path: ['sourceRange'], message: 'A preserved range needs an approximate planning quantity' })
+  if (line.sourcePackage?.usableQuantityEach && !line.sourcePackage.yieldAssumption) context.addIssue({ code: 'custom', path: ['sourcePackage', 'yieldAssumption'], message: 'Derived usable quantity needs an explicit yield assumption' })
 })
 
 export const sourceSchema = z.object({
@@ -50,7 +71,23 @@ export const sourceSchema = z.object({
 export const recipeV2Schema = z.object({
   schemaVersion: z.literal(2), id: z.string().uuid(), slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/), title: text('Title', 120), description: text('Description', 280), emoji: text('Emoji', 8),
   category: z.enum(['Breakfast', 'Lunch', 'Dinner', 'Dessert', 'Snack']), cuisine: text('Cuisine', 80), tags: z.array(text('Tag', 30)).min(1),
-  yield: z.object({ servings: z.number().positive(), label: text('Yield label', 100) }),
+  yield: z.object({
+    source: z.object({
+      kind: z.enum(['meal-servings', 'countable-output']),
+      amount: z.number().positive().nullable(),
+      range: z.object({ min: z.number().positive(), max: z.number().positive() }).nullable(),
+      unit: text('Yield unit', 40),
+      label: text('Yield label', 100),
+    }).superRefine((sourceYield, context) => {
+      if ((sourceYield.amount === null) === (sourceYield.range === null)) context.addIssue({ code: 'custom', path: ['amount'], message: 'Provide exactly one source yield amount or range' })
+      if (sourceYield.range && sourceYield.range.max < sourceYield.range.min) context.addIssue({ code: 'custom', path: ['range', 'max'], message: 'Yield range maximum must be at least its minimum' })
+    }),
+    planningServings: z.object({
+      default: z.number().positive(),
+      range: z.object({ min: z.number().positive(), max: z.number().positive() }).nullable(),
+      assumption: text('Planning assumption', 240).nullable(),
+    }),
+  }),
   times: z.object({ prepMinutes: z.number().int().nonnegative(), cookMinutes: z.number().int().nonnegative(), totalMinutes: z.number().int().positive() }),
   requirements: z.array(recipeRequirementSchema).min(1), methodSummary: z.array(text('Method step', 420)).min(1).max(12), source: sourceSchema,
   review: z.object({ status: z.enum(['source-reviewed', 'kitchen-tested']), reviewedAt: z.iso.date(), ingredientCompletenessReviewed: z.literal(true), methodIndependentlyWritten: z.literal(true) }),
@@ -61,7 +98,7 @@ export const recipeV2Schema = z.object({
 
 export const packageOfferSchema = z.object({
   id: id('offer'), canonicalIngredientId: id('ingredient'), variantId: id('variant'), packageQuantity: quantitySchema,
-  usableYield: quantitySchema.nullable().default(null), totalPrice: z.number().nonnegative(), currency: z.literal('USD'), retailer: text('Retailer', 120), sourceUrl: z.url().nullable(), observedAt: z.iso.date(), estimate: z.literal(true),
+  usableYield: quantitySchema.nullable().default(null), conversionNote: text('Conversion note', 240).nullable().default(null), totalPrice: z.number().nonnegative(), currency: z.literal('USD'), retailer: text('Retailer', 120), sourceUrl: z.url().nullable(), observedAt: z.iso.date(), estimate: z.literal(true),
 })
 
 export type CanonicalIngredient = z.infer<typeof canonicalIngredientSchema>

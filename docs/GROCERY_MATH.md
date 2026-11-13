@@ -2,7 +2,7 @@
 
 ## Calculation flow
 
-1. Scale each requirement by requested servings divided by source servings.
+1. Scale each requirement by requested people divided by `yield.planningServings.default`; source output remains unchanged.
 2. Group only identical canonical ingredient **and variant** IDs.
 3. Convert within a shared dimension to the ingredient base unit.
 4. Keep non-quantified, incompatible, optional, and alternative inputs explicit.
@@ -10,7 +10,11 @@
 
 Deterministic conversion: `1 cup + 2 tbsp = 1.125 cups`. The engine refuses `oz_mass → fl_oz`, fresh thyme → dried thyme, table salt → sea salt, and garlic heads → cloves without an ingredient-specific yield.
 
-The UI demonstrates up to three recipes, adjustable servings, source contributions, unresolved lines, and estimate-only package math. It is not an optimizer and does not model pantry inventory beyond omission of optional ingredients.
+The UI demonstrates up to three recipes, adjustable planning portions, source contributions, unresolved lines, and estimate-only package math. Optional ingredients are visibly excluded by default and can be included with a checkbox.
+
+The headline is a **priced-items checkout subtotal**, never a whole-list estimate. Unpriced or unresolved item count is shown beside it. Package output separates nominal package quantity, assumed usable quantity, consumed cost, and usable remainder.
+
+Example: the chickpea soup requires an assumed 480g drained chickpeas. Two hypothetical 410g-net cans at $1.19 each, each assumed to yield 240g drained, produce a $2.38 checkout subtotal, $2.38 consumed estimate, 820g nominal net purchase, 480g usable purchase, and 0g usable remainder.
 
 ## Ad hoc ingestion
 
