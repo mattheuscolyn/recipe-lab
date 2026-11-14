@@ -8,5 +8,5 @@
 ## Content and release review
 
 - [ ] No recipe/source content changed, or provenance and rights were reviewed
-- [ ] No public deployment or production integration was added
+- [ ] Any public-preview change is intentional, static-only, documented, and does not publish personal data or credentials
 - [ ] Documentation and acceptance criteria were updated where needed

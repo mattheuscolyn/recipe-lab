@@ -1,8 +1,10 @@
 # Recipe Lab
 
-Recipe Lab is a private, local-first personal recipe application. Milestone 2A connects 25 reviewed recipes to discovery preferences, an explicit weekly meal calendar, and a normalized grocery list while keeping all personal data in the browser.
+Recipe Lab is a public-preview, local-first personal recipe application. Milestone 2A connects 25 reviewed recipes to discovery preferences, an explicit weekly meal calendar, and a normalized grocery list while keeping all personal data in the browser.
 
-> **Review gate:** the 25 pilot recipes are source-reviewed, not kitchen-tested or cleared for public republication. No public deployment is configured or approved. The four synthetic v1 fixtures remain preserved but excluded.
+> **Public-preview gate:** the 25 pilot recipes are source-reviewed, not kitchen-tested or cleared for republication. The public GitHub Pages preview uses independent UI/method summaries and no publisher photography, but source terms and data rights still require review. The four synthetic v1 fixtures remain preserved but excluded. Personal preferences and plans stay in each visitor's browser and are not uploaded.
+
+Public preview: <https://mattheuscolyn.github.io/recipe-lab/>
 
 ## Quick start
 
