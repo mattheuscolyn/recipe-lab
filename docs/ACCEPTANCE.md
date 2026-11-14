@@ -30,4 +30,8 @@
 - [x] Grocery checks persist per week and never mutate pantry or ingredient quantities.
 - [x] Discover, Library, Plan, and Grocery have responsive layouts and explicit empty/fallback states.
 - [x] Regression tests cover discovery/undo, refresh persistence, week navigation, repeats, serving scaling, deletion, locking, migration, storage fallback, and backup round-trip.
+- [x] Unknown recipe references and duplicate date/meal slots cannot enter through import; invalid persisted slots are quarantined with an exportable original recovery payload.
+- [x] Persistence messaging follows the latest browser write and distinguishes temporary-memory imports from successfully persisted imports.
+- [x] Recipe details transfer and contain keyboard focus, close with Escape, and restore focus to the opener.
+- [x] Discovery resumes with unreviewed recipes and ends with explicit deferred/review-again actions instead of cycling invisibly.
 - [ ] Public deployment remains intentionally disabled pending source-content and application review.

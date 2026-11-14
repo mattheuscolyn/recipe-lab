@@ -2,6 +2,8 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
+import { pilotRecipes } from './data/pilotCatalog'
+import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY } from './domain/personalData'
 
 describe('Recipe Lab personal planning experience', () => {
   beforeEach(() => window.localStorage.clear())
@@ -32,6 +34,43 @@ describe('Recipe Lab personal planning experience', () => {
     await user.type(screen.getByPlaceholderText(/search recipes, ingredients/i), 'Smoky Black Bean')
     const card = screen.getByRole('heading', { name: 'Smoky Black Bean Soup' }).closest('article')!
     expect(within(card).getByRole('button', { name: 'Interested' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('resumes discovery at the first recipe without a prior decision', () => {
+    const data = { ...emptyPersonalData(), preferences: { [pilotRecipes[0].id]: { ...emptyPreference(), status: 'passed' as const } } }
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify(data))
+    render(<App />)
+    expect(screen.getByRole('heading', { name: pilotRecipes[1].title })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: pilotRecipes[0].title })).not.toBeInTheDocument()
+  })
+
+  it('treats Not now as a deferral with an explicit end and revisit action', async () => {
+    const user = userEvent.setup()
+    const preferences = Object.fromEntries(pilotRecipes.slice(1).map(({ id }) => [id, { ...emptyPreference(), status: 'saved' as const }]))
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), preferences }))
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Not now' }))
+    expect(screen.getByRole('heading', { name: /reached the end/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Revisit deferred recipes' }))
+    expect(screen.getByRole('heading', { name: pilotRecipes[0].title })).toBeInTheDocument()
+    expect(screen.getByText('Unreviewed')).toBeInTheDocument()
+  })
+
+  it('traps keyboard focus in recipe details, closes with Escape, and restores the opener', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const opener = screen.getByRole('button', { name: 'Details and source' })
+    await user.click(opener)
+    const dialog = screen.getByRole('dialog')
+    const close = screen.getByRole('button', { name: 'Close recipe' })
+    expect(close).toHaveFocus()
+    await user.tab({ shift: true })
+    expect(dialog).toContainElement(document.activeElement as HTMLElement)
+    await user.tab()
+    expect(close).toHaveFocus()
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(opener).toHaveFocus()
   })
 
   it('navigates weeks and starts every week empty', async () => {

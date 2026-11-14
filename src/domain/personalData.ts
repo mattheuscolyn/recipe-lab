@@ -30,6 +30,8 @@ export type RecipePreference = z.infer<typeof recipePreferenceSchema>
 export type MealSlot = z.infer<typeof mealSlotSchema>
 export type PersonalData = z.infer<typeof personalDataSchema>
 export type StorageLike = Pick<Storage, 'getItem' | 'setItem'>
+export type PlanValidationIssue = { code: 'unknown-recipe' | 'duplicate-slot'; slot: MealSlot; message: string }
+export type LoadPersonalDataResult = { data: PersonalData; persistent: boolean; error: string | null; recoveryBackup: string | null }
 
 export const PERSONAL_DATA_KEY = 'recipe-lab.personal.v1'
 export const emptyPreference = (): RecipePreference => ({ status: null, cooked: false, personalRating: null, note: '' })
@@ -45,13 +47,42 @@ export function migratePersonalData(input: unknown): PersonalData {
   throw new Error('Backup is not a supported Recipe Lab personal-data file')
 }
 
-export function loadPersonalData(storage: StorageLike | null): { data: PersonalData; persistent: boolean; error: string | null } {
-  if (!storage) return { data: emptyPersonalData(), persistent: false, error: 'Browser storage is unavailable; changes last only until this tab closes.' }
+export function validatePlanForCatalog(data: PersonalData, knownRecipeIds: ReadonlySet<string>): { data: PersonalData; issues: PlanValidationIssue[] } {
+  const issues: PlanValidationIssue[] = []
+  const seenSlots = new Set<string>()
+  const plan = data.plan.filter((slot) => {
+    if (!knownRecipeIds.has(slot.recipeId)) {
+      issues.push({ code: 'unknown-recipe', slot, message: `${slot.date} ${slot.meal} references a recipe that is not in this catalog.` })
+      return false
+    }
+    const slotKey = `${slot.date}:${slot.meal}`
+    if (seenSlots.has(slotKey)) {
+      issues.push({ code: 'duplicate-slot', slot, message: `${slot.date} ${slot.meal} appears more than once.` })
+      return false
+    }
+    seenSlots.add(slotKey)
+    return true
+  })
+  return { data: issues.length ? { ...data, plan } : data, issues }
+}
+
+export function loadPersonalData(storage: StorageLike | null, knownRecipeIds?: ReadonlySet<string>): LoadPersonalDataResult {
+  if (!storage) return { data: emptyPersonalData(), persistent: false, error: 'Browser storage is unavailable; changes last only until this tab closes.', recoveryBackup: null }
+  let raw: string | null
   try {
-    const raw = storage.getItem(PERSONAL_DATA_KEY)
-    return { data: raw ? migratePersonalData(JSON.parse(raw)) : emptyPersonalData(), persistent: true, error: null }
+    raw = storage.getItem(PERSONAL_DATA_KEY)
   } catch {
-    return { data: emptyPersonalData(), persistent: false, error: 'Saved personal data could not be read; this tab is using temporary memory only.' }
+    return { data: emptyPersonalData(), persistent: false, error: 'Saved personal data could not be read; this tab is using temporary memory only.', recoveryBackup: null }
+  }
+  if (!raw) return { data: emptyPersonalData(), persistent: true, error: null, recoveryBackup: null }
+  try {
+    const migrated = migratePersonalData(JSON.parse(raw))
+    if (!knownRecipeIds) return { data: migrated, persistent: true, error: null, recoveryBackup: null }
+    const validated = validatePlanForCatalog(migrated, knownRecipeIds)
+    if (!validated.issues.length) return { data: validated.data, persistent: true, error: null, recoveryBackup: null }
+    return { data: validated.data, persistent: true, error: `${validated.issues.length} invalid saved meal ${validated.issues.length === 1 ? 'slot was' : 'slots were'} quarantined. Export the recovery backup before replacing it.`, recoveryBackup: raw }
+  } catch {
+    return { data: emptyPersonalData(), persistent: true, error: 'Saved personal data is invalid and was not loaded. Export the recovery backup before replacing it.', recoveryBackup: raw }
   }
 }
 
@@ -66,4 +97,10 @@ export function savePersonalData(storage: StorageLike | null, data: PersonalData
 }
 
 export const exportPersonalData = (data: PersonalData): string => JSON.stringify(personalDataSchema.parse(data), null, 2)
-export const importPersonalData = (raw: string): PersonalData => migratePersonalData(JSON.parse(raw))
+export function importPersonalData(raw: string, knownRecipeIds?: ReadonlySet<string>): PersonalData {
+  const data = migratePersonalData(JSON.parse(raw))
+  if (!knownRecipeIds) return data
+  const validated = validatePlanForCatalog(data, knownRecipeIds)
+  if (validated.issues.length) throw new Error(`Backup was not imported: ${validated.issues.map(({ message }) => message).join(' ')}`)
+  return data
+}

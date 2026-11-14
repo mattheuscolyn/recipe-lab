@@ -17,7 +17,11 @@ Milestone 2A uses `localStorage` under `recipe-lab.personal.v1`. The payload is 
 
 `localStorage` was selected because the personal payload is small, synchronous, and easy to inspect or recover. A versioned schema and migration boundary are already present. If storage cannot be read or written, the UI displays a warning and continues in temporary memory. Library controls export and import the complete personal payload as JSON.
 
-Moving to IndexedDB is intentionally deferred until data volume or attachment/offline requirements justify the added failure modes. This is the only product/architecture decision that may merit revisiting before a later milestone.
+Moving to IndexedDB is intentionally deferred until data volume or attachment/offline requirements justify the added failure modes. The repository owner approved `localStorage` for Milestone 2A in the PR #6 review.
+
+Catalog references are validated in addition to the structural Zod schema. A backup import containing an unknown recipe or duplicate date/meal slot is rejected before current data changes. If an older persisted payload contains either problem, the affected slots are quarantined from the active plan, a visible warning is shown, and the exact original JSON remains available as a recovery export.
+
+Persistence status reflects the latest write, not only the initial page load. A quota or permission failure leaves the imported/edited state available in temporary memory, labels it accordingly, and keeps the normal JSON export available.
 
 ## Verification scenarios
 
@@ -28,6 +32,8 @@ Moving to IndexedDB is intentionally deferred until data volume or attachment/of
 - Lock a slot and confirm its recipe, servings, and remove control cannot change until unlocked.
 - Navigate to another week and confirm it starts empty unless that week was previously planned.
 - Export personal JSON, clear browser data, import the file, and confirm the state round-trips.
+- Open recipe details by keyboard, cycle focus through the modal, close with Escape, and confirm focus returns to the opener.
+- Load a saved payload with an orphan or duplicate slot, export the untouched recovery JSON, and confirm groceries render only the quarantined-safe plan.
 
 Automated coverage implements these cases where practical; browser screenshots are captured from the local Vite build. No hosting or deployment configuration is included.
 
