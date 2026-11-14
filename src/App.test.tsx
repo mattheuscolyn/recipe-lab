@@ -1,25 +1,40 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import App from './App'
 
-describe('Recipe Lab prototype', () => {
-  it('searches by ingredient and opens a recipe', async () => {
+describe('Recipe Lab grocery pilot', () => {
+  it('searches real recipes and shows source facts', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.type(screen.getByPlaceholderText(/search titles or ingredients/i), 'mushroom')
-    expect(screen.getByText('Miso Mushroom Toast')).toBeInTheDocument()
-    expect(screen.queryByText('Lemon Herb Orzo')).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /open recipe/i }))
-    expect(screen.getByRole('dialog')).toHaveTextContent('mixed mushrooms')
+    expect(screen.getByText('25 real records validated')).toBeInTheDocument()
+    await user.type(screen.getByPlaceholderText(/search recipes or ingredients/i), 'pancake')
+    expect(screen.getByRole('heading', { name: 'Simply Perfect Pancakes' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /view source facts/i }))
+    expect(screen.getByRole('dialog')).toHaveTextContent('1 1/2 cups (180g) all-purpose flour')
+    expect(screen.getByRole('dialog')).toHaveTextContent('Source reviewed, not kitchen-tested')
   })
-  it('filters by tag and resets an empty search', async () => {
+
+  it('updates serving-scaled contributions in the grocery demo', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Vegan' }))
-    expect(screen.getByText('Showing 1 of 4 recipes')).toBeInTheDocument()
-    await user.type(screen.getByPlaceholderText(/search titles or ingredients/i), 'no-such-recipe')
-    await user.click(screen.getByRole('button', { name: /reset filters/i }))
-    expect(screen.getByText('Showing 4 of 4 recipes')).toBeInTheDocument()
+    const input = screen.getByLabelText('Smoky Black Bean Soup planning servings')
+    await user.click(input)
+    await user.keyboard('{Control>}a{/Control}8')
+    const garlic = screen.getByRole('heading', { name: 'Garlic' }).closest('article')!
+    expect(within(garlic).getByText('7 clove')).toBeInTheDocument()
+    expect(screen.getByText(/Priced-items checkout subtotal/i)).toBeInTheDocument()
+  })
+
+  it('shows output assumptions and makes optional exclusions controllable', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.type(screen.getByPlaceholderText(/search recipes or ingredients/i), 'pancake')
+    await user.click(screen.getByRole('button', { name: /view source facts/i }))
+    expect(screen.getByRole('dialog')).toHaveTextContent('12 large pancakes')
+    expect(screen.getByRole('dialog')).toHaveTextContent('Planning default: 4 people')
+    await user.click(screen.getByRole('button', { name: /close recipe/i }))
+    expect(screen.getByRole('checkbox', { name: /optional item/i })).not.toBeChecked()
   })
 })

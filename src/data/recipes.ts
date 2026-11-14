@@ -7,4 +7,7 @@ const recipes = [
   { schemaVersion:1,id:'ea62a5ce-5c89-4c59-94c6-4573804043bb',slug:'olive-oil-chocolate-cake',title:'Olive Oil Chocolate Cake',description:'A dark, tender snacking cake with flaky salt and a glossy crumb.',emoji:'🍫',category:'Dessert',yield:{amount:8,unit:'slices'},times:{prepMinutes:15,cookMinutes:35,totalMinutes:55},ingredients:[{id:'ing-flour',amount:1.25,unit:'cups',item:'all-purpose flour'},{id:'ing-cocoa',amount:.5,unit:'cup',item:'cocoa powder'},{id:'ing-oil',amount:.5,unit:'cup',item:'extra-virgin olive oil'},{id:'ing-sugar',amount:.75,unit:'cup',item:'brown sugar'}],steps:[{position:1,instruction:'Whisk the dry ingredients in a large bowl.'},{position:2,instruction:'Whisk in olive oil, eggs, and hot coffee until glossy.'},{position:3,instruction:'Bake in a lined pan until the center springs back.',timerMinutes:35},{position:4,instruction:'Cool before finishing with flaky salt.'}],tags:['Baking','Vegetarian'],source:{name:'Recipe Lab test kitchen'},review:{status:'draft'}},
 ] satisfies unknown[]
 
-export const recipeCollection = assertRecipeCollection(recipes)
+/** Preserved schema-v1 synthetic fixtures. They are not counted as real pilot recipes. */
+export const legacyRecipeFixturesV1 = assertRecipeCollection(recipes)
+/** @deprecated Use pilotRecipes for the schema-v2 real catalog. */
+export const recipeCollection = legacyRecipeFixturesV1
