@@ -15,3 +15,23 @@
 - [x] Compound salt-and-pepper source lines map to both grocery ingredients under one source-line identity.
 - [x] Diced red onion uses the shared onion canonical identity while its incompatible cup measure remains visibly unresolved.
 - [ ] Legal/source-terms review and public deployment remain blocked; kitchen testing is not required for this private pilot.
+
+## Issue #5 — Milestone 2A acceptance report
+
+- [x] Discovery offers Interested, Save for later, Pass, Not now, and one-step Undo with accessible native controls.
+- [x] Passed and skipped recipes remain searchable and filterable in the complete library.
+- [x] Preferences, cooked state, personal ratings, and notes persist under stable recipe IDs.
+- [x] Personal data has a versioned schema, legacy migration, JSON export/import, and a visible storage-unavailable fallback.
+- [x] Monday–Sunday plans start empty and provide Breakfast, Lunch, and Dinner slots with add/swap/remove, servings, repeats, and locks.
+- [x] Week navigation is shared between the calendar and grocery views.
+- [x] Grocery calculations derive only from the viewed week's scheduled slots, with no recipe cap.
+- [x] Repeated recipes retain separate dated contributions while quantities consolidate and scale with each slot's servings.
+- [x] Optional, unresolved, known-subtotal, missing-price, checkout, consumed-cost, and remainder semantics remain visible.
+- [x] Grocery checks persist per week and never mutate pantry or ingredient quantities.
+- [x] Discover, Library, Plan, and Grocery have responsive layouts and explicit empty/fallback states.
+- [x] Regression tests cover discovery/undo, refresh persistence, week navigation, repeats, serving scaling, deletion, locking, migration, storage fallback, and backup round-trip.
+- [x] Unknown recipe references and duplicate date/meal slots cannot enter through import; invalid persisted slots are quarantined with an exportable original recovery payload.
+- [x] Persistence messaging follows the latest browser write and distinguishes temporary-memory imports from successfully persisted imports.
+- [x] Recipe details transfer and contain keyboard focus, close with Escape, and restore focus to the opener.
+- [x] Discovery resumes with unreviewed recipes and ends with explicit deferred/review-again actions instead of cycling invisibly.
+- [ ] Public deployment remains intentionally disabled pending source-content and application review.
