@@ -35,7 +35,7 @@ Persistence status reflects the latest write, not only the initial page load. A 
 - Open recipe details by keyboard, cycle focus through the modal, close with Escape, and confirm focus returns to the opener.
 - Load a saved payload with an orphan or duplicate slot, export the untouched recovery JSON, and confirm groceries render only the quarantined-safe plan.
 
-Automated coverage implements these cases where practical; browser screenshots are captured from the local Vite build. No hosting or deployment configuration is included.
+Automated coverage implements these cases where practical; browser screenshots are captured from the Vite build. Milestone 2A originally shipped without hosting; issue #7 adds an intentional static GitHub Pages preview while preserving browser-only personal data.
 
 ## Browser evidence
 

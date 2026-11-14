@@ -14,7 +14,7 @@
 - [x] Mixed measured/nonquantified grocery lines remain unresolved in every recipe-selection order, with any measured amount labeled only as a known subtotal.
 - [x] Compound salt-and-pepper source lines map to both grocery ingredients under one source-line identity.
 - [x] Diced red onion uses the shared onion canonical identity while its incompatible cup measure remains visibly unresolved.
-- [ ] Legal/source-terms review and public deployment remain blocked; kitchen testing is not required for this private pilot.
+- [ ] Legal/source-terms review remains outstanding; the intentional public prototype preview is not clearance for source republication. Kitchen testing is not required for this milestone.
 
 ## Issue #5 — Milestone 2A acceptance report
 
@@ -34,4 +34,4 @@
 - [x] Persistence messaging follows the latest browser write and distinguishes temporary-memory imports from successfully persisted imports.
 - [x] Recipe details transfer and contain keyboard focus, close with Escape, and restore focus to the opener.
 - [x] Discovery resumes with unreviewed recipes and ends with explicit deferred/review-again actions instead of cycling invisibly.
-- [ ] Public deployment remains intentionally disabled pending source-content and application review.
+- [x] The public prototype preview is intentionally enabled under issue #7; personal preferences, plans, and grocery checks remain browser-local and are not part of the deployment artifact.

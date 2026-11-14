@@ -28,8 +28,8 @@ The stack now includes chicken, beef, pork, turkey, canned fish, tofu, tempeh, b
 - A few source measures cannot be safely converted without density or size assumptions: grape-tomato pint/mass, bunch herbs, chicken-thigh count, cup flour, shredded-cheese volume, and diced-onion volume. Each affected record either remains unresolved or carries an explicit approximate planning note.
 - The quesadilla's ½-cup diced red onion remains visibly unresolved under the shared onion canonical identity; no cup-to-whole-onion conversion is assumed.
 - Package prices are synthetic demonstration estimates dated 2026-11-13, not retailer quotes. Regional sizes, waste, pantry inventory, taxes, and substitutions are not modeled.
-- Public reuse rights still need a separate legal/source-terms review. The repository must remain private and public deployment disabled.
-- Kitchen testing is not required for private pilot use. Records remain `source-reviewed` and must never be described as `kitchen-tested` unless actually cooked.
+- Public reuse rights still need a separate legal/source-terms review. The GitHub Pages site is an intentional prototype preview, not a claim that source content is cleared for republication.
+- Kitchen testing is not required for prototype use. Records remain `source-reviewed` and must never be described as `kitchen-tested` unless actually cooked.
 
 ## Legacy synthetic fixture review
 
