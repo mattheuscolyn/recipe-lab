@@ -3,7 +3,7 @@ import { convertQuantity } from './units'
 
 export type RecipeSelection = { recipeId: string; servings: number }
 export type Contribution = { recipeId: string; recipeTitle: string; requirementId: string; amount: number | null; unit: UnitCode | null; originalText: string; approximate: boolean; optional: boolean; confidence: 'reviewed' | 'needs-review'; note: string | null }
-export type GroceryLine = { canonicalIngredientId: string; variantId: string; name: string; variant: string; total: { amount: number; unit: UnitCode } | null; contributions: Contribution[]; optional: boolean; unresolved: boolean; pricing: PriceCalculation | null }
+export type GroceryLine = { canonicalIngredientId: string; variantId: string; name: string; variant: string; total: { amount: number; unit: UnitCode } | null; knownSubtotal: { amount: number; unit: UnitCode }; contributions: Contribution[]; optional: boolean; unresolved: boolean; pricing: PriceCalculation | null }
 export type PriceCalculation = { offerId: string; estimatedCheckoutCost: number; estimatedConsumptionCost: number; packages: number; packagePurchased: { amount: number; unit: UnitCode }; usablePurchased: { amount: number; unit: UnitCode }; unused: { amount: number; unit: UnitCode } }
 
 export function calculatePackagePurchase(required: { amount: number; unit: UnitCode }, ingredient: CanonicalIngredient, offer: PackageOffer): PriceCalculation {
@@ -30,13 +30,14 @@ export function buildGroceryList(recipes: RecipeV2[], ingredients: CanonicalIngr
       const key = `${ingredient.id}:${requirement.variantId}`
       const variant = ingredient.variants.find(({ id }) => id === requirement.variantId)
       if (!variant) throw new Error(`Unknown variant ${requirement.variantId}`)
-      const line = grouped.get(key) ?? { canonicalIngredientId: ingredient.id, variantId: variant.id, name: ingredient.displayName, variant: variant.label, total: { amount: 0, unit: ingredient.baseUnit }, contributions: [], optional: requirement.optional, unresolved: false, pricing: null }
+      const line = grouped.get(key) ?? { canonicalIngredientId: ingredient.id, variantId: variant.id, name: ingredient.displayName, variant: variant.label, total: { amount: 0, unit: ingredient.baseUnit }, knownSubtotal: { amount: 0, unit: ingredient.baseUnit }, contributions: [], optional: requirement.optional, unresolved: false, pricing: null }
       line.optional = line.optional && requirement.optional
       if (requirement.quantity) {
         const scaled = { ...requirement.quantity, amount: requirement.quantity.amount * multiplier }
         try {
           const normalized = convertQuantity(scaled, ingredient.baseUnit, ingredient)
-          line.total = { amount: (line.total?.amount ?? 0) + normalized.amount, unit: ingredient.baseUnit }
+          line.knownSubtotal = { amount: line.knownSubtotal.amount + normalized.amount, unit: ingredient.baseUnit }
+          line.total = line.unresolved ? null : { ...line.knownSubtotal }
           line.contributions.push({ recipeId: recipe.id, recipeTitle: recipe.title, requirementId: requirement.id, amount: normalized.amount, unit: ingredient.baseUnit, originalText: requirement.originalText, approximate: requirement.quantity.approximate, optional: requirement.optional, confidence: requirement.confidence, note: requirement.reviewNote })
         } catch (error) {
           line.unresolved = true; line.total = null

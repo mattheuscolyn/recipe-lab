@@ -3,11 +3,11 @@
 Schema v2 separates facts that schema v1 conflated:
 
 - `CanonicalIngredient`: stable identity, aliases, variants/forms, and a grocery base unit.
-- `RecipeRequirement`: verbatim factual source line, parsed quantity or explicit non-quantified state, canonical and variant IDs, preparation, optionality, confidence, and reviewer note.
+- `RecipeRequirement`: shared source-line identity, verbatim factual source line, parsed quantity or explicit non-quantified state, canonical and variant IDs, preparation, optionality, confidence, and reviewer note.
 - `RecipeV2`: attribution, checked date, explicit unknown ratings, independently written method summary, and distinct `source-reviewed`/`kitchen-tested` status.
 - `RecipeV2.yield.source`: the publisher output as a quantity or range and its semantic kind (`meal-servings` or `countable-output`).
 - `RecipeV2.yield.planningServings`: the user-adjustable people default and its documented assumption; it never rewrites the source output.
-- `RecipeRequirement`: selected planning quantity, preserved source range, structured alternatives, optional state, and source package/net/usable facts when applicable.
+- `RecipeRequirement`: selected planning quantity, preserved incompatible source measure, source range, structured alternatives, optional state, and source package/net/usable facts when applicable. Multiple requirements may share a source-line identity when one source line names multiple grocery ingredients.
 - `PackageOffer`: variant-specific package quantity, optional ingredient-specific usable yield, documented cross-dimension conversion, explicitly hypothetical dated price, retailer/source, and currency.
 
 The v1 schema and four synthetic fixtures remain in `src/domain/recipe.ts` and `src/data/recipes.ts`. They are excluded from the real pilot rather than silently reinterpreted. Their completeness defects are recorded in `src/data/legacyQuality.ts`.

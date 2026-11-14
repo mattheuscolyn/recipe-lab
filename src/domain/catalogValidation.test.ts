@@ -31,16 +31,17 @@ describe('schema-v2 pilot catalog', () => {
     expect(pilotRecipes.every(({ requirements }) => requirements.every(({ originalText }) => originalText.length > 0))).toBe(true)
     expect(packageOffers.every(({ estimate }) => estimate)).toBe(true)
   })
-  it('matches the separate source-review line count for every recipe', () => {
+  it('maps every manually attested source line to one or more normalized requirements', () => {
     expect(sourceReviewReport).toHaveLength(25)
     expect(new Set(sourceReviewReport.map(({ slug }) => slug)).size).toBe(25)
     sourceReviewReport.forEach((entry) => {
       const recipe = pilotRecipes.find(({ slug }) => slug === entry.slug)
       expect(recipe, entry.slug).toBeDefined()
       expect(recipe?.requirements.length, entry.slug).toBe(entry.recordRequirementLines)
-      expect(entry.recordRequirementLines, entry.slug).toBe(entry.sourceIngredientLines)
+      expect(new Set(recipe?.requirements.map(({ sourceLineId }) => sourceLineId)).size, entry.slug).toBe(entry.sourceIngredientLines)
     })
     expect(sourceReviewReport.reduce((sum, entry) => sum + entry.sourceIngredientLines, 0)).toBe(282)
+    expect(sourceReviewReport.reduce((sum, entry) => sum + entry.recordRequirementLines, 0)).toBe(285)
   })
   it('documents completeness failures in every legacy synthetic fixture', () => {
     expect(legacyFixtureKnownIssues).toHaveLength(4)

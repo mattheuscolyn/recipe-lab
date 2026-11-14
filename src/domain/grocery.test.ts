@@ -69,4 +69,38 @@ describe('grocery calculation', () => {
     const lemon = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-lemon-juice')!
     expect(lemon.contributions[0].approximate).toBe(true)
   })
+  it('keeps mixed measured and nonquantified totals unresolved in both selection orders', () => {
+    const measured = selection('best-lentil-soup')
+    const toTaste = selection('smoky-black-bean-soup')
+    for (const selections of [[measured, toTaste], [toTaste, measured]]) {
+      const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, selections)
+      const salt = list.find(({ canonicalIngredientId, variantId }) => canonicalIngredientId === 'ingredient-salt' && variantId === 'variant-salt-unspecified')!
+      expect(salt.unresolved).toBe(true)
+      expect(salt.total).toBeNull()
+      expect(salt.knownSubtotal).toEqual({ amount: 1, unit: 'tsp' })
+      expect(salt.contributions).toHaveLength(2)
+      expect(salt.pricing).toBeNull()
+    }
+  })
+  it('maps a compound salt-and-pepper source line to both grocery ingredients', () => {
+    const sesameChicken = recipe('easy-sesame-chicken')
+    const compound = sesameChicken.requirements.filter(({ sourceLineId }) => sourceLineId === 'source-line-sesame-chicken-seasoning')
+    expect(compound).toHaveLength(2)
+    expect(compound.map(({ canonicalIngredientId }) => canonicalIngredientId).sort()).toEqual(['ingredient-black-pepper', 'ingredient-salt'])
+    const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('easy-sesame-chicken')])
+    const salt = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-salt')!
+    const pepper = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-black-pepper')!
+    expect(salt).toMatchObject({ unresolved: true, total: null })
+    expect(pepper).toMatchObject({ unresolved: true, total: null })
+    expect(salt.contributions[0].originalText).toBe('Pinch each salt and pepper')
+    expect(pepper.contributions[0].originalText).toBe('Pinch each salt and pepper')
+  })
+  it('keeps diced red onion under the onion canonical identity without a size conversion', () => {
+    expect(canonicalIngredients.some(({ id }) => id === 'ingredient-red-onion-diced')).toBe(false)
+    const quesadillas = recipe('hearty-black-bean-quesadillas')
+    const redOnion = quesadillas.requirements.find(({ variantId }) => variantId === 'variant-onion-red')!
+    expect(redOnion).toMatchObject({ canonicalIngredientId: 'ingredient-onion', quantity: null, sourceQuantity: { amount: .5, unit: 'cup' } })
+    const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('hearty-black-bean-quesadillas')])
+    expect(list.find(({ canonicalIngredientId, variantId }) => canonicalIngredientId === 'ingredient-onion' && variantId === 'variant-onion-red')).toMatchObject({ unresolved: true, total: null, name: 'Onion', variant: 'Red' })
+  })
 })

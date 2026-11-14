@@ -11,4 +11,7 @@
 - [x] Price demo separates checkout, consumption, and unused package quantity.
 - [x] Tests cover conversions, aliases, serving multipliers, consolidation, rounding, missing price, approximate input, ingestion failures, and legacy defects.
 - [x] A separate source-to-record line-count review covers all 25 recipes and records exceptions.
+- [x] Mixed measured/nonquantified grocery lines remain unresolved in every recipe-selection order, with any measured amount labeled only as a known subtotal.
+- [x] Compound salt-and-pepper source lines map to both grocery ingredients under one source-line identity.
+- [x] Diced red onion uses the shared onion canonical identity while its incompatible cup measure remains visibly unresolved.
 - [ ] Legal/source-terms review and public deployment remain blocked; kitchen testing is not required for this private pilot.

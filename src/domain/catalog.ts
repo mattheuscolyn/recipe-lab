@@ -34,8 +34,10 @@ export const canonicalIngredientSchema = z.object({
 
 export const recipeRequirementSchema = z.object({
   id: id('requirement'),
+  sourceLineId: id('source-line'),
   originalText: text('Original source line', 300),
   quantity: quantitySchema.nullable(),
+  sourceQuantity: quantitySchema.nullable().default(null),
   nonQuantified: z.enum(['to-taste', 'as-needed', 'for-serving']).nullable().default(null),
   canonicalIngredientId: id('ingredient'),
   variantId: id('variant'),

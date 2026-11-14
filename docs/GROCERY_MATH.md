@@ -8,6 +8,8 @@
 4. Keep non-quantified, incompatible, optional, and alternative inputs explicit.
 5. Select a compatible price fixture when present, round packages up, and report checkout, prorated consumption, and unused quantity separately.
 
+If a grocery line combines measured and nonquantified contributions, its authoritative total remains unknown in every recipe-selection order. The UI may show a clearly labeled measured `knownSubtotal`, but never presents it as the complete total and never prices the unresolved line.
+
 Deterministic conversion: `1 cup + 2 tbsp = 1.125 cups`. The engine refuses `oz_mass → fl_oz`, fresh thyme → dried thyme, table salt → sea salt, and garlic heads → cloves without an ingredient-specific yield.
 
 The UI demonstrates up to three recipes, adjustable planning portions, source contributions, unresolved lines, and estimate-only package math. Optional ingredients are visibly excluded by default and can be included with a checkbox.
