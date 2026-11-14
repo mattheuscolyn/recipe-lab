@@ -1,40 +1,67 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import App from './App'
 
-describe('Recipe Lab grocery pilot', () => {
-  it('searches real recipes and shows source facts', async () => {
+describe('Recipe Lab personal planning experience', () => {
+  beforeEach(() => window.localStorage.clear())
+
+  it('records a discovery choice, supports undo, and keeps passed recipes browsable', async () => {
     const user = userEvent.setup()
     render(<App />)
-    expect(screen.getByText('25 real records validated')).toBeInTheDocument()
-    await user.type(screen.getByPlaceholderText(/search recipes or ingredients/i), 'pancake')
-    expect(screen.getByRole('heading', { name: 'Simply Perfect Pancakes' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Smoky Black Bean Soup' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Pass' }))
     expect(screen.queryByRole('heading', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: /view source facts/i }))
-    expect(screen.getByRole('dialog')).toHaveTextContent('1 1/2 cups (180g) all-purpose flour')
-    expect(screen.getByRole('dialog')).toHaveTextContent('Source reviewed, not kitchen-tested')
+    await user.click(screen.getByRole('button', { name: /undo last choice/i }))
+    expect(screen.getByRole('heading', { name: 'Smoky Black Bean Soup' })).toBeInTheDocument()
+    expect(screen.getByText('Unreviewed')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Pass' }))
+    await user.click(screen.getByRole('button', { name: 'Library' }))
+    await user.type(screen.getByPlaceholderText(/search recipes, ingredients/i), 'Smoky Black Bean')
+    const card = screen.getByRole('heading', { name: 'Smoky Black Bean Soup' }).closest('article')!
+    expect(within(card).getByText('Passed')).toBeInTheDocument()
   })
 
-  it('updates serving-scaled contributions in the grocery demo', async () => {
+  it('restores personal preferences after a remount', async () => {
+    const user = userEvent.setup()
+    const first = render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Interested' }))
+    first.unmount()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Library' }))
+    await user.type(screen.getByPlaceholderText(/search recipes, ingredients/i), 'Smoky Black Bean')
+    const card = screen.getByRole('heading', { name: 'Smoky Black Bean Soup' }).closest('article')!
+    expect(within(card).getByRole('button', { name: 'Interested' })).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('navigates weeks and starts every week empty', async () => {
     const user = userEvent.setup()
     render(<App />)
-    const input = screen.getByLabelText('Smoky Black Bean Soup planning servings')
-    await user.click(input)
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    const initialWeek = screen.getByText(/Week of/i).nextElementSibling?.textContent
+    expect(screen.getByText(/Nothing planned yet/i)).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Next week' }))
+    expect(screen.getByText(/Week of/i).nextElementSibling?.textContent).not.toBe(initialWeek)
+    expect(screen.getByText(/Nothing planned yet/i)).toBeInTheDocument()
+  })
+
+  it('consolidates repeated scheduled recipes at scaled servings and updates after deletion', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Plan' }))
+    const dinners = screen.getAllByRole('combobox', { name: /Choose Dinner for/i })
+    await user.selectOptions(dinners[0], '813d36f1-f9ce-431b-b2f4-594af0510b78')
+    await user.selectOptions(dinners[3], '813d36f1-f9ce-431b-b2f4-594af0510b78')
+    const people = screen.getAllByRole('spinbutton', { name: /Dinner people for/i })
+    await user.click(people[1])
     await user.keyboard('{Control>}a{/Control}8')
-    const garlic = screen.getByRole('heading', { name: 'Garlic' }).closest('article')!
-    expect(within(garlic).getByText('7 clove')).toBeInTheDocument()
-    expect(screen.getByText(/Priced-items checkout subtotal/i)).toBeInTheDocument()
-  })
-
-  it('shows output assumptions and makes optional exclusions controllable', async () => {
-    const user = userEvent.setup()
-    render(<App />)
-    await user.type(screen.getByPlaceholderText(/search recipes or ingredients/i), 'pancake')
-    await user.click(screen.getByRole('button', { name: /view source facts/i }))
-    expect(screen.getByRole('dialog')).toHaveTextContent('12 large pancakes')
-    expect(screen.getByRole('dialog')).toHaveTextContent('Planning default: 4 people')
-    await user.click(screen.getByRole('button', { name: /close recipe/i }))
-    expect(screen.getByRole('checkbox', { name: /optional item/i })).not.toBeChecked()
+    await user.click(screen.getByRole('button', { name: 'Grocery' }))
+    const garlic = screen.getByText('Garlic').closest('article')!
+    expect(within(garlic).getByText('6 clove')).toBeInTheDocument()
+    expect(within(garlic).getByText('2 scheduled contributions')).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    await user.click(screen.getAllByRole('button', { name: /Remove Dinner for/i })[1])
+    await user.click(screen.getByRole('button', { name: 'Grocery' }))
+    expect(screen.getByText('Garlic').closest('article')?.querySelector('.line-total')).toHaveTextContent('2 clove')
   })
 })
