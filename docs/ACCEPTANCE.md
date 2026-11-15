@@ -35,3 +35,13 @@
 - [x] Recipe details transfer and contain keyboard focus, close with Escape, and restore focus to the opener.
 - [x] Discovery resumes with unreviewed recipes and ends with explicit deferred/review-again actions instead of cycling invisibly.
 - [x] The public prototype preview is intentionally enabled under issue #7; personal preferences, plans, and grocery checks remain browser-local and are not part of the deployment artifact.
+
+## Issue #9 — tactile discovery deck acceptance report
+
+- [x] Horizontal pointer gestures commit Interested to the right and Pass to the left only after a tested threshold; short, diagonal, and vertical movement cancels without changing personal data.
+- [x] The top recipe visibly drags, rotates, shows directional feedback, sends off after commitment, and reveals two noninteractive preview cards without introducing external photography.
+- [x] Interested, Pass, Save for later, and Not now buttons use the same persisted decision path; duplicate release/click events are locked to one decision.
+- [x] Arrow Left and Arrow Right work when focus is in the deck, while interactive controls and dialogs retain their existing keyboard behavior.
+- [x] Progress, action results, and cancellation feedback are exposed to assistive technology; reduced-motion users skip the send-off delay.
+- [x] Undo, reload resumption, deferred-recipe revisit, details/source, searchable Library status, planning, and Grocery remain intact.
+- [x] Production builds were browser-checked at 1440px desktop and 390px touch-mobile sizes with no console errors or failed asset requests.

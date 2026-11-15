@@ -2,3 +2,62 @@
 .storage-banner{display:flex;align-items:center;justify-content:center;gap:14px}.storage-banner button{padding:6px 10px;border:1px solid currentColor;background:transparent;color:inherit;font-size:11px;font-weight:700}.discovery-complete{background:var(--cream)}.discovery-complete>div{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 @media(max-width:1000px){.app-header{grid-template-columns:auto 1fr}.privacy-note{display:none}.browse-grid{grid-template-columns:repeat(2,1fr)}.page-heading{grid-template-columns:1fr}.backup-card,.week-navigation{justify-self:start}.browse-tools{grid-template-columns:1fr}.week-grid{grid-template-columns:repeat(7,190px)}}
 @media(max-width:720px){.app-header{position:static;grid-template-columns:1fr;padding:14px 18px 0}.brand{margin-bottom:12px}.app-header nav{justify-content:space-between;overflow-x:auto}.app-header nav button{padding:10px 12px}.discover-intro{grid-template-columns:1fr;padding:48px 20px 30px}.discover-intro aside{display:none}.discovery-stage{padding:0 14px 60px}.discovery-card{grid-template-columns:1fr}.discovery-visual{min-height:210px}.discovery-visual span{font-size:88px}.discovery-copy{padding:28px 22px}.decision-grid{grid-template-columns:1fr 1fr}.discovery-copy dl{gap:20px}.content-page{padding:48px 14px 70px}.page-heading{gap:20px}.page-heading h1,.page-heading.compact h1{font-size:48px}.browse-grid{grid-template-columns:1fr}.backup-card>div{flex-wrap:wrap}.week-navigation{width:100%;justify-content:space-between}.week-navigation>div{min-width:120px}.week-grid{display:grid;grid-template-columns:1fr;overflow:visible}.day-column{min-width:0}.cost-strip,.integrated-grocery{grid-template-columns:1fr}.cost-strip div{border-right:0;border-bottom:1px solid var(--line)}.grocery-toolbar{align-items:start;flex-direction:column;gap:8px}.personal-panel{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr;gap:20px}.detail-heading h2{font-size:40px}.app-footer{gap:8px;flex-direction:column}}
+
+/* Tactile discovery deck */
+.discovery-stage{overflow:hidden}
+.deck-meta{display:grid;grid-template-columns:auto minmax(140px,1fr) auto;align-items:center;gap:16px;max-width:1180px;margin:0 auto 16px;color:var(--muted);font-size:11px}
+.deck-meta>div:first-child{white-space:nowrap;text-transform:uppercase;letter-spacing:.09em}
+.deck-meta>div:first-child span{color:var(--ink);font:22px 'DM Serif Display',serif}
+.deck-meta p{margin:0;white-space:nowrap}
+.deck-meta kbd{display:inline-grid;place-items:center;min-width:24px;padding:3px 6px;border:1px solid var(--line);border-radius:4px;background:var(--cream);box-shadow:0 2px 0 var(--line);color:var(--moss);font:10px 'DM Sans',sans-serif}
+.deck-progress{height:5px;border-radius:99px;background:#dedbd0;overflow:hidden}
+.deck-progress i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--orange),#e5a68c);transition:width .24s ease}
+.deck-shell{position:relative;isolation:isolate;max-width:1180px;margin:0 auto;padding-bottom:28px}
+.deck-preview{position:absolute;z-index:0;inset:0 20px 28px;display:flex;align-items:flex-end;gap:10px;padding:18px 26px;border:1px solid var(--line);border-radius:8px;background:#e9e5d9;color:var(--moss);box-shadow:0 12px 30px rgba(34,45,35,.06);pointer-events:none;transform-origin:50% 100%}
+.deck-preview span{font-size:24px}
+.deck-preview b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:18px 'DM Serif Display',serif}
+.deck-preview.depth-1{z-index:2;transform:translateY(13px) scale(.976)}
+.deck-preview.depth-2{z-index:1;transform:translateY(25px) scale(.95);opacity:.7}
+.deck-card{position:relative;z-index:3;border-radius:8px;overflow:hidden;touch-action:pan-y;user-select:none;will-change:transform;transform-origin:50% 85%;transition:transform .24s cubic-bezier(.2,.78,.28,1),box-shadow .2s ease}
+.deck-card:focus-visible{outline:4px solid #e5a68c;outline-offset:4px}
+.deck-card.is-dragging{cursor:grabbing;box-shadow:0 32px 72px rgba(34,45,35,.2);transition:none}
+.deck-card.is-exiting-left,.deck-card.is-exiting-right{pointer-events:none}
+.swipe-feedback{position:absolute;z-index:5;top:30px;padding:9px 15px;border:3px solid currentColor;border-radius:5px;background:rgba(252,250,244,.92);font-size:15px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;pointer-events:none}
+.interested-feedback{right:32px;transform:rotate(8deg);color:var(--moss)}
+.pass-feedback{left:32px;transform:rotate(-8deg);color:var(--orange)}
+.discovery-visual small{margin-top:-18px;color:rgba(53,75,59,.72);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.decision-grid{grid-template-columns:1fr 1.2fr 1.2fr .85fr}
+.decision-grid button{min-height:44px}
+.decision-grid button:disabled{opacity:.55;cursor:not-allowed}
+.decision-grid .pass{border-color:#b7b2a8;background:#f0ede5;color:#625f59}
+.gesture-help{margin:0 auto;max-width:1180px;color:var(--muted);font-size:11px;text-align:center}
+
+@media(max-width:720px){
+  .discover-intro{padding-bottom:24px}
+  .discover-intro h1{font-size:clamp(48px,14vw,68px)}
+  .deck-meta{grid-template-columns:auto 1fr;gap:9px 12px;margin-bottom:12px}
+  .deck-meta p{grid-column:1/-1;text-align:center}
+  .deck-shell{padding-bottom:22px}
+  .deck-preview{inset:0 10px 22px;padding:12px 18px}
+  .deck-preview.depth-1{transform:translateY(10px) scale(.98)}
+  .deck-preview.depth-2{transform:translateY(19px) scale(.955)}
+  .deck-card{min-height:0}
+  .discovery-visual{min-height:184px}
+  .discovery-visual span{font-size:78px}
+  .discovery-copy{padding:24px 20px 22px}
+  .discovery-copy h2{margin:18px 0 9px;font-size:39px}
+  .discovery-copy>p{font-size:14px;line-height:1.5}
+  .discovery-copy dl{margin-bottom:18px;padding:13px 0}
+  .decision-grid{grid-template-columns:1fr 1fr}
+  .decision-grid .pass{grid-column:1}
+  .decision-grid .interest{grid-column:2;grid-row:1}
+  .discovery-links{gap:14px}
+  .swipe-feedback{top:20px;font-size:12px}
+  .interested-feedback{right:18px}
+  .pass-feedback{left:18px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .deck-card{will-change:auto}
+}

@@ -1,6 +1,6 @@
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { pilotRecipes } from './data/pilotCatalog'
 import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY } from './domain/personalData'
@@ -13,7 +13,7 @@ describe('Recipe Lab personal planning experience', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: 'Smoky Black Bean Soup' })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Pass' }))
-    expect(screen.queryByRole('heading', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument()
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument())
     await user.click(screen.getByRole('button', { name: /undo last choice/i }))
     expect(screen.getByRole('heading', { name: 'Smoky Black Bean Soup' })).toBeInTheDocument()
     expect(screen.getByText('Unreviewed')).toBeInTheDocument()
@@ -28,6 +28,7 @@ describe('Recipe Lab personal planning experience', () => {
     const user = userEvent.setup()
     const first = render(<App />)
     await user.click(screen.getByRole('button', { name: 'Interested' }))
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument())
     first.unmount()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Library' }))
@@ -54,6 +55,76 @@ describe('Recipe Lab personal planning experience', () => {
     await user.click(screen.getByRole('button', { name: 'Revisit deferred recipes' }))
     expect(screen.getByRole('heading', { name: pilotRecipes[0].title })).toBeInTheDocument()
     expect(screen.getByText('Unreviewed')).toBeInTheDocument()
+  })
+
+  it('keeps Save for later equivalent to other persisted decision buttons', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Save for later' }))
+    expect(screen.getByRole('heading', { name: pilotRecipes[1].title })).toBeInTheDocument()
+    const saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.preferences[pilotRecipes[0].id].status).toBe('saved')
+  })
+
+  it('shows a stable end state when every recipe already has a decision', () => {
+    const preferences = Object.fromEntries(pilotRecipes.map(({ id }) => [id, { ...emptyPreference(), status: 'saved' as const }]))
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), preferences }))
+    render(<App />)
+    expect(screen.getByRole('heading', { name: /reached the end/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Review choices again' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Browse all recipes' })).toBeInTheDocument()
+  })
+
+  it('maps committed pointer swipes to preferences and ignores a duplicate click', async () => {
+    render(<App />)
+    const card = screen.getByRole('article', { name: /Smoky Black Bean Soup.*Swipe/i })
+    fireEvent.pointerDown(card, { pointerId: 1, button: 0, clientX: 120, clientY: 200 })
+    fireEvent.pointerMove(card, { pointerId: 1, clientX: 245, clientY: 205 })
+    fireEvent.pointerUp(card, { pointerId: 1, clientX: 245, clientY: 205 })
+    fireEvent.click(screen.getByRole('button', { name: /Interested/i }))
+
+    await waitFor(() => expect(screen.getByRole('heading', { name: pilotRecipes[1].title })).toBeInTheDocument())
+    const saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.preferences[pilotRecipes[0].id].status).toBe('interested')
+    expect(saved.preferences[pilotRecipes[1].id]).toBeUndefined()
+  })
+
+  it('cancels short and vertical gestures without recording a preference', () => {
+    render(<App />)
+    const card = screen.getByRole('article', { name: /Smoky Black Bean Soup.*Swipe/i })
+
+    fireEvent.pointerDown(card, { pointerId: 2, button: 0, clientX: 140, clientY: 140 })
+    fireEvent.pointerMove(card, { pointerId: 2, clientX: 190, clientY: 144 })
+    fireEvent.pointerUp(card, { pointerId: 2, clientX: 190, clientY: 144 })
+    fireEvent.pointerDown(card, { pointerId: 3, button: 0, clientX: 180, clientY: 120 })
+    fireEvent.pointerMove(card, { pointerId: 3, clientX: 188, clientY: 270 })
+    fireEvent.pointerUp(card, { pointerId: 3, clientX: 188, clientY: 270 })
+
+    expect(screen.getByRole('heading', { name: 'Smoky Black Bean Soup' })).toBeInTheDocument()
+    expect(JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}').preferences ?? {}).toEqual({})
+    expect(screen.getByText(/No choice made for Smoky Black Bean Soup/i)).toBeInTheDocument()
+  })
+
+  it('supports arrow-key decisions from the deck and exposes progress', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const card = screen.getByRole('article', { name: /Smoky Black Bean Soup.*Swipe/i })
+    expect(screen.getByRole('progressbar', { name: /0 of 25 recipes reviewed/i })).toBeInTheDocument()
+    card.focus()
+    await user.keyboard('{ArrowLeft}')
+    await waitFor(() => expect(screen.getByRole('heading', { name: pilotRecipes[1].title })).toBeInTheDocument())
+    const saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.preferences[pilotRecipes[0].id].status).toBe('passed')
+  })
+
+  it('removes send-off delay for reduced-motion users', async () => {
+    const originalMatchMedia = window.matchMedia
+    Object.defineProperty(window, 'matchMedia', { configurable: true, value: vi.fn().mockReturnValue({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }) })
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Pass' }))
+    expect(screen.getByRole('heading', { name: pilotRecipes[1].title })).toBeInTheDocument()
+    Object.defineProperty(window, 'matchMedia', { configurable: true, value: originalMatchMedia })
   })
 
   it('traps keyboard focus in recipe details, closes with Escape, and restores the opener', async () => {
