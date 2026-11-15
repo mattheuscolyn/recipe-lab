@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { pilotRecipes } from './data/pilotCatalog'
+import { startOfWeek, weekDates } from './domain/mealPlan'
 import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY } from './domain/personalData'
 
 describe('Recipe Lab personal planning experience', () => {
@@ -204,13 +205,121 @@ describe('Recipe Lab personal planning experience', () => {
     expect(screen.getByText(/Nothing planned yet/i)).toBeInTheDocument()
   })
 
+  it('schedules from Discover and Library without changing discovery preference and consolidates groceries', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /Add to plan/i }))
+    let dialog = screen.getByRole('dialog', { name: /Schedule Smoky Black Bean Soup/i })
+    await user.click(within(dialog).getAllByRole('button', { name: /^Choose /i })[1])
+    const servings = within(dialog).getByRole('spinbutton', { name: 'Servings' })
+    await user.clear(servings)
+    await user.type(servings, '2')
+    await user.click(within(dialog).getByRole('button', { name: 'Schedule recipe' }))
+    expect(screen.getByRole('status')).toHaveTextContent(/Smoky Black Bean Soup scheduled/i)
+    let saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.plan).toHaveLength(1)
+    expect(saved.plan[0]).toMatchObject({ meal: 'Dinner', servings: 2, recipeId: pilotRecipes[0].id })
+    expect(saved.preferences[pilotRecipes[0].id]).toBeUndefined()
+
+    await user.click(screen.getByRole('button', { name: 'Library' }))
+    await user.type(screen.getByPlaceholderText(/search recipes, ingredients/i), 'Smoky Black Bean')
+    const card = screen.getByRole('heading', { name: 'Smoky Black Bean Soup' }).closest('article')!
+    await user.click(within(card).getByRole('button', { name: 'Save for later' }))
+    await user.click(within(card).getByRole('button', { name: /Add to plan/i }))
+    dialog = screen.getByRole('dialog', { name: /Schedule Smoky Black Bean Soup/i })
+    await user.click(within(dialog).getAllByRole('button', { name: /^Choose /i })[3])
+    await user.click(within(dialog).getByRole('button', { name: 'Schedule recipe' }))
+
+    await user.click(screen.getByRole('button', { name: 'Grocery' }))
+    const garlic = screen.getByText('Garlic').closest('article')!
+    expect(within(garlic).getByText('3 clove')).toBeInTheDocument()
+    expect(within(garlic).getByText('2 scheduled contributions')).toBeInTheDocument()
+    saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.preferences[pilotRecipes[0].id].status).toBe('saved')
+    expect(saved.plan).toHaveLength(2)
+  })
+
+  it('offers Quick Add from recipe details and restores focus when cancelled', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    const details = screen.getByRole('button', { name: 'Details and source' })
+    await user.click(details)
+    await user.click(screen.getByRole('button', { name: /Add to weekly plan/i }))
+    expect(screen.queryByRole('dialog', { name: 'Smoky Black Bean Soup' })).not.toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: /Schedule Smoky Black Bean Soup/i })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(details).toHaveFocus()
+  })
+
+  it('requires replacement confirmation and protects locked meals', async () => {
+    const user = userEvent.setup()
+    const now = new Date()
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const tuesday = weekDates(startOfWeek(iso))[1]
+    const plan = [{ id: 'locked-tuesday-dinner', date: tuesday, meal: 'Dinner' as const, recipeId: pilotRecipes[0].id, servings: 4, locked: true }]
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), plan }))
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Library' }))
+    await user.type(screen.getByPlaceholderText(/search recipes, ingredients/i), 'Simply Perfect Pancakes')
+    const card = screen.getByRole('heading', { name: 'Simply Perfect Pancakes' }).closest('article')!
+    await user.click(within(card).getByRole('button', { name: /Add to plan/i }))
+    let dialog = screen.getByRole('dialog', { name: /Schedule Simply Perfect Pancakes/i })
+    await user.click(within(dialog).getAllByRole('button', { name: /^Choose /i })[1])
+    await user.selectOptions(within(dialog).getByRole('combobox', { name: 'Meal' }), 'Dinner')
+    expect(within(dialog).getByRole('status')).toHaveTextContent(/meal is locked/i)
+    expect(within(dialog).getByRole('button', { name: 'Review replacement' })).toBeDisabled()
+    await user.keyboard('{Escape}')
+
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
+    await user.click(screen.getByRole('button', { name: 'Library' }))
+    await user.click(screen.getByRole('heading', { name: 'Simply Perfect Pancakes' }).closest('article')!.querySelector('.plan-link')!)
+    dialog = screen.getByRole('dialog', { name: /Schedule Simply Perfect Pancakes/i })
+    await user.click(within(dialog).getAllByRole('button', { name: /^Choose /i })[1])
+    await user.selectOptions(within(dialog).getByRole('combobox', { name: 'Meal' }), 'Dinner')
+    await user.click(within(dialog).getByRole('button', { name: 'Review replacement' }))
+    expect(JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}').plan[0].recipeId).toBe(pilotRecipes[0].id)
+    await user.click(within(dialog).getByRole('button', { name: 'Confirm replacement' }))
+    expect(JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}').plan[0].recipeId).toBe(pilotRecipes[1].id)
+  })
+
+  it('uses a searchable prioritized slot picker and keeps locked edit controls safe', async () => {
+    const user = userEvent.setup()
+    const preferences = { [pilotRecipes[0].id]: { ...emptyPreference(), status: 'saved' as const } }
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), preferences }))
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Plan' }))
+    await user.click(screen.getByRole('button', { name: /Choose recipe for Mon.* Dinner/i }))
+    const dialog = screen.getByRole('dialog', { name: /Mon.*Dinner/i })
+    const search = within(dialog).getByRole('textbox', { name: /Search recipes for meal slot/i })
+    await user.tab()
+    expect(search).toHaveFocus()
+    await user.click(within(dialog).getByRole('button', { name: 'Your picks' }))
+    expect(within(dialog).getByRole('button', { name: /Smoky Black Bean Soup/i })).toBeInTheDocument()
+    expect(within(dialog).queryByRole('button', { name: /Simply Perfect Pancakes/i })).not.toBeInTheDocument()
+    await user.click(within(dialog).getByRole('button', { name: /Smoky Black Bean Soup/i }))
+    await user.click(screen.getByRole('button', { name: 'Lock' }))
+    expect(screen.getByRole('button', { name: /Swap recipe for Mon.* Dinner/i })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: 'Unlock' }))
+    await user.click(screen.getByRole('button', { name: /Swap recipe for Mon.* Dinner/i }))
+    const replacement = screen.getByRole('dialog', { name: /Mon.*Dinner/i })
+    await user.type(within(replacement).getByRole('textbox', { name: /Search recipes for meal slot/i }), 'Pancakes')
+    await user.click(within(replacement).getByRole('button', { name: /Simply Perfect Pancakes/i }))
+    expect(within(replacement).getByRole('alert')).toHaveTextContent(/Replace Smoky Black Bean Soup/i)
+    await user.click(within(replacement).getByRole('button', { name: 'Confirm replacement' }))
+    expect(document.querySelector('.slot-recipe')).toHaveTextContent('Simply Perfect Pancakes')
+  })
+
   it('consolidates repeated scheduled recipes at scaled servings and updates after deletion', async () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Plan' }))
-    const dinners = screen.getAllByRole('combobox', { name: /Choose Dinner for/i })
-    await user.selectOptions(dinners[0], '813d36f1-f9ce-431b-b2f4-594af0510b78')
-    await user.selectOptions(dinners[3], '813d36f1-f9ce-431b-b2f4-594af0510b78')
+    await user.click(screen.getByRole('button', { name: /Choose recipe for Mon.* Dinner/i }))
+    await user.click(screen.getByRole('button', { name: /Smoky Black Bean Soup/i }))
+    await user.click(screen.getByRole('button', { name: /Choose recipe for Thu.* Dinner/i }))
+    await user.click(screen.getByRole('button', { name: /Smoky Black Bean Soup/i }))
     const people = screen.getAllByRole('spinbutton', { name: /Dinner people for/i })
     await user.click(people[1])
     await user.keyboard('{Control>}a{/Control}8')

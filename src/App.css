@@ -61,3 +61,57 @@
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .deck-card{will-change:auto}
 }
+
+/* Meal Planning 2.0 */
+.schedule-inline{margin-top:6px;padding:10px 14px;border:1px solid var(--moss);border-radius:4px;background:var(--moss);color:white;font-size:11px;font-weight:700}
+.browse-card-links{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}
+.plan-link{color:var(--moss)}
+.discovery-links{align-items:center;gap:16px}
+.planner-dialog{position:relative;width:min(860px,100%);max-height:calc(100vh - 40px);overflow-y:auto;padding:clamp(28px,5vw,52px);background:var(--cream);box-shadow:var(--shadow)}
+.planner-dialog h2{margin:0 45px 10px 0;font-size:clamp(34px,5vw,54px);line-height:1}
+.planner-dialog>p,.schedule-form>p{color:var(--muted);line-height:1.55}
+.schedule-week-heading{display:grid;grid-template-columns:42px 1fr 42px;align-items:center;gap:10px;margin:28px 0 12px;text-align:center}
+.schedule-week-heading button{height:40px;border:1px solid var(--line);background:var(--paper)}
+.schedule-week-heading strong{font-size:13px}
+.schedule-days{display:grid;grid-template-columns:repeat(7,minmax(70px,1fr));gap:6px;overflow-x:auto;padding:3px 3px 10px}
+.schedule-days button{display:grid;gap:3px;min-width:70px;padding:11px 7px;border:1px solid var(--line);border-radius:4px;background:transparent;color:var(--muted)}
+.schedule-days button[aria-pressed=true]{background:var(--moss);border-color:var(--moss);color:white}
+.schedule-days span{font-size:9px;text-transform:uppercase;letter-spacing:.08em}.schedule-days strong{font-size:11px}
+.schedule-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.schedule-fields label{display:grid;gap:6px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.schedule-fields select,.schedule-fields input,.picker-search input{width:100%;padding:12px;border:1px solid var(--line);background:white;color:var(--ink)}
+.slot-warning{display:grid;gap:4px;margin:14px 0;padding:13px 15px;border-left:3px solid var(--orange);background:#f6e7dc;font-size:12px}.slot-warning span{color:var(--muted)}.slot-warning.locked{border-color:#756f68;background:#ebe8df}
+.replace-confirm,.picker-confirm{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0;padding:14px;background:#f1eee5;font-size:12px}.replace-confirm button,.picker-confirm button{padding:7px 10px;border:1px solid var(--line);background:var(--cream);font-size:10px;font-weight:700}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.dialog-actions button,.primary{padding:11px 16px;border:1px solid var(--line);border-radius:4px;background:transparent;font-size:11px;font-weight:700}.dialog-actions .primary,.primary{border-color:var(--moss);background:var(--moss);color:white}.dialog-actions button:disabled{opacity:.45;cursor:not-allowed}
+.recipe-picker-dialog{width:min(920px,100%)}
+.picker-search{display:block;margin:20px 0 10px}
+.picker-filters{display:flex;gap:6px;overflow-x:auto;padding:3px}.picker-filters button{padding:7px 11px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--muted);font-size:10px;white-space:nowrap}.picker-filters button[aria-pressed=true]{background:var(--moss);border-color:var(--moss);color:white}
+.picker-confirm>div{display:flex;gap:6px}
+.picker-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:400px;margin-top:14px;overflow-y:auto}
+.picker-results>button{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);background:white;color:var(--ink);text-align:left}.picker-results>button:hover{border-color:var(--moss);background:#f5f6ef}.picker-results>button>span:nth-child(2){display:grid;gap:3px}.picker-results small{color:var(--muted);font-size:9px}.picker-results>button>b{padding:4px 6px;border-radius:3px;background:#e9eddf;color:var(--moss);font-size:8px;text-transform:uppercase}.picker-emoji{font-size:24px}
+.slot-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;color:var(--orange);font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}.slot-heading b{color:#756f68;font-size:8px}
+.slot-recipe{display:block;min-height:42px;font:17px/1.15 'DM Serif Display',serif}.meal-slot>.slot-recipe+small{display:block;margin-top:5px;color:var(--muted);font-size:9px}
+.empty-slot-button{width:100%;padding:11px 8px;border:1px dashed var(--line);border-radius:3px;background:transparent;color:var(--moss);font-size:10px;font-weight:700}.empty-slot-button:hover{border-color:var(--moss);background:#eef1e6}
+.meal-slot>.empty-slot-button+small{display:block;margin-top:8px;color:#aaa;font-size:9px}
+.slot-meta{grid-template-columns:1fr 1fr;margin-top:10px}.slot-meta label{grid-column:1/-1}.slot-meta input{width:100%}.slot-meta button{min-height:28px}
+.schedule-toast{position:fixed;z-index:25;right:20px;bottom:20px;display:flex;align-items:center;gap:10px;max-width:min(620px,calc(100vw - 40px));padding:14px 16px;border-left:4px solid var(--moss);background:var(--cream);box-shadow:var(--shadow);font-size:12px}.schedule-toast span{line-height:1.4}.schedule-toast button{padding:7px 9px;border:1px solid var(--line);background:transparent;font-size:10px;font-weight:700}.schedule-toast button:last-child{border:0;font-size:18px}
+
+@media(max-width:720px){
+  .planner-backdrop{padding:0;align-items:end}
+  .planner-dialog{width:100%;max-height:92vh;padding:28px 18px 22px;border-radius:14px 14px 0 0}
+  .planner-dialog h2{font-size:36px}
+  .schedule-days{grid-template-columns:repeat(7,58px)}
+  .schedule-days button{min-width:58px}
+  .schedule-fields{grid-template-columns:1fr 120px}
+  .picker-results{grid-template-columns:1fr;max-height:44vh}
+  .replace-confirm,.picker-confirm{align-items:stretch;flex-direction:column}
+  .picker-confirm>div{justify-content:flex-end}
+  .browse-card-links{align-items:flex-start;flex-direction:column}
+  .discovery-links{flex-wrap:wrap;justify-content:flex-start}.discovery-links button:last-child{margin-left:auto}
+  .day-column>header{position:sticky;top:0;z-index:1}
+  .meal-slot{min-height:0;padding:15px}
+  .slot-recipe{min-height:0;font-size:20px}
+  .slot-meta{grid-template-columns:100px repeat(3,auto);align-items:end}.slot-meta label{grid-column:auto}.slot-meta input{width:100%}
+  .schedule-toast{right:10px;bottom:10px;left:10px;max-width:none}
+}

@@ -25,6 +25,7 @@ type DiscoveryDeckProps = {
   preferenceLabel: (status: PreferenceStatus | null) => string
   onDecision: (status: Decision) => void
   onOpen: (opener: HTMLButtonElement) => void
+  onSchedule: (opener: HTMLButtonElement) => void
   onUndo: () => void
 }
 
@@ -42,7 +43,7 @@ function useReducedMotion() {
   return reduced
 }
 
-export function DiscoveryDeck({ recipe, previewRecipes, preference, remaining, reviewed, total, canUndo, formatMinutes, preferenceLabel, onDecision, onOpen, onUndo }: DiscoveryDeckProps) {
+export function DiscoveryDeck({ recipe, previewRecipes, preference, remaining, reviewed, total, canUndo, formatMinutes, preferenceLabel, onDecision, onOpen, onSchedule, onUndo }: DiscoveryDeckProps) {
   const deckRef = useRef<HTMLElement>(null)
   const decisionLocked = useRef(false)
   const timerRef = useRef<number | null>(null)
@@ -183,7 +184,7 @@ export function DiscoveryDeck({ recipe, previewRecipes, preference, remaining, r
             <button type="button" disabled={locked} onClick={() => commitDecision('saved', 'button')}>Save for later</button>
             <button type="button" className="not-now" disabled={locked} onClick={() => commitDecision(null, 'button')}>Not now</button>
           </div>
-          <div className="discovery-links"><button className="text-button" type="button" disabled={locked} onClick={(event) => onOpen(event.currentTarget)}>Details and source</button><button className="text-button" type="button" disabled={!canUndo || locked} onClick={onUndo}>↶ Undo last choice</button></div>
+          <div className="discovery-links"><button className="text-button plan-link" type="button" disabled={locked} onClick={(event) => onSchedule(event.currentTarget)}>＋ Add to plan</button><button className="text-button" type="button" disabled={locked} onClick={(event) => onOpen(event.currentTarget)}>Details and source</button><button className="text-button" type="button" disabled={!canUndo || locked} onClick={onUndo}>↶ Undo last choice</button></div>
         </div>
       </article>
     </div>
