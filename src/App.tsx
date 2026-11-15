@@ -10,7 +10,7 @@ import { formatAmount } from './domain/units'
 import { usePersonalData } from './hooks/usePersonalData'
 
 type Section = 'discover' | 'library' | 'plan' | 'grocery'
-type HistoryEntry = { recipeId: string; previous: RecipePreference | undefined; index: number; wasDeferred: boolean }
+type HistoryEntry = { recipeId: string; previous: RecipePreference | undefined; index: number; wasDeferred: boolean; reviewQueue: string[] | null }
 const MEALS = ['Breakfast', 'Lunch', 'Dinner'] as const
 const ingredientNames = new Map(canonicalIngredients.map((ingredient) => [ingredient.id, ingredient.displayName]))
 const recipeMap = new Map(pilotRecipes.map((recipe) => [recipe.id, recipe]))
@@ -85,6 +85,7 @@ function App() {
   const [discoverIndex, setDiscoverIndex] = useState(() => Math.max(0, pilotRecipes.findIndex(({ id }) => !data.preferences[id]?.status)))
   const [discoverComplete, setDiscoverComplete] = useState(() => pilotRecipes.every(({ id }) => Boolean(data.preferences[id]?.status)))
   const [deferredIds, setDeferredIds] = useState<Set<string>>(() => new Set())
+  const [reviewQueue, setReviewQueue] = useState<string[] | null>(null)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('All')
@@ -94,15 +95,17 @@ function App() {
   const week = useMemo(() => weekDates(weekStart), [weekStart])
   const weekEnd = week[6]
   const weekSlots = useMemo(() => data.plan.filter(({ date }) => date >= weekStart && date <= weekEnd), [data.plan, weekStart, weekEnd])
-  const candidate = discoverComplete ? null : pilotRecipes[discoverIndex % pilotRecipes.length]
+  const candidate = discoverComplete ? null : reviewQueue ? recipeMap.get(reviewQueue[0]) ?? null : pilotRecipes[discoverIndex % pilotRecipes.length]
   const reviewedCount = useMemo(() => pilotRecipes.filter(({ id }) => Boolean(data.preferences[id]?.status)).length, [data.preferences])
-  const discoveryRemaining = useMemo(() => pilotRecipes.filter(({ id }) => !data.preferences[id]?.status && !deferredIds.has(id)).length, [data.preferences, deferredIds])
+  const discoveryRemaining = useMemo(() => reviewQueue?.length ?? pilotRecipes.filter(({ id }) => !data.preferences[id]?.status && !deferredIds.has(id)).length, [data.preferences, deferredIds, reviewQueue])
   const previewRecipes = useMemo(() => {
     if (!candidate) return []
+    if (reviewQueue) return reviewQueue.slice(1, 3).map((id) => recipeMap.get(id)).filter((recipe): recipe is RecipeV2 => Boolean(recipe))
     return Array.from({ length: pilotRecipes.length - 1 }, (_, index) => pilotRecipes[(discoverIndex + index + 1) % pilotRecipes.length])
       .filter(({ id }) => !data.preferences[id]?.status && !deferredIds.has(id) && id !== candidate.id)
       .slice(0, 2)
-  }, [candidate, data.preferences, deferredIds, discoverIndex])
+  }, [candidate, data.preferences, deferredIds, discoverIndex, reviewQueue])
+  const completionUndoRef = useRef<HTMLButtonElement>(null)
   const preferenceFor = (recipeId: string) => data.preferences[recipeId] ?? emptyPreference()
   const openDetail = (recipe: RecipeV2, opener: HTMLElement) => { setDetailOpener(opener); setDetail(recipe) }
   const closeDetail = useCallback(() => setDetail(null), [])
@@ -111,7 +114,14 @@ function App() {
   const setStatus = (recipeId: string, status: PreferenceStatus) => updatePreference(recipeId, { ...preferenceFor(recipeId), status })
   const actOnCandidate = (status: PreferenceStatus | null) => {
     if (!candidate) return
-    setHistory((current) => [...current, { recipeId: candidate.id, previous: data.preferences[candidate.id], index: discoverIndex, wasDeferred: deferredIds.has(candidate.id) }])
+    setHistory((current) => [...current, { recipeId: candidate.id, previous: data.preferences[candidate.id], index: discoverIndex, wasDeferred: deferredIds.has(candidate.id), reviewQueue: reviewQueue ? [...reviewQueue] : null }])
+    if (reviewQueue) {
+      if (status) setStatus(candidate.id, status)
+      const remaining = reviewQueue.slice(1)
+      if (remaining.length) setReviewQueue(remaining)
+      else { setReviewQueue(null); setDiscoverComplete(true) }
+      return
+    }
     const excluded = new Set(deferredIds)
     excluded.add(candidate.id)
     if (!status) setDeferredIds(excluded)
@@ -128,14 +138,26 @@ function App() {
     if (!entry) return
     setData((current) => { const preferences = { ...current.preferences }; if (entry.previous) preferences[entry.recipeId] = entry.previous; else delete preferences[entry.recipeId]; return { ...current, preferences } })
     setDeferredIds((current) => { const next = new Set(current); if (entry.wasDeferred) next.add(entry.recipeId); else next.delete(entry.recipeId); return next })
-    setDiscoverIndex(entry.index); setDiscoverComplete(false); setHistory((current) => current.slice(0, -1))
+    setDiscoverIndex(entry.index); setReviewQueue(entry.reviewQueue ? [...entry.reviewQueue] : null); setDiscoverComplete(false); setHistory((current) => current.slice(0, -1))
   }
   const revisitDiscovery = () => {
     const deferredIndex = pilotRecipes.findIndex(({ id }) => deferredIds.has(id))
-    setDiscoverIndex(deferredIndex >= 0 ? deferredIndex : 0)
-    setDeferredIds(new Set())
+    if (deferredIndex >= 0) {
+      setDiscoverIndex(deferredIndex)
+      setDeferredIds(new Set())
+      setReviewQueue(null)
+    } else {
+      setDiscoverIndex(0)
+      setReviewQueue(pilotRecipes.map(({ id }) => id))
+    }
     setDiscoverComplete(false)
   }
+
+  useEffect(() => {
+    if (!discoverComplete || !history.length || section !== 'discover') return
+    const frame = window.requestAnimationFrame(() => completionUndoRef.current?.focus())
+    return () => window.cancelAnimationFrame(frame)
+  }, [discoverComplete, history.length, section])
 
   const allTags = useMemo(() => ['All', 'Breakfast', 'Lunch', 'Dinner', 'Vegetarian', 'Vegan', 'Interested', 'Saved', 'Cooked'], [])
   const libraryRecipes = useMemo(() => pilotRecipes.filter((recipe) => {
@@ -183,7 +205,7 @@ function App() {
     {storageError || recoveryBackup ? <div className="storage-banner" role="status"><span>{storageError}</span>{recoveryBackup ? <button type="button" onClick={exportRecoveryBackup}>Export recovery backup</button> : null}</div> : null}
 
     {section === 'discover' ? <main className="discover-page"><section className="discover-intro"><div><p className="eyebrow">Find your next meal</p><h1>Recipes worth<br/><em>coming back to.</em></h1><p>Swipe, use the arrow keys, or choose a button. Passing never removes a recipe from your library.</p></div><aside><strong>{reviewedCount}</strong><span>recipes reviewed</span><strong>{data.plan.length}</strong><span>meals scheduled</span></aside></section>
-      <section className="discovery-stage" aria-labelledby="discover-title">{candidate ? <DiscoveryDeck recipe={candidate} previewRecipes={previewRecipes} preference={preferenceFor(candidate.id)} remaining={Math.max(1, discoveryRemaining)} reviewed={reviewedCount} total={pilotRecipes.length} canUndo={Boolean(history.length)} formatMinutes={formatMinutes} preferenceLabel={preferenceLabel} onDecision={actOnCandidate} onOpen={(opener) => openDetail(candidate, opener)} onUndo={undo}/> : <div className="empty-state discovery-complete"><span>✓</span><h2 id="discover-title">You reached the end for now.</h2><p>{deferredIds.size ? `${deferredIds.size} deferred recipe${deferredIds.size === 1 ? '' : 's'} can be revisited without changing your saved choices.` : 'Every recipe has a saved choice. You can review them again or browse the complete library.'}</p><div><button type="button" onClick={revisitDiscovery}>{deferredIds.size ? 'Revisit deferred recipes' : 'Review choices again'}</button><button type="button" onClick={() => setSection('library')}>Browse all recipes</button></div></div>}</section>
+      <section className="discovery-stage" aria-labelledby="discover-title">{candidate ? <DiscoveryDeck recipe={candidate} previewRecipes={previewRecipes} preference={preferenceFor(candidate.id)} remaining={discoveryRemaining} reviewed={reviewedCount} total={pilotRecipes.length} canUndo={Boolean(history.length)} formatMinutes={formatMinutes} preferenceLabel={preferenceLabel} onDecision={actOnCandidate} onOpen={(opener) => openDetail(candidate, opener)} onUndo={undo}/> : <div className="empty-state discovery-complete"><span>✓</span><h2 id="discover-title">You reached the end for now.</h2><p>{deferredIds.size ? `${deferredIds.size} deferred recipe${deferredIds.size === 1 ? '' : 's'} can be revisited without changing your saved choices.` : 'Every recipe has a saved choice. You can review them again or browse the complete library.'}</p><div>{history.length ? <button ref={completionUndoRef} type="button" onClick={undo}>↶ Undo last choice</button> : null}<button type="button" onClick={revisitDiscovery}>{deferredIds.size ? 'Revisit deferred recipes' : 'Review choices again'}</button><button type="button" onClick={() => setSection('library')}>Browse all recipes</button></div></div>}</section>
     </main> : null}
 
     {section === 'library' ? <main className="content-page"><section className="page-heading"><div><p className="eyebrow">All recipes</p><h1>Your recipe library</h1><p>Every recipe stays discoverable, including anything you passed.</p></div><div className="backup-card"><strong>Your data</strong><span>{persistent ? 'Saved in this browser' : 'Temporary memory only — export to keep a copy'}</span><div><button type="button" onClick={exportBackup}>Export JSON</button><label className="button-label">Import JSON<input type="file" accept="application/json" onChange={importBackup}/></label></div>{backupMessage ? <small role="status">{backupMessage}</small> : null}</div></section><section className="browse-tools"><label><span className="sr-only">Search all recipes</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search recipes, ingredients, or cuisines…"/></label><div className="filter-row" aria-label="Recipe filters">{allTags.map((tag) => <button type="button" key={tag} className={filter === tag ? 'active' : ''} aria-pressed={filter === tag} onClick={() => setFilter(tag)}>{tag}</button>)}</div><p>{libraryRecipes.length} of {pilotRecipes.length} recipes</p></section>{libraryRecipes.length ? <section className="browse-grid">{libraryRecipes.map((recipe) => <BrowseCard key={recipe.id} recipe={recipe} preference={preferenceFor(recipe.id)} onStatus={(status) => setStatus(recipe.id, status)} onOpen={(opener) => openDetail(recipe, opener)}/>)}</section> : <section className="empty-state"><span>⌕</span><h2>No recipes match</h2><p>Try another search or clear the active filter.</p><button type="button" onClick={() => { setQuery(''); setFilter('All') }}>Clear filters</button></section>}</main> : null}

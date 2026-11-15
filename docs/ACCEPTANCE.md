@@ -44,4 +44,6 @@
 - [x] Arrow Left and Arrow Right work when focus is in the deck, while interactive controls and dialogs retain their existing keyboard behavior.
 - [x] Progress, action results, and cancellation feedback are exposed to assistive technology; reduced-motion users skip the send-off delay.
 - [x] Undo, reload resumption, deferred-recipe revisit, details/source, searchable Library status, planning, and Grocery remain intact.
+- [x] Review choices again creates a complete 25-recipe pass with truthful remaining counts and leaves every stored preference unchanged until the user makes a replacement choice.
+- [x] The completion state retains Undo, moves keyboard focus to it after the final card exits, and restores both the final recipe and its prior preference.
 - [x] Production builds were browser-checked at 1440px desktop and 390px touch-mobile sizes with no console errors or failed asset requests.
