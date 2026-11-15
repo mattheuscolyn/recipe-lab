@@ -1,11 +1,56 @@
 import { describe, expect, it } from 'vitest'
 import { canonicalIngredients, packageOffers, pilotRecipes } from '../data/pilotCatalog'
 import { buildGroceryList, calculatePackagePurchase } from './grocery'
+import type { PantryLot } from './personalData'
 
 const recipe = (slug: string) => pilotRecipes.find((item) => item.slug === slug)!
 const selection = (slug: string, servings?: number) => { const item = recipe(slug); return { recipeId: item.id, servings: servings ?? item.yield.planningServings.default } }
 
 describe('grocery calculation', () => {
+  it('subtracts only safely matched pantry quantity and reprices the unmet garlic requirement', () => {
+    const pantry: PantryLot[] = [{ id: 'garlic-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 4, unit: 'clove', bestBy: null, note: '' }]
+    const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('smoky-black-bean-soup', 8), selection('white-bean-soup')], { pantryLots: pantry })
+    const garlic = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-garlic')!
+    expect(garlic.total).toEqual({ amount: 7, unit: 'clove' })
+    expect(garlic.pantry).toMatchObject({ available: { amount: 4, unit: 'clove' }, applied: { amount: 4, unit: 'clove' }, toBuy: { amount: 3, unit: 'clove' }, matchedLotIds: ['garlic-lot'] })
+    expect(garlic.pricing).toMatchObject({ packages: 1, estimatedCheckoutCost: .89, unused: { amount: 7, unit: 'clove' } })
+    expect(garlic.pricing?.estimatedConsumptionCost).toBeCloseTo(.267)
+  })
+
+  it('counts each compatible pantry lot once and caps coverage at demand', () => {
+    const pantry: PantryLot[] = [
+      { id: 'lot-a', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 3, unit: 'clove', bestBy: null, note: '' },
+      { id: 'lot-b', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 5, unit: 'clove', bestBy: null, note: '' },
+    ]
+    const garlic = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('smoky-black-bean-soup', 8), selection('white-bean-soup')], { pantryLots: pantry }).find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-garlic')!
+    expect(garlic.pantry.available.amount).toBe(8)
+    expect(garlic.pantry.applied.amount).toBe(7)
+    expect(garlic.pantry.toBuy?.amount).toBe(0)
+    expect(new Set(garlic.pantry.matchedLotIds)).toEqual(new Set(['lot-a', 'lot-b']))
+    expect(garlic.pricing).toBeNull()
+  })
+
+  it('never subtracts an incompatible pantry variant or unit', () => {
+    const pantry: PantryLot[] = [
+      { id: 'dried-thyme', canonicalIngredientId: 'ingredient-thyme', variantId: 'variant-thyme-dried', quantity: 2, unit: 'tsp', bestBy: null, note: '' },
+      { id: 'garlic-by-weight', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 50, unit: 'g', bestBy: null, note: '' },
+    ]
+    const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('white-bean-soup')], { pantryLots: pantry })
+    const freshThyme = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-thyme')!
+    const garlic = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-garlic')!
+    expect(freshThyme.pantry).toMatchObject({ applied: { amount: 0 }, reviewLotIds: ['dried-thyme'] })
+    expect(garlic.pantry).toMatchObject({ applied: { amount: 0 }, reviewLotIds: ['garlic-by-weight'] })
+    expect(garlic.pantry.toBuy).toEqual({ amount: 3, unit: 'clove' })
+  })
+
+  it('keeps an unquantified requirement unresolved even when matching pantry inventory exists', () => {
+    const pantry: PantryLot[] = [{ id: 'salt-lot', canonicalIngredientId: 'ingredient-salt', variantId: 'variant-salt-unspecified', quantity: 5, unit: 'tsp', bestBy: null, note: '' }]
+    const salt = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('smoky-black-bean-soup')], { pantryLots: pantry }).find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-salt')!
+    expect(salt).toMatchObject({ unresolved: true, total: null, pricing: null })
+    expect(salt.pantry.toBuy).toBeNull()
+    expect(salt.pantry.applied.amount).toBe(0)
+    expect(salt.pantry.available.amount).toBe(5)
+  })
   it('applies serving multipliers and consolidates canonical garlic', () => {
     const list = buildGroceryList(pilotRecipes, canonicalIngredients, packageOffers, [selection('smoky-black-bean-soup', 8), selection('white-bean-soup')])
     const garlic = list.find(({ canonicalIngredientId }) => canonicalIngredientId === 'ingredient-garlic')!

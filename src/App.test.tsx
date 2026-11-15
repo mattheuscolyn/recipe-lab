@@ -233,7 +233,7 @@ describe('Recipe Lab personal planning experience', () => {
 
     await user.click(screen.getByRole('button', { name: 'Grocery' }))
     const garlic = screen.getByText('Garlic').closest('article')!
-    expect(within(garlic).getByText('3 clove')).toBeInTheDocument()
+    expect(within(within(garlic).getByText('Required').parentElement!).getByText('3 clove')).toBeInTheDocument()
     expect(within(garlic).getByText('2 scheduled contributions')).toBeInTheDocument()
     saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
     expect(saved.preferences[pilotRecipes[0].id].status).toBe('saved')
@@ -264,6 +264,56 @@ describe('Recipe Lab personal planning experience', () => {
     expect(screen.getByRole('dialog', { name: /Schedule Smoky Black Bean Soup/i })).toBeInTheDocument()
     await user.keyboard('{Escape}')
     expect(details).toHaveFocus()
+  })
+
+  it('creates, edits, and explicitly deletes separate pantry inventory', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Pantry' }))
+    const add = screen.getByRole('button', { name: /Add pantry item/i })
+    await user.click(add)
+    expect(screen.getByRole('button', { name: 'Close pantry item editor' })).toHaveFocus()
+    const dialog = screen.getByRole('dialog', { name: 'Add pantry item' })
+    await user.type(within(dialog).getByRole('textbox', { name: 'Search pantry ingredients' }), 'Garlic')
+    await user.click(within(dialog).getByRole('button', { name: /Garlic.*Fresh clove/i }))
+    await user.type(within(dialog).getByRole('spinbutton', { name: 'Pantry quantity' }), '4')
+    await user.type(within(dialog).getByLabelText('Best-by date'), '2026-11-20')
+    await user.type(within(dialog).getByRole('textbox', { name: 'Pantry note' }), 'Top shelf')
+    await user.click(within(dialog).getByRole('button', { name: 'Add to pantry' }))
+    expect(screen.getByRole('heading', { name: 'Garlic' })).toBeInTheDocument()
+    expect(screen.getByText('4', { selector: '.pantry-quantity' })).toBeInTheDocument()
+    expect(add).toHaveFocus()
+
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    const editDialog = screen.getByRole('dialog', { name: 'Edit pantry lot' })
+    const quantity = within(editDialog).getByRole('spinbutton', { name: 'Pantry quantity' })
+    await user.clear(quantity)
+    await user.type(quantity, '6')
+    await user.click(within(editDialog).getByRole('button', { name: 'Save changes' }))
+    expect(screen.getByText('6', { selector: '.pantry-quantity' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
+    await user.click(screen.getByRole('button', { name: 'Confirm delete' }))
+    expect(screen.getByRole('heading', { name: /pantry starts empty/i })).toBeInTheDocument()
+  })
+
+  it('keeps pantry quantities unchanged when groceries are checked or weeks change', async () => {
+    const now = new Date()
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const monday = startOfWeek(iso)
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), plan: [{ id: 'monday-dinner', date: monday, meal: 'Dinner', recipeId: pilotRecipes[0].id, servings: 4, locked: false }], pantry: [{ id: 'garlic-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 4, unit: 'clove', bestBy: null, note: '' }] }))
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Grocery' }))
+    const garlic = screen.getByText('Garlic').closest('article')!
+    expect(within(within(garlic).getByText('Required').parentElement!).getByText('2 clove')).toBeInTheDocument()
+    expect(within(within(garlic).getByText('In pantry').parentElement!).getByText('2 clove')).toBeInTheDocument()
+    expect(within(within(garlic).getByText('To buy').parentElement!).getByText('0 clove')).toBeInTheDocument()
+    await user.click(within(garlic).getByRole('checkbox'))
+    await user.click(screen.getByRole('button', { name: 'Next week' }))
+    await user.click(screen.getByRole('button', { name: 'Previous week' }))
+    const saved = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_KEY) ?? '{}')
+    expect(saved.pantry).toEqual([{ id: 'garlic-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 4, unit: 'clove', bestBy: null, note: '' }])
   })
 
   it('requires replacement confirmation and protects locked meals', async () => {
@@ -340,11 +390,12 @@ describe('Recipe Lab personal planning experience', () => {
     await user.keyboard('{Control>}a{/Control}8')
     await user.click(screen.getByRole('button', { name: 'Grocery' }))
     const garlic = screen.getByText('Garlic').closest('article')!
-    expect(within(garlic).getByText('6 clove')).toBeInTheDocument()
+    expect(within(within(garlic).getByText('Required').parentElement!).getByText('6 clove')).toBeInTheDocument()
     expect(within(garlic).getByText('2 scheduled contributions')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /^Plan/ }))
     await user.click(screen.getAllByRole('button', { name: /Remove Dinner for/i })[1])
     await user.click(screen.getByRole('button', { name: 'Grocery' }))
-    expect(screen.getByText('Garlic').closest('article')?.querySelector('.line-total')).toHaveTextContent('2 clove')
+    const remainingGarlic = screen.getByText('Garlic').closest('article')!
+    expect(within(within(remainingGarlic).getByText('Required').parentElement!).getByText('2 clove')).toBeInTheDocument()
   })
 })

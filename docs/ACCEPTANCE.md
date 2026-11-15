@@ -62,3 +62,17 @@
 - [x] Quick Add defaults to today within the current week, uses Monday for other weeks, and successful scheduling focuses the persistent View week action.
 - [x] Regression tests cover preference-safe Quick Add, repeated-meal consolidation, detail focus restoration, locked-slot safety, explicit replacement, search, filters, and picker keyboard focus.
 - [x] Production builds were browser-checked at 1440px desktop and 390px mobile sizes with no console errors or failed asset requests.
+
+## Issue #13 — Pantry MVP acceptance report
+
+- [x] Pantry starts empty and supports searching the canonical catalog plus explicit create, edit, and delete of separate inventory lots.
+- [x] Each lot records an exact variant, positive quantity, compatible unit, optional best-by date, and optional note.
+- [x] Version-1 browser data and backups migrate to version 2 without losing preferences, meal plans, or grocery checks; v2 backups roundtrip pantry data.
+- [x] Invalid imports remain atomic, invalid persisted catalog references are quarantined with the original recovery payload, and failed writes retain temporary-memory messaging.
+- [x] Grocery lines show Required, In pantry, and To buy while preserving source contributions, unresolved requirements, optional status, and estimated pricing labels.
+- [x] Four pantry garlic cloves offset seven required cloves to leave three to buy, and package estimates recalculate from the remaining demand.
+- [x] Multiple lots contribute once each and pantry coverage never exceeds demand or creates negative purchase quantities.
+- [x] Variant mismatches, incompatible units, and unquantified requirements are never silently subtracted and remain marked Needs review.
+- [x] Expired, within-seven-days, later, and undated states are fixed-date tested without making food-safety or disposal claims.
+- [x] Scheduling, cooking, grocery checks, and week navigation never deduct or reserve pantry inventory.
+- [x] Plan, Pantry, and Grocery link directly to one another and retain responsive, keyboard-accessible controls and dialogs.
