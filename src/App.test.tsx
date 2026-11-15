@@ -269,7 +269,7 @@ describe('Recipe Lab personal planning experience', () => {
   it('creates, edits, and explicitly deletes separate pantry inventory', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: 'Pantry' }))
+    await user.click(screen.getByRole('button', { name: /^Pantry/ }))
     const add = screen.getByRole('button', { name: /Add pantry item/i })
     await user.click(add)
     expect(screen.getByRole('button', { name: 'Close pantry item editor' })).toHaveFocus()
@@ -295,6 +295,30 @@ describe('Recipe Lab personal planning experience', () => {
     await user.click(screen.getByRole('button', { name: 'Delete' }))
     await user.click(screen.getByRole('button', { name: 'Confirm delete' }))
     expect(screen.getByRole('heading', { name: /pantry starts empty/i })).toBeInTheDocument()
+    await waitFor(() => expect(add).toHaveFocus())
+  })
+
+  it('restores pantry focus when an edit removes its original filtered control', async () => {
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify({ ...emptyPersonalData(), pantry: [{ id: 'garlic-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 4, unit: 'clove', bestBy: null, note: '' }] }))
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /^Pantry/ }))
+    const add = screen.getByRole('button', { name: /Add pantry item/i })
+    await user.click(add)
+    await user.keyboard('{Escape}')
+    expect(add).toHaveFocus()
+
+    await user.type(screen.getByPlaceholderText(/Search pantry items or notes/i), 'Garlic')
+    await user.click(screen.getByRole('button', { name: 'Edit' }))
+    const dialog = screen.getByRole('dialog', { name: 'Edit pantry lot' })
+    await user.click(within(dialog).getByRole('button', { name: /Garlic.*Change ingredient/i }))
+    const ingredientSearch = within(dialog).getByRole('textbox', { name: 'Search pantry ingredients' })
+    await user.clear(ingredientSearch)
+    await user.type(ingredientSearch, 'Milk')
+    await user.click(within(dialog).getByRole('button', { name: /^Milk/i }))
+    await user.click(within(dialog).getByRole('button', { name: 'Save changes' }))
+    expect(screen.getByRole('heading', { name: /No pantry lots match/i })).toBeInTheDocument()
+    await waitFor(() => expect(add).toHaveFocus())
   })
 
   it('keeps pantry quantities unchanged when groceries are checked or weeks change', async () => {
@@ -305,6 +329,10 @@ describe('Recipe Lab personal planning experience', () => {
     const user = userEvent.setup()
     render(<App />)
     await user.click(screen.getByRole('button', { name: 'Grocery' }))
+    const costStrip = document.querySelector<HTMLElement>('.cost-strip')!
+    expect(within(costStrip).getByText('Priced-items remaining checkout subtotal')).toBeInTheDocument()
+    expect(within(costStrip).getByText('Priced-items estimated remaining consumption subtotal')).toBeInTheDocument()
+    expect(Number(within(costStrip).getByText('Unpriced or unresolved').parentElement?.querySelector('strong')?.textContent)).toBeGreaterThan(0)
     const garlic = screen.getByText('Garlic').closest('article')!
     expect(within(within(garlic).getByText('Required').parentElement!).getByText('2 clove')).toBeInTheDocument()
     expect(within(within(garlic).getByText('In pantry').parentElement!).getByText('2 clove')).toBeInTheDocument()
