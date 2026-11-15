@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
 import { pilotRecipes } from './data/pilotCatalog'
-import { startOfWeek, weekDates } from './domain/mealPlan'
+import { defaultScheduleDate, startOfWeek, weekDates } from './domain/mealPlan'
 import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY } from './domain/personalData'
 
 describe('Recipe Lab personal planning experience', () => {
@@ -240,6 +240,20 @@ describe('Recipe Lab personal planning experience', () => {
     expect(saved.plan).toHaveLength(2)
   })
 
+  it('defaults Quick Add to today in the current week and Monday in a future week', () => {
+    expect(defaultScheduleDate('2026-11-09', '2026-11-12')).toBe('2026-11-12')
+    expect(defaultScheduleDate('2026-11-16', '2026-11-12')).toBe('2026-11-16')
+  })
+
+  it('focuses the scheduling confirmation after filling an empty slot', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: 'Plan' }))
+    await user.click(screen.getByRole('button', { name: /Choose recipe for Mon.* Dinner/i }))
+    await user.click(screen.getByRole('button', { name: /Smoky Black Bean Soup/i }))
+    await waitFor(() => expect(screen.getByRole('button', { name: 'View week' })).toHaveFocus())
+  })
+
   it('offers Quick Add from recipe details and restores focus when cancelled', async () => {
     const user = userEvent.setup()
     render(<App />)
@@ -310,6 +324,7 @@ describe('Recipe Lab personal planning experience', () => {
     expect(within(replacement).getByRole('alert')).toHaveTextContent(/Replace Smoky Black Bean Soup/i)
     await user.click(within(replacement).getByRole('button', { name: 'Confirm replacement' }))
     expect(document.querySelector('.slot-recipe')).toHaveTextContent('Simply Perfect Pancakes')
+    await waitFor(() => expect(screen.getByRole('button', { name: 'View week' })).toHaveFocus())
   })
 
   it('consolidates repeated scheduled recipes at scaled servings and updates after deletion', async () => {

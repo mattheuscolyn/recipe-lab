@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import type { RecipeV2 } from '../domain/catalog'
-import { shiftWeek, weekDates } from '../domain/mealPlan'
+import { defaultScheduleDate, shiftWeek, weekDates } from '../domain/mealPlan'
 import type { MealSlot, RecipePreference } from '../domain/personalData'
 
 export type MealName = 'Breakfast' | 'Lunch' | 'Dinner'
 
 const friendlyDate = (iso: string, options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' }) => new Intl.DateTimeFormat('en-US', options).format(new Date(`${iso}T12:00:00`))
 const focusableSelector = 'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+const localTodayIso = () => {
+  const today = new Date()
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+}
 
 function ModalFrame({ titleId, onClose, returnFocus, children, className = '' }: { titleId: string; onClose: () => void; returnFocus: HTMLElement | null; children: React.ReactNode; className?: string }) {
   const dialogRef = useRef<HTMLElement>(null)
@@ -40,7 +44,7 @@ function ModalFrame({ titleId, onClose, returnFocus, children, className = '' }:
 }
 export function ScheduleRecipeDialog({ recipe, selectedWeek, plan, recipeTitles, returnFocus, onClose, onSchedule }: { recipe: RecipeV2; selectedWeek: string; plan: MealSlot[]; recipeTitles: ReadonlyMap<string, string>; returnFocus: HTMLElement | null; onClose: () => void; onSchedule: (date: string, meal: MealName, servings: number) => void }) {
   const [pickerWeek, setPickerWeek] = useState(selectedWeek)
-  const [date, setDate] = useState(selectedWeek)
+  const [date, setDate] = useState(() => defaultScheduleDate(selectedWeek, localTodayIso()))
   const [meal, setMeal] = useState<MealName>(recipe.category === 'Breakfast' ? 'Breakfast' : recipe.category === 'Lunch' ? 'Lunch' : 'Dinner')
   const [servings, setServings] = useState(String(recipe.yield.planningServings.default))
   const [confirming, setConfirming] = useState(false)
@@ -50,7 +54,7 @@ export function ScheduleRecipeDialog({ recipe, selectedWeek, plan, recipeTitles,
   const moveWeek = (amount: number) => {
     const next = shiftWeek(pickerWeek, amount)
     setPickerWeek(next)
-    setDate(next)
+    setDate(defaultScheduleDate(next, localTodayIso()))
     setConfirming(false)
   }
   const submit = (event: FormEvent) => {

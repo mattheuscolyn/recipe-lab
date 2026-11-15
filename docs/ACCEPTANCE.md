@@ -59,5 +59,6 @@
 - [x] Grocery quantities continue to derive from the viewed week, consolidate repeated ingredients, and recompute after serving or slot changes.
 - [x] Plans, preferences, and grocery checks retain the existing versioned localStorage and export/import behavior.
 - [x] Dialogs trap focus, close with Escape, restore focus to their opener, announce outcomes, and respect reduced-motion preferences.
+- [x] Quick Add defaults to today within the current week, uses Monday for other weeks, and successful scheduling focuses the persistent View week action.
 - [x] Regression tests cover preference-safe Quick Add, repeated-meal consolidation, detail focus restoration, locked-slot safety, explicit replacement, search, filters, and picker keyboard focus.
 - [x] Production builds were browser-checked at 1440px desktop and 390px mobile sizes with no console errors or failed asset requests.
