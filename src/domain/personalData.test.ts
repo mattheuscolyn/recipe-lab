@@ -3,6 +3,7 @@ import { pilotRecipes } from '../data/pilotCatalog'
 import { emptyPersonalData, emptyPreference, exportPersonalData, importPersonalData, loadPersonalData, migratePersonalData, PERSONAL_DATA_KEY, savePersonalData } from './personalData'
 
 const knownRecipeIds = new Set(pilotRecipes.map(({ id }) => id))
+const ingredientCatalog = new Map([['ingredient-garlic', new Set(['variant-garlic-fresh-clove'])]])
 const slot = (id: string, recipeId: string) => ({ id, date: '2026-11-09', meal: 'Dinner' as const, recipeId, servings: 4, locked: false })
 
 describe('personal data persistence', () => {
@@ -12,11 +13,14 @@ describe('personal data persistence', () => {
       preferences: { recipe: { ...emptyPreference(), status: 'saved' as const, cooked: true, personalRating: 5, note: 'Double the lemon.' } },
       plan: [{ id: 'monday-dinner', date: '2026-11-09', meal: 'Dinner' as const, recipeId: '813d36f1-f9ce-431b-b2f4-594af0510b78', servings: 6, locked: true }],
       checkedGroceries: { '2026-11-09:ingredient-garlic:variant-garlic': true },
+      pantry: [{ id: 'garlic-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 4, unit: 'clove' as const, bestBy: '2026-11-20', note: 'Top shelf' }],
     }
-    expect(importPersonalData(exportPersonalData(data), knownRecipeIds)).toEqual(data)
+    expect(importPersonalData(exportPersonalData(data), knownRecipeIds, ingredientCatalog)).toEqual(data)
   })
-  it('migrates the pre-versioned shape into schema version 1', () => {
+  it('migrates pre-versioned and v1 backups into schema version 2 without losing existing data', () => {
     expect(migratePersonalData({ preferences: {}, plan: [], checkedGroceries: {} })).toEqual(emptyPersonalData())
+    const v1 = { schemaVersion: 1, preferences: { recipe: emptyPreference() }, plan: [slot('kept', pilotRecipes[0].id)], checkedGroceries: { checked: true } }
+    expect(migratePersonalData(v1)).toEqual({ ...v1, schemaVersion: 2, pantry: [] })
   })
   it('loads saved data and reports unavailable storage without crashing', () => {
     const values = new Map<string, string>()
@@ -49,5 +53,13 @@ describe('personal data persistence', () => {
   })
   it('rejects unsupported backups', () => {
     expect(() => importPersonalData('{"schemaVersion":99}')).toThrow(/not a supported/i)
+  })
+  it('rejects invalid pantry catalog references atomically', () => {
+    const data = { ...emptyPersonalData(), pantry: [{ id: 'bad-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-not-garlic', quantity: 1, unit: 'clove' as const, bestBy: null, note: '' }] }
+    expect(() => importPersonalData(exportPersonalData(data), knownRecipeIds, ingredientCatalog)).toThrow(/not imported.*variant/i)
+  })
+  it('rejects duplicate pantry lot identities', () => {
+    const lot = { id: 'duplicate-lot', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 1, unit: 'clove', bestBy: null, note: '' }
+    expect(() => migratePersonalData({ ...emptyPersonalData(), pantry: [lot, lot] })).toThrow(/not a supported/i)
   })
 })
