@@ -13,6 +13,7 @@ export function startOfWeek(iso: string): string {
 
 export const weekDates = (weekStart: string): string[] => Array.from({ length: 7 }, (_, index) => addDays(weekStart, index))
 export const shiftWeek = (weekStart: string, weeks: number): string => addDays(weekStart, weeks * 7)
+export const defaultScheduleDate = (weekStart: string, today: string): string => weekDates(weekStart).includes(today) ? today : weekStart
 
 export function upsertMealSlot(plan: MealSlot[], slot: MealSlot): MealSlot[] {
   const existing = plan.findIndex(({ date, meal }) => date === slot.date && meal === slot.meal)

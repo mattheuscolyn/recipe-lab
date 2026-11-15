@@ -47,3 +47,18 @@
 - [x] Review choices again creates a complete 25-recipe pass with truthful remaining counts and leaves every stored preference unchanged until the user makes a replacement choice.
 - [x] The completion state retains Undo, moves keyboard focus to it after the final card exits, and restores both the final recipe and its prior preference.
 - [x] Production builds were browser-checked at 1440px desktop and 390px touch-mobile sizes with no console errors or failed asset requests.
+
+## Issue #11 — connected meal planning acceptance report
+
+- [x] Discover, recipe details, and Library offer a direct planning action without changing the recipe's personal preference.
+- [x] Quick Add schedules an explicit week, day, meal, and serving count and provides a direct path to the affected week.
+- [x] Replacing an occupied slot requires explicit confirmation, while locked slots cannot be replaced until unlocked.
+- [x] Swipe Undo remains independent from planning changes and repeated recipes can occupy separate meal slots.
+- [x] The slot picker searches all 25 recipes, filters by meal or personal picks, and prioritizes Interested and Saved recipes.
+- [x] Planned meals support serving changes, swap, lock, unlock, and removal on responsive desktop and mobile layouts.
+- [x] Grocery quantities continue to derive from the viewed week, consolidate repeated ingredients, and recompute after serving or slot changes.
+- [x] Plans, preferences, and grocery checks retain the existing versioned localStorage and export/import behavior.
+- [x] Dialogs trap focus, close with Escape, restore focus to their opener, announce outcomes, and respect reduced-motion preferences.
+- [x] Quick Add defaults to today within the current week, uses Monday for other weeks, and successful scheduling focuses the persistent View week action.
+- [x] Regression tests cover preference-safe Quick Add, repeated-meal consolidation, detail focus restoration, locked-slot safety, explicit replacement, search, filters, and picker keyboard focus.
+- [x] Production builds were browser-checked at 1440px desktop and 390px mobile sizes with no console errors or failed asset requests.
