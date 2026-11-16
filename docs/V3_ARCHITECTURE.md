@@ -626,11 +626,11 @@ Nutrition may remain unknown at all three gates. It is required only as an expli
 
 ---
 
-## D. Provisional product decisions pending owner approval
+## D. Approved product decisions
 
-The architecture and acceptance scenarios use the following reviewed defaults provisionally. They are not final owner approvals and should remain configurable or isolated behind policy where indicated.
+The project owner approved the following eight product defaults. Their implementation remains subject to the normal development and review process; future adjustments should be documented and reviewed.
 
-| Decision | Provisional default | Guardrail and rationale |
+| Decision | Approved default | Guardrail and rationale |
 |---|---|---|
 | Source-serving increments for adequacy | Use natural integer source servings by default; allow reviewed recipe-specific alternatives such as half a sandwich or adding a side. | Never generate arbitrary calorie-derived fractions. A noninteger alternative must be natural for that specific output and explicitly reviewed. |
 | When does actual leftover inventory exist? | Only `Confirm cooked` creates a `PreparedFoodLot`; prefill actual output from the plan but require confirmation/edit. | Asking for every quantity is more accurate but burdens routine use; creating it at planning time produces phantom food. |
