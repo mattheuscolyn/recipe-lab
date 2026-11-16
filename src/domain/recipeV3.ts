@@ -112,6 +112,7 @@ export const recipeRequirementV3Schema = z.object({
 export const subrecipeDependencySchema = z.object({
   dependencyId: id('dependency'),
   recipeId: z.string().uuid().nullable(),
+  revisionId: id('revision').nullable(),
   sourceUrl: z.url().nullable(),
   label: text('Subrecipe label', 160),
   quantity: quantityFactSchema.nullable(),
@@ -119,6 +120,9 @@ export const subrecipeDependencySchema = z.object({
   resolution: z.enum(['linked-version', 'source-fact-only', 'unresolved']),
 }).superRefine((dependency, context) => {
   if (dependency.resolution === 'linked-version' && dependency.recipeId === null) context.addIssue({ code: 'custom', path: ['recipeId'], message: 'A linked subrecipe needs a recipe id' })
+  if (dependency.resolution === 'linked-version' && dependency.revisionId === null) context.addIssue({ code: 'custom', path: ['revisionId'], message: 'A linked subrecipe needs an exact revision id' })
+  if (dependency.resolution !== 'linked-version' && dependency.recipeId !== null) context.addIssue({ code: 'custom', path: ['recipeId'], message: 'Only a linked-version dependency may name an internal recipe id' })
+  if (dependency.resolution !== 'linked-version' && dependency.revisionId !== null) context.addIssue({ code: 'custom', path: ['revisionId'], message: 'Only a linked-version dependency may name a revision id' })
   if (dependency.recipeId === null && dependency.sourceUrl === null && dependency.resolution !== 'unresolved') context.addIssue({ code: 'custom', path: ['sourceUrl'], message: 'A source-only dependency needs a source URL or linked recipe' })
 })
 
@@ -280,7 +284,7 @@ const recipeV3StructureSchema = z.object({
   equipment: z.array(equipmentRequirementSchema),
   equipmentReviewState: z.enum(['unknown', 'source-reported', 'editor-reviewed']),
   mealRoles: z.object({
-    primary: z.array(z.enum(['breakfast', 'lunch', 'dinner', 'snack', 'side'])).min(1),
+    primary: z.array(z.enum(['breakfast', 'lunch', 'dinner', 'dessert', 'snack', 'side'])).min(1),
     tags: z.array(text('Meal role tag', 60)),
   }),
   steps: z.array(structuredStepSchema),
@@ -315,24 +319,29 @@ export type SuitabilityRecord = z.infer<typeof suitabilityRecordSchema>
 
 export function computeRecipeV3Readiness(recipe: RecipeV3): RecipeV3Readiness {
   const blockers: string[] = []
+  const minimumSafeImport = recipe.review.ingredientCompletenessReviewed
+  if (!minimumSafeImport) blockers.push('ingredient-completeness-unreviewed')
   if (recipe.output.scaling.policy === 'review-required') blockers.push('output-scaling-review-required')
   if (recipe.output.planningGuidance.sourceServingsPerMealPortion?.value == null) blockers.push('meal-portion-guidance-missing')
   if (recipe.effort.activeMinutes.value === null) blockers.push('active-time-unknown')
   if (recipe.suitability.reviewState === 'unknown') blockers.push('suitability-unknown')
   if (recipe.subrecipes.some(({ required, resolution }) => required && resolution !== 'linked-version')) blockers.push('essential-subrecipe-unresolved')
-  const recommendationReady = blockers.length === 0
+  if (recipe.source.rights.factualMetadataUse === 'review-needed') blockers.push('rights-review-required')
+  if (recipe.source.rights.factualMetadataUse === 'restricted') blockers.push('rights-restricted')
+  const recommendationReady = minimumSafeImport && blockers.length === 0
   if (!recipe.steps.length) blockers.push('structured-steps-missing')
   if (!recipe.review.structuredStepsReviewed) blockers.push('structured-steps-unreviewed')
   if (!recipe.review.safetyReviewed) blockers.push('safety-review-missing')
   if (recipe.equipmentReviewState === 'unknown') blockers.push('equipment-unreviewed')
-  if (recipe.source.rights.factualMetadataUse === 'review-needed') blockers.push('rights-review-required')
+  if (recipe.identity.lifecycle === 'kitchen-tested' && recipe.review.kitchenTestedAt === null) blockers.push('kitchen-test-date-unknown')
   const cookingModeReady = recommendationReady
     && recipe.steps.length > 0
     && recipe.review.structuredStepsReviewed
     && recipe.review.safetyReviewed
     && recipe.equipmentReviewState !== 'unknown'
-    && recipe.source.rights.factualMetadataUse !== 'review-needed'
-  return { minimumSafeImport: true, recommendationReady, cookingModeReady, blockers }
+    && recipe.source.rights.factualMetadataUse === 'approved'
+    && (recipe.identity.lifecycle !== 'kitchen-tested' || recipe.review.kitchenTestedAt !== null)
+  return { minimumSafeImport, recommendationReady, cookingModeReady, blockers }
 }
 
 const allEvidenceIds = (recipe: RecipeV3): string[] => {
@@ -428,6 +437,8 @@ export const recipeV3Schema = recipeV3StructureSchema.superRefine((recipe, conte
   if (multipliers && !multipliers.includes(1)) context.addIssue({ code: 'custom', path: ['output', 'scaling', 'allowedMultipliers'], message: 'Approved multipliers must include the original batch' })
   if (multipliers && recipe.output.discreteItem && multipliers.some((multiplier) => !Number.isInteger(multiplier * recipe.output.discreteItem!.itemCount))) context.addIssue({ code: 'custom', path: ['output', 'scaling', 'allowedMultipliers'], message: 'Approved multipliers cannot produce fractional items' })
 
+  if (recipe.review.kitchenTestedAt !== null && recipe.identity.lifecycle !== 'kitchen-tested') context.addIssue({ code: 'custom', path: ['review', 'kitchenTestedAt'], message: 'Only a kitchen-tested lifecycle may declare a kitchen-test date' })
+
   const expected = computeRecipeV3Readiness(recipe)
   if (JSON.stringify(recipe.review.readiness) !== JSON.stringify(expected)) context.addIssue({ code: 'custom', path: ['review', 'readiness'], message: 'Readiness must be derived from the v3 completeness gates' })
 })
@@ -462,6 +473,7 @@ export function validateRecipeV3Catalog(input: unknown): RecipeV3CatalogResult {
   duplicate(recipes, ({ identity }) => identity.revisionId, 'recipes')
   duplicate(recipes, ({ identity }) => identity.slug, 'recipes')
   const recipeIds = new Set(recipes.map(({ identity }) => identity.recipeId))
+  const revisionKeys = new Set(recipes.map(({ identity }) => `${identity.recipeId}:${identity.revisionId}`))
 
   recipes.forEach((recipe, recipeIndex) => {
     recipe.requirements.forEach((requirement, requirementIndex) => {
@@ -486,6 +498,7 @@ export function validateRecipeV3Catalog(input: unknown): RecipeV3CatalogResult {
     })
     recipe.subrecipes.forEach((dependency, dependencyIndex) => {
       if (dependency.recipeId && !recipeIds.has(dependency.recipeId)) issues.push({ path: `recipes.${recipeIndex}.subrecipes.${dependencyIndex}.recipeId`, message: `Unknown subrecipe ${dependency.recipeId}` })
+      if (dependency.resolution === 'linked-version' && dependency.recipeId && dependency.revisionId && !revisionKeys.has(`${dependency.recipeId}:${dependency.revisionId}`)) issues.push({ path: `recipes.${recipeIndex}.subrecipes.${dependencyIndex}.revisionId`, message: `Unknown subrecipe revision ${dependency.recipeId}:${dependency.revisionId}` })
     })
   })
   return issues.length ? { success: false, issues } : { success: true, data: { ingredients, recipes } }

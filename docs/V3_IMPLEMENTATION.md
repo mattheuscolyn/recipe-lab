@@ -21,11 +21,11 @@ The approved architecture remains the product source of truth. This document rec
 - publisher attribution, checked date, selection rationale, conservative rights state, and evidence references;
 - source yield, publisher serving definition, discrete whole-item output, scaling policy, and distinct planning guidance;
 - recipe components, original source lines, structured source/planning quantities, nonquantified states, variants, alternatives, packages, and yield assumptions;
-- required/optional subrecipe dependencies and their resolution state;
+- required/optional subrecipe dependencies pinned to exact internal recipe revisions when linked;
 - reported, computed, or explicitly unknown nutrition with a declared basis;
 - reported or unknown prep/cook/passive/active/total time, effort, and attention metadata;
 - equipment plus its review state;
-- primary meal roles and tags;
+- primary meal roles—including distinct dessert and snack roles—and tags;
 - independently written structured steps linked to requirements, equipment, evidence, timing, and dependencies;
 - storage/leftover suitability with explicit review and unknown states;
 - source, ingredient, step, safety, kitchen-test, and feature-readiness review state;
@@ -55,7 +55,7 @@ Unknown values are first-class. A `Sourced<T>` with `value: null` must use `conf
 - Selected planning quantities and alternative quantities match their ingredient base dimension.
 - An incompatible original publisher measure remains legal as a source fact; it is not silently promoted into a planning conversion.
 - Usable package quantities match the ingredient base dimension.
-- Linked subrecipe IDs resolve inside the supplied v3 catalog.
+- A `linked-version` subrecipe contains both a recipe ID and immutable revision ID, and that exact pair resolves inside the supplied v3 catalog. Nonlinked dependencies cannot carry internal IDs that might drift silently.
 
 `assertRecipeV3Catalog` throws an actionable path/message report; `validateRecipeV3Catalog` returns a result object for ingestion and tests.
 
@@ -79,13 +79,17 @@ Unknown values are first-class. A `Sourced<T>` with `value: null` must use `conf
 | Method summary | Copied to `legacyMethodSummary`; `steps` remains empty and cooking mode remains blocked. |
 | Times | Existing prep/cook/total values remain reviewed evidence. Active/passive split remains unknown. |
 | Nutrition, equipment, storage | Explicit unknown states; nothing is inferred from tags or summaries. |
+| Dessert and snack categories | Retained as distinct primary roles; neither is silently mapped to the other. |
+| Kitchen-tested status | Lifecycle is retained, but `kitchenTestedAt` remains null because v2 supplies only a general review date, not a kitchen-test date. |
 | Rights | `review-needed`, independent-summary-only, no image license. |
 
 The adapter does not parse free-text review notes to manufacture subrecipe dependencies. For example, the quesadilla seasoning remains a preserved nonquantified needs-review requirement until a future source review captures a dependency URL and essential/optional status.
 
 ## Derived readiness gates
 
-Minimum safe import is true for a structurally valid recipe with attributable source/yield and preserved ingredient evidence. Recommendation readiness additionally requires reviewed scaling, meal-portion guidance, active-time knowledge, reviewed/explicit suitability, and resolution of essential subrecipes. Cooking readiness additionally requires reviewed structured steps, safety review, reviewed equipment state, and rights disposition.
+Minimum safe import requires a structurally valid recipe with attributable source/yield, preserved ingredient evidence, and an explicit completed ingredient-completeness review. Recommendation readiness additionally requires **approved** factual-metadata rights (neither `review-needed` nor `restricted` qualifies), reviewed scaling, meal-portion guidance, active-time knowledge, reviewed/explicit suitability, and resolution of essential subrecipes. Cooking readiness additionally requires reviewed structured steps, safety review, and reviewed equipment state.
+
+A migrated record whose v2 lifecycle says `kitchen-tested` keeps that lifecycle but receives no invented test date. It gets `kitchen-test-date-unknown`, which blocks cooking-mode readiness until actual date evidence is supplied; recommendation readiness remains governed by the normal evidence and rights gates.
 
 Readiness is recomputed rather than trusted from serialized input. A record that claims a gate it has not earned is invalid.
 
@@ -93,7 +97,7 @@ Readiness is recomputed rather than trusted from serialized input. A record that
 
 The illustrative architecture type required three explicit additions so approved rules can be represented without inference:
 
-1. `SubrecipeDependency.required` distinguishes an essential unresolved input—which blocks complete grocery/recommendation results—from a disclosed optional dependency.
+1. `SubrecipeDependency.required` distinguishes an essential unresolved input—which blocks complete grocery/recommendation results—from a disclosed optional dependency. A `linked-version` also requires an exact `revisionId` paired with `recipeId`; it never follows the latest revision implicitly.
 2. `equipmentReviewState` distinguishes “not collected” from a reviewed conclusion that no special equipment is required.
 3. `review.structuredStepsReviewed` and `review.safetyReviewed` make the cooking-mode gate auditable instead of deriving review from array presence.
 

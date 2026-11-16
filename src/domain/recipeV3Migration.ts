@@ -39,11 +39,13 @@ const known = <T>(value: T, evidenceIds: string[], confidence: 'reported' | 'rev
 })
 
 const primaryRole = (category: RecipeV2['category']): RecipeV3['mealRoles']['primary'][number] => {
-  if (category === 'Breakfast') return 'breakfast'
-  if (category === 'Lunch') return 'lunch'
-  if (category === 'Dinner') return 'dinner'
-  if (category === 'Snack') return 'snack'
-  return 'snack'
+  switch (category) {
+    case 'Breakfast': return 'breakfast'
+    case 'Lunch': return 'lunch'
+    case 'Dinner': return 'dinner'
+    case 'Dessert': return 'dessert'
+    case 'Snack': return 'snack'
+  }
 }
 
 function sourceQuantityFor(requirement: RecipeRequirement, sourceEvidenceId: string): QuantityFact | null {
@@ -239,7 +241,7 @@ export function adaptRecipeV2ToDraftV3(recipe: RecipeV2): RecipeV3 {
       methodIndependentlyWritten: recipe.review.methodIndependentlyWritten,
       structuredStepsReviewed: false,
       safetyReviewed: false,
-      kitchenTestedAt: recipe.review.status === 'kitchen-tested' ? recipe.review.reviewedAt : null,
+      kitchenTestedAt: null,
       readiness: { minimumSafeImport: false, recommendationReady: false, cookingModeReady: false, blockers: [] },
     },
   }

@@ -178,7 +178,7 @@ type RecipeV3 = {
 
   equipment: EquipmentRequirement[]
   mealRoles: {
-    primary: ('breakfast' | 'lunch' | 'dinner' | 'snack' | 'side')[]
+    primary: ('breakfast' | 'lunch' | 'dinner' | 'dessert' | 'snack' | 'side')[]
     tags: string[]
   }
 
@@ -253,9 +253,11 @@ type IngredientAlternative = {
 type SubrecipeDependency = {
   dependencyId: string
   recipeId: string | null
+  revisionId: string | null
   sourceUrl: string | null
   label: string
   quantity: QuantityFact | null
+  required: boolean
   resolution: 'linked-version' | 'source-fact-only' | 'unresolved'
 }
 
@@ -348,7 +350,7 @@ A minimal soup revision could retain publisher output as four source servings, a
 | `components[]` / `componentId` | `R`, `FV` | Publisher ingredient groups when present; otherwise a reviewed `main` component. | Sauces, fillings, prep order, subrecipes. | Adapter assigns `component-main`; recommendation works, cooking readiness blocked until reviewed where grouping matters. |
 | `requirement.scaling` | `R`, `E` | Rule reviewed per requirement class. | Scale whole eggs/items and fixed seasoning safely. | Batch scaling beyond original yield requires review. |
 | `alternativeId` / `relationship` | `R` when alternatives exist, `FV` | Preserves explicit branches rather than flattening one choice. | Grocery substitutions and reproducible plans. | Keep chosen v2 branch; mark unresolved alternative semantics. |
-| `subrecipes[]` | `O`, `FV` | Explicit linked recipe/dependency, including unresolved external batches. | Avoid hidden ingredients and duplicate preparation. | Unresolved dependency remains visible; blocks cooking readiness, not catalog browsing. |
+| `subrecipes[]` | `O`, `FV` | An internal `linked-version` pins both stable recipe ID and immutable revision ID; external source facts remain URL-based. Essential/optional status is explicit. | Avoid hidden ingredients, revision drift, and duplicate preparation. | An unresolved essential dependency blocks complete grocery/recommendation results; an optional one remains disclosed. |
 | `nutrition.*` | `O`, `FV` if publisher reports it | Reported values retain basis and inclusions; computed values name method and uncertainty. | Meal adequacy context and optional low-weight goal. | `status: unknown`; recipe remains usable and is not penalized as zero calories. |
 | `effort.passiveMinutes` / `activeMinutes` | `O`, `FV` when explicit; otherwise `E` | Publisher fact or reviewed derivation kept distinct. | Fit cooking into available time. | Use total time conservatively; candidate gets unknown-effort explanation. |
 | `effort.effortLevel` / `attentionPattern` | `E` | Rule/editorial judgment. | Effort balancing. | Neutral score; never reject solely for missing value. |
@@ -618,8 +620,8 @@ Migration rules:
 
 | Gate | Required evidence | Missing-field behavior |
 |---|---|---|
-| **Minimum safe import** | Stable identity/source; source yield kind and label; complete factual ingredient lines; canonical/variant mapping or explicit unresolved state; original measures/ranges/alternatives; review metadata and rights defaults. | Reject only when identity/source facts are absent or ingredient/yield meaning would be falsely asserted. Nutrition/storage may be unknown. |
-| **Recommendation-ready** | Minimum gate plus reviewed output scaling, primary meal role, active/elapsed-time feasibility, lunch/prep-ahead and leftover/storage suitability state (including explicit unknown), and adequacy guidance where source servings are clearly light. | Recipe remains browseable/manual-plan eligible; automation excludes only the unsupported use and explains why. |
+| **Minimum safe import** | Stable identity/source; source yield kind and label; complete factual ingredient lines with `ingredientCompletenessReviewed: true`; canonical/variant mapping or explicit unresolved state; original measures/ranges/alternatives; review metadata and rights defaults. | Reject only when identity/source facts are absent, ingredient completeness is unreviewed, or ingredient/yield meaning would be falsely asserted. Nutrition/storage may be unknown. |
+| **Recommendation-ready** | Minimum gate plus approved factual-metadata rights, reviewed output scaling, primary meal role, active/elapsed-time feasibility, lunch/prep-ahead and leftover/storage suitability state (including explicit unknown), and adequacy guidance where source servings are clearly light. | Recipe remains browseable/manual-plan eligible; automation excludes review-needed/restricted public use and other unsupported uses with an explanation. |
 | **Cooking-mode-ready** | Recommendation gate plus independently written structured steps, linked requirements, equipment, task/timer review, safety-sensitive prep review, and public-rights disposition. | Cook mode disabled; source link and current independent summary remain available. |
 
 Nutrition may remain unknown at all three gates. It is required only as an explicitly reviewed state, not as a numeric value.

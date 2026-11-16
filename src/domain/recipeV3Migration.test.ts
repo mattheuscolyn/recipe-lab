@@ -131,6 +131,27 @@ describe('recipe v2 to v3 compatibility migration', () => {
     expect(recipeV3Schema.array().parse(JSON.parse(JSON.stringify(first)))).toEqual(first)
     expect(pilotRecipes).toEqual(untouchedV2)
   })
+
+  it('preserves a kitchen-tested lifecycle without inventing a kitchen-test date', () => {
+    const kitchenTested = structuredClone(pilotRecipes[0])
+    kitchenTested.review.status = 'kitchen-tested'
+    const migrated = adaptRecipeV2ToDraftV3(kitchenTested)
+    expect(migrated.identity.lifecycle).toBe('kitchen-tested')
+    expect(migrated.review.kitchenTestedAt).toBeNull()
+    expect(migrated.review.readiness.blockers).toContain('kitchen-test-date-unknown')
+    expect(migrated.review.readiness.cookingModeReady).toBe(false)
+  })
+
+  it('preserves Dessert as a distinct primary meal role', () => {
+    const dessert = structuredClone(pilotRecipes[0])
+    dessert.id = '20000000-0000-4000-8000-000000000001'
+    dessert.slug = 'synthetic-dessert-fixture'
+    dessert.title = 'Synthetic Dessert Fixture'
+    dessert.category = 'Dessert'
+    const migrated = adaptRecipeV2ToDraftV3(dessert)
+    expect(migrated.mealRoles.primary).toEqual(['dessert'])
+    expect(migrated.mealRoles.primary).not.toContain('snack')
+  })
 })
 
 describe('recipe v3 validation', () => {
@@ -227,6 +248,54 @@ describe('recipe v3 validation', () => {
     if (!result.success) expect(result.error.issues.some(({ message }) => message.includes('Readiness must be derived'))).toBe(true)
   })
 
+  it('keeps an incompletely reviewed draft below every readiness gate', () => {
+    const recipe = cloneRecipe()
+    recipe.identity.lifecycle = 'draft'
+    recipe.review.ingredientCompletenessReviewed = false
+    refreshReadiness(recipe)
+    expect(recipe.review.readiness.minimumSafeImport).toBe(false)
+    expect(recipe.review.readiness.recommendationReady).toBe(false)
+    expect(recipe.review.readiness.cookingModeReady).toBe(false)
+    expect(recipe.review.readiness.blockers).toContain('ingredient-completeness-unreviewed')
+    expect(recipeV3Schema.safeParse(recipe).success).toBe(true)
+  })
+
+  it('requires approved rather than restricted rights for public-use readiness', () => {
+    const recipe = cloneRecipe()
+    const evidenceId = recipe.source.evidence[0].evidenceId
+    recipe.output.scaling = { policy: 'fixed-batch', allowedMultipliers: [1], note: 'Original batch only.' }
+    recipe.output.planningGuidance.sourceServingsPerMealPortion = { value: 1, evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null }
+    recipe.effort.activeMinutes = { value: 20, evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null }
+    recipe.suitability.reviewState = 'editor-reviewed'
+    recipe.source.rights.factualMetadataUse = 'restricted'
+    refreshReadiness(recipe)
+    expect(recipe.review.readiness.minimumSafeImport).toBe(true)
+    expect(recipe.review.readiness.recommendationReady).toBe(false)
+    expect(recipe.review.readiness.cookingModeReady).toBe(false)
+    expect(recipe.review.readiness.blockers).toContain('rights-restricted')
+    expect(recipeV3Schema.safeParse(recipe).success).toBe(true)
+  })
+
+  it('pins linked subrecipes to an exact recipe revision', () => {
+    const parent = cloneRecipe(0)
+    const child = cloneRecipe(1)
+    parent.subrecipes = [{
+      dependencyId: 'dependency-exact-child', recipeId: child.identity.recipeId, revisionId: null,
+      sourceUrl: child.source.canonicalUrl, label: child.identity.title, quantity: null, required: true, resolution: 'linked-version',
+    }]
+    refreshReadiness(parent)
+    expect(recipeV3Schema.safeParse(parent).success).toBe(false)
+
+    parent.subrecipes[0].revisionId = child.identity.revisionId
+    expect(recipeV3Schema.safeParse(parent).success).toBe(true)
+    expect(validateRecipeV3Catalog({ ingredients: canonicalIngredients, recipes: [parent, child] }).success).toBe(true)
+
+    parent.subrecipes[0].revisionId = 'revision-not-in-catalog'
+    const mismatch = validateRecipeV3Catalog({ ingredients: canonicalIngredients, recipes: [parent, child] })
+    expect(mismatch.success).toBe(false)
+    if (!mismatch.success) expect(mismatch.issues.some(({ message }) => message.includes('Unknown subrecipe revision'))).toBe(true)
+  })
+
   it('derives recommendation and cooking readiness only after their evidence gates pass', () => {
     const recipe = cloneRecipe()
     const evidenceId = recipe.source.evidence[0].evidenceId
@@ -234,12 +303,13 @@ describe('recipe v3 validation', () => {
     recipe.output.planningGuidance.sourceServingsPerMealPortion = { value: 1, evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null }
     recipe.effort.activeMinutes = { value: 20, evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null }
     recipe.suitability.reviewState = 'editor-reviewed'
+    recipe.source.rights.factualMetadataUse = 'approved'
     refreshReadiness(recipe)
     expect(recipe.review.readiness.recommendationReady).toBe(true)
     expect(recipe.review.readiness.cookingModeReady).toBe(false)
 
     recipe.subrecipes = [{
-      dependencyId: 'dependency-test-seasoning', recipeId: null, sourceUrl: null, label: 'Required seasoning',
+      dependencyId: 'dependency-test-seasoning', recipeId: null, revisionId: null, sourceUrl: null, label: 'Required seasoning',
       quantity: null, required: true, resolution: 'unresolved',
     }]
     refreshReadiness(recipe)
@@ -258,7 +328,6 @@ describe('recipe v3 validation', () => {
     recipe.review.structuredStepsReviewed = true
     recipe.review.safetyReviewed = true
     recipe.equipmentReviewState = 'editor-reviewed'
-    recipe.source.rights.factualMetadataUse = 'approved'
     refreshReadiness(recipe)
     expect(recipe.review.readiness.cookingModeReady).toBe(true)
     expect(recipeV3Schema.safeParse(recipe).success).toBe(true)
