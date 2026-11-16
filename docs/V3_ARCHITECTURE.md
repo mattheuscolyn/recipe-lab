@@ -1,6 +1,6 @@
-# Recipe Lab 3.0 architecture proposal
+# Recipe Lab 3.0 approved architecture
 
-> **Status:** review proposal for issue #16. This document does not change the production schema, planner, grocery calculations, or application behavior.
+> **Status:** approved design baseline from issue #16. The recipe-only schema and v2 compatibility layer are described in [V3_IMPLEMENTATION.md](./V3_IMPLEMENTATION.md); the live application still uses v2 and no planner, grocery, pantry, or UI behavior has switched to v3.
 
 ## Executive summary
 
