@@ -1,5 +1,7 @@
 # Recipe schema v2
 
+> **Active contract:** this document describes the live v2 application schema. The proposed v3 design for issue #16 is documentation-only and is split into the [architecture and migration proposal](./V3_ARCHITECTURE.md), [25-recipe readiness audit](./V3_RECIPE_AUDIT.md), and [acceptance scenarios](./V3_ACCEPTANCE_SCENARIOS.md). Nothing in that proposal is active application behavior.
+
 Schema v2 separates facts that schema v1 conflated:
 
 - `CanonicalIngredient`: stable identity, aliases, variants/forms, and a grocery base unit.
