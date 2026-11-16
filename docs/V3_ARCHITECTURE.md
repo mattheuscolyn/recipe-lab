@@ -358,9 +358,9 @@ A minimal soup revision could retain publisher output as four source servings, a
 | `suitability.*` | `E`; `FV` for explicit publisher claims | Storage/make-ahead facts require evidence or reviewed rule. | Safe leftovers, meal prep and thaw planning. | Do not recommend leftovers or freezing automatically; fresh use remains available. |
 | `review.readiness` | `D` | Computed from completeness gates and visible blockers. | Honest feature availability. | Feature is disabled with an explanation, not silently guessed. |
 
-### A.5 First-visit capture policy
+### A.5 First-import and first-visit capture policy
 
-Capture on the first source visit when present:
+For every new recipe import, capture the following on the first source visit when present. In particular, publisher-reported nutrition, its serving basis, and the publisher serving count/size are first-import evidence even though computed nutrition is deferred:
 
 - canonical URL, publisher, author, title, rating/review count and checked time;
 - exact yield text, serving count, serving-size statement, countable item count and range;
@@ -368,7 +368,7 @@ Capture on the first source visit when present:
 - source prep/cook/passive/total time and explicitly named equipment;
 - nutrition panel values, their serving basis, and stated inclusions/exclusions;
 - explicit prepare-ahead, storage, freezing, thawing or reheating claims;
-- enough method-stage evidence for a reviewer to write independent structured steps later, stored as internal evidence references rather than public verbatim prose.
+- enough method-stage evidence for a reviewer to write independent structured steps later, stored only as access-controlled internal evidence references outside the public repository rather than as public verbatim prose.
 
 Do **not** require a source revisit for editorial meal roles, effort labels, optimizer weights, adequacy guidance, technique tips, canonical matching, or a reviewed storage-rule decision. Those are later enrichment and must carry editorial/rule provenance.
 
@@ -462,7 +462,10 @@ type PantryAvailability = {
   variantId: string
   confidence: 'confirmed-measured' | 'confirmed-unquantified' | 'likely-owned' | 'unknown' | 'missing'
   quantity: QuantityFact | null
-  lotIds: string[]
+  lots: {
+    pantryLotId: string
+    storageState: Sourced<'ambient' | 'refrigerated' | 'frozen'>
+  }[]
 }
 
 type PrepTask = {
@@ -485,7 +488,9 @@ type DefrostTask = PrepTask & {
 }
 ```
 
-Example: Monday dinner requests two meal portions. One Sunday `CookEvent` creates a four-source-serving `Batch`; two source servings allocate fresh to Monday and two allocate refrigerated to Tuesday lunch. Grocery demand contains the batch ingredients once.
+`storageState` is a structured per-lot selection, not text inferred from a pantry note. A defrost task may be derived only when the relevant lot explicitly has `value: 'frozen'`, a nonempty evidence reference (normally `user-entered`), and `confidence: 'reported'` or `'reviewed'`. Estimated, uncertain, null or unknown storage state may produce a check prompt but cannot assert that food is frozen or prescribe thaw timing.
+
+Example: Monday dinner requests two meal portions. One Monday `CookEvent` creates a four-source-serving `Batch`; two source servings allocate fresh to Monday dinner and two allocate refrigerated to Tuesday lunch. Grocery demand contains the batch ingredients once.
 
 ### B.2 Conservation and safety invariants
 
@@ -575,7 +580,7 @@ Stable recipe and requirement IDs are mandatory. A source change creates a new `
 Catalog v3 and personal-data versioning are independent. A later personal-data v3 should add new collections beside existing data:
 
 ```ts
-type PersonalDataV3 = PersonalDataV2 & {
+type PersonalDataV3 = Omit<PersonalDataV2, 'schemaVersion'> & {
   schemaVersion: 3
   mealRequirements: MealRequirement[]
   cookEvents: CookEvent[]
@@ -583,16 +588,26 @@ type PersonalDataV3 = PersonalDataV2 & {
   allocations: MealAllocation[]
   preparedFoodLots: PreparedFoodLot[]
   tasks: PrepTask[]
-  legacyPlanSlots: MealSlotV2[]
+  legacyRecipeChoices: {
+    legacySlotId: string
+    mealRequirementId: string
+    recipeId: string
+  }[]
+  migrationRecovery: {
+    sourceSchemaVersion: 2
+    originalPayload: PersonalDataV2
+  } | null
 }
 ```
+
+The `Omit` keeps the v2 fields and their exact semantics—including the original `plan` slots—while replacing only the discriminant; it does not intersect the incompatible literal versions `2` and `3`. `migrationRecovery.originalPayload` is the immutable recovery/export copy made before the first v3 write. `legacyRecipeChoices` records only the legacy slot's recipe selection; it is deliberately neither a batch nor an allocation.
 
 Migration rules:
 
 - Copy preferences, checked groceries and pantry lots unchanged.
-- Preserve every legacy meal slot in `legacyPlanSlots` with its original ID/date/meal/recipe/servings/lock.
+- Preserve every legacy meal slot unchanged in the inherited v2 `plan` and in `migrationRecovery.originalPayload`, including its original ID/date/meal/recipe/servings/lock.
 - Create a matching `MealRequirement` with `requestedPortions = legacy.servings` and the same lock.
-- Create an **unallocated legacy recipe choice**, not a completed cook event, batch, leftover allocation or prepared lot.
+- Create a matching **unallocated `legacyRecipeChoice`**, not a completed cook event, batch, leftover allocation or prepared lot.
 - In compatibility mode, existing grocery behavior may continue to derive directly from legacy slots until a user opts to convert that week.
 - Week conversion is explicit and previewed: the user chooses batch sizes/leftover relationships before new entities are committed.
 - Export the exact pre-migration JSON before writing v3. On validation/write failure, keep temporary memory plus the recovery payload, matching current behavior.
@@ -611,18 +626,20 @@ Nutrition may remain unknown at all three gates. It is required only as an expli
 
 ---
 
-## D. Decisions requiring approval
+## D. Provisional product decisions pending owner approval
 
-| Review question | Recommended default | Alternative and rationale |
+The architecture and acceptance scenarios use the following reviewed defaults provisionally. They are not final owner approvals and should remain configurable or isolated behind policy where indicated.
+
+| Decision | Provisional default | Guardrail and rationale |
 |---|---|---|
-| What source-serving increments may adequacy guidance allocate? | Integer meal demand; reviewed simple source-serving choices such as 1, 2, or a side. | Arbitrary calorie-fitting fractions create false precision and are rejected. Fractional source servings should require an explicit recipe-specific review. |
+| Source-serving increments for adequacy | Use natural integer source servings by default; allow reviewed recipe-specific alternatives such as half a sandwich or adding a side. | Never generate arbitrary calorie-derived fractions. A noninteger alternative must be natural for that specific output and explicitly reviewed. |
 | When does actual leftover inventory exist? | Only `Confirm cooked` creates a `PreparedFoodLot`; prefill actual output from the plan but require confirmation/edit. | Asking for every quantity is more accurate but burdens routine use; creating it at planning time produces phantom food. |
 | May reviewed general storage rules fill publisher silence? | Yes, after food-safety review and with a versioned rule/evidence ID; until then suitability stays unknown. | Source-only evidence is simpler but leaves many safe common cases permanently unusable for automation. |
 | May editors approve partial batches? | Yes, per recipe through allowed multipliers; whole-item output must remain integral and the original batch is always allowed. | A blanket half-batch rule risks fractional eggs/items and unsupported cooking behavior. |
-| Does an unresolved subrecipe block recommendations? | Block cooking mode; block recommendation only when its quantity/ingredients affect groceries or safety. | Blocking every recipe is safer but unnecessarily excludes cases where the dependency is optional and disclosed. |
+| Does an unresolved subrecipe block recommendations? | An unresolved essential input blocks falsely complete grocery and cooking results; an optional dependency may remain usable when clearly disclosed. | Cooking mode remains blocked when required steps or inputs are unresolved. This avoids both false completeness and unnecessary exclusion. |
 | How are actual prepared lots maintained across weeks? | Permit explicit remaining-amount adjustment plus confirm depleted/discarded; use optimistic version checks for reservations. | Requiring only disposal confirmation is simpler but cannot correct real-world yield or serving changes. |
-| How long should recent-meal history influence variety? | Configurable 28-day browser-local default; export/delete with personal data. | A shorter window forgets repetition quickly; indefinite retention is unnecessary for the product goal. |
-| Are computed nutrition estimates part of the first v3 implementation? | Defer them; capture publisher-reported values and basis when present. | Estimation adds ingredient databases and uncertainty work before core batch conservation is proven. |
+| How long should recent-meal history influence variety? | Configurable 28-day browser-local default; export/delete with personal data and use only as a soft signal. | It must never become a hard exclusion. A shorter window forgets repetition quickly; indefinite retention is unnecessary for the product goal. |
+| Are computed nutrition estimates part of the first v3 implementation? | Defer them, while still requiring first-import capture of publisher-reported nutrition and its serving basis whenever available. | Estimation adds ingredient databases and uncertainty work before core batch conservation is proven; deferral does not authorize a later source revisit for already-published facts. |
 
 ---
 

@@ -32,12 +32,13 @@ All tests assert schema validity, stable IDs, nonnegative quantities, allocation
 
 **Expected**
 
-- Candidate A creates an eight-source-serving batch and allocates four source servings to the two dinner portions; or Candidate B keeps four source servings and explicitly attaches a side requirement.
+- Candidate A creates one default four-source-serving batch (`multiplier: 1`) and allocates all four source servings to the two dinner portions. Candidate B creates the same batch, allocates two source servings with explicit side requirements, and records the other two source servings as an unallocated planned remainder (not actual leftover stock); a reviewed half-batch could avoid that remainder when its multiplier is allowed.
 - Explanation says the publisher serving is light for the selected dinner role.
 
 **Checks**
 
 - No allocation uses an arbitrary calorie-derived amount such as `1.63` source servings.
+- Candidate A leaves no unexplained batch remainder and grocery demand reflects one publisher batch, not a doubled batch; Candidate B exposes rather than hides its planned remainder.
 - Unknown side calories do not become zero.
 - A user lock choosing one serving per portion is allowed with an adequacy warning, not rejected.
 
@@ -120,6 +121,7 @@ All tests assert schema validity, stable IDs, nonnegative quantities, allocation
 
 - Planner does not assert a made-up exact thaw duration.
 - If storage state is unknown, task is a check/reminder, not a claim that the meat is frozen.
+- A pantry note containing the word “frozen” does not create a defrost task; only the structured per-lot storage state with reported/reviewed evidence can do so.
 - Cancelling the cook event cancels its derived thaw task.
 
 ## S07 — two cook events share parsley; pantry offsets once
@@ -246,7 +248,7 @@ All tests assert schema validity, stable IDs, nonnegative quantities, allocation
 ### M01 — legacy meal slot is not a cooked batch
 
 - Import a personal-data v2 slot with recipe, date, meal, servings and lock.
-- Migration preserves the slot and creates a matching `MealRequirement`/unallocated legacy choice.
+- Migration produces an inhabitable `schemaVersion: 3` value, preserves the exact v2 payload and original `plan` slot semantics, and creates a matching `MealRequirement`/unallocated legacy choice.
 - Assert zero `CookEvent`, `Batch`, `MealAllocation` and `PreparedFoodLot` entities until explicit week conversion.
 
 ### M02 — migration rollback and atomic failure
