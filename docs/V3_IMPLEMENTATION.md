@@ -2,7 +2,7 @@
 
 ## Status and boundary
 
-Recipe Lab now contains an implemented, validated **recipe-only v3 foundation**. The live application still imports and uses the v2 catalog. No UI, discovery, weekly plan, grocery, pantry, browser-local personal data, deployment, or optimizer behavior reads v3 yet.
+Recipe Lab now contains an implemented, validated **recipe v3 foundation**. Deterministic cooking-batch, allocation, prepared-food, and batch-grocery domain math is documented separately in [V3_PLANNING_IMPLEMENTATION.md](./V3_PLANNING_IMPLEMENTATION.md). The live application still imports and uses the v2 catalog. No UI, discovery, weekly plan, grocery, pantry, browser-local personal data, deployment, or optimizer behavior reads v3 yet.
 
 Implementation files:
 
@@ -125,5 +125,5 @@ The test adapts all 25 live v2 recipes, validates them as one v3 catalog, assert
 
 - No v3 catalog is imported by the application.
 - No new recipe ingestion UI or source research is included.
-- No batch, allocation, leftover, pantry-confidence, optimizer, or personal-data v3 entities are implemented.
+- Batch, allocation, prepared-food, and pantry-confidence calculations now exist as isolated pure domain modules; they are not persisted or connected to runtime behavior. No optimizer or personal-data v3 migration is implemented.
 - No computed nutrition, source-text reproduction, accounts, synchronization, or deployment changes are included.
