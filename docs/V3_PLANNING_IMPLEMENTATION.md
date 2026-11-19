@@ -29,6 +29,10 @@ Two implementation-level additions make the approved model executable without ch
 
 The implementation also adds stable `recipeId` beside `recipeRevisionId`, evidence IDs for batch output and stored allocations, and internal `cancelled` batch state. These support exact revision pairing, explainability, and non-destructive edits. They do not change recipe facts.
 
+### Calendar and instant policy
+
+`MealRequirement.date` is the user's local calendar date. `timeZone` is a required IANA zone such as `America/Los_Angeles`, and `intendedAt` is an absolute ISO timestamp. Validation derives the local date with the IANA zone; it never compares a local date with a UTC string prefix. Fresh same-day checks also project the cook instant into the meal's zone. This handles Pacific evening timestamps that fall on the following UTC date, local midnight, and daylight-saving transitions. Storage durations remain elapsed-time comparisons between absolute instants.
+
 ## Conservation and lifecycle rules
 
 - A zero-portion requirement must be `skipped`; a skipped requirement cannot have an active allocation.
@@ -37,8 +41,10 @@ The implementation also adds stable `recipeId` beside `recipeRevisionId`, eviden
 - Discrete-item output and allocation amounts are integers.
 - A planned batch is not food inventory. A prepared lot is created only by explicit cook confirmation with actual output.
 - Fresh allocations become served on confirmation. Stored allocations become versioned prepared-lot reservations. Unallocated actual output becomes available inventory.
+- Cook confirmation revalidates every stored allocation against the actual completion instant. A reservation before `storedAt`/the best-use start is invalid even if it was feasible against the originally planned cook time.
 - Reservation checks use the caller's expected lot version, so a stale concurrent write fails.
 - Cancelling a planned batch invalidates its allocations, derived task IDs, and grocery-demand ID. Unrelated entities retain their IDs; a locked dependent meal blocks the destructive edit.
+- A `served` allocation is immutable to prospective portion/replacement edits. Correcting history requires a future separately audited adjustment operation; this foundation never rewrites consumption as cancelled planning.
 
 ## Acceptance coverage
 
@@ -60,6 +66,8 @@ S06 (thaw-task policy execution) and S12 (candidate feasibility for the lunch-co
 ## Grocery uncertainty behavior
 
 Each line exposes both `knownSubtotal` and nullable `total`. If any contribution cannot be quantified safely, `total` and `toBuy` remain `null`; the known portion is not discarded. `likely-owned`, unknown, unquantified, wrong-variant, and incompatible-unit pantry records subtract zero. They remain check/uncertainty signals.
+
+Callers must choose a grocery scope. `historical` reports ingredient demand for planned and already prepared batches, which is useful for a whole-plan audit. `outstanding` includes only batches still in `planned` state and therefore does not tell someone to buy ingredients for already cooked food. It is still ingredient demand—not a purchased/checklist ledger—so a later integration must also reconcile items already bought or checked off before presenting a final shopping list.
 
 Offers, package rounding, and price totals remain in the existing v2 grocery pipeline. They are not duplicated here because this milestone establishes batch demand and pantry coverage, not a replacement UI.
 

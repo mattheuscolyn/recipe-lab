@@ -54,6 +54,7 @@ export type BatchGroceryLine = {
 }
 
 export type BatchGroceryDemand = {
+  scope: 'historical' | 'outstanding'
   lines: BatchGroceryLine[]
   uncertainties: string[]
 }
@@ -66,14 +67,16 @@ export function buildBatchGroceryDemand(input: {
   recipes: RecipeV3[]
   ingredients: CanonicalIngredient[]
   batches: Batch[]
+  scope: 'historical' | 'outstanding'
   pantry?: PantryAvailability[]
   includeOptional?: boolean
 }): BatchGroceryDemand {
+  if (!['historical', 'outstanding'].includes(input.scope)) throw new Error('Grocery demand scope must be historical or outstanding')
   const recipes = new Map(input.recipes.map((recipe) => [revisionKey(recipe.identity.recipeId, recipe.identity.revisionId), recipe]))
   const ingredients = new Map(input.ingredients.map((ingredient) => [ingredient.id, ingredient]))
   const pantry = (input.pantry ?? []).map((availability) => pantryAvailabilitySchema.parse(availability))
   if (new Set(pantry.map(({ availabilityId }) => availabilityId)).size !== pantry.length) throw new Error('Pantry availability may offset demand only once')
-  const activeBatches = input.batches.filter((batch) => batch.state !== 'cancelled')
+  const activeBatches = input.batches.filter((batch) => input.scope === 'historical' ? batch.state !== 'cancelled' : batch.state === 'planned')
   if (new Set(activeBatches.map(({ batchId }) => batchId)).size !== activeBatches.length) throw new Error('A batch may contribute grocery demand only once')
 
   const grouped = new Map<string, { ingredient: CanonicalIngredient; variantId: string; contributions: BatchGroceryContribution[]; uncertainties: string[] }>()
@@ -163,5 +166,5 @@ export function buildBatchGroceryDemand(input: {
     }
   }).sort((left, right) => left.name.localeCompare(right.name) || left.variant.localeCompare(right.variant))
 
-  return { lines, uncertainties: globalUncertainties }
+  return { scope: input.scope, lines, uncertainties: globalUncertainties }
 }

@@ -7,6 +7,21 @@ const nonnegativeFinite = z.number().nonnegative().finite()
 const positiveFinite = z.number().positive().finite()
 const EPSILON = 1e-9
 
+function isSupportedTimeZone(timeZone: string): boolean {
+  try { new Intl.DateTimeFormat('en-US', { timeZone }).format(0); return true } catch { return false }
+}
+
+function localDateForInstant(instant: string, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(new Date(instant))
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value
+  return `${value('year')}-${value('month')}-${value('day')}`
+}
+
 export const outputAmountSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('source-serving'), amount: nonnegativeFinite }),
   z.object({ kind: z.literal('fixed-portion'), amount: nonnegativeFinite }),
@@ -17,6 +32,7 @@ export const mealRequirementSchema = z.object({
   mealRequirementId: id('meal-requirement'),
   date: z.iso.date(),
   intendedAt: z.iso.datetime().nullable(),
+  timeZone: z.string().trim().min(1).refine(isSupportedTimeZone, 'Expected a supported IANA time zone'),
   meal: z.enum(['breakfast', 'lunch', 'dinner']),
   requestedPortions: z.number().int().nonnegative(),
   status: z.enum(['unplanned', 'planned', 'skipped']),
@@ -31,7 +47,7 @@ export const mealRequirementSchema = z.object({
 }).superRefine((requirement, context) => {
   if (requirement.requestedPortions === 0 && requirement.status !== 'skipped') context.addIssue({ code: 'custom', path: ['status'], message: 'Zero portions must be explicitly skipped' })
   if (requirement.requestedPortions > 0 && requirement.status === 'skipped') context.addIssue({ code: 'custom', path: ['status'], message: 'A skipped meal must request zero portions' })
-  if (requirement.intendedAt && !requirement.intendedAt.startsWith(requirement.date)) context.addIssue({ code: 'custom', path: ['intendedAt'], message: 'Meal time must fall on the requirement date' })
+  if (requirement.intendedAt && isSupportedTimeZone(requirement.timeZone) && localDateForInstant(requirement.intendedAt, requirement.timeZone) !== requirement.date) context.addIssue({ code: 'custom', path: ['intendedAt'], message: 'Meal instant must fall on the requirement date in its IANA time zone' })
 })
 
 export const cookEventSchema = z.object({
@@ -253,7 +269,7 @@ function reviewedStorage(recipe: RecipeV3, service: MealAllocation['service']): 
 }
 
 function validateAllocationTiming(recipe: RecipeV3, event: CookEvent, requirement: MealRequirement, service: MealAllocation['service']): string[] {
-  const cookDate = event.intendedAt.slice(0, 10)
+  const cookDate = localDateForInstant(event.intendedAt, requirement.timeZone)
   if (service === 'fresh' && requirement.date !== cookDate) throw new Error('Fresh allocation must be served on the cook-event date')
   if (!requirement.intendedAt) {
     if (service === 'fresh') return []
@@ -323,6 +339,7 @@ export function confirmCookEvent(input: {
   cookEvent: CookEvent
   batch: Batch
   allocations: MealAllocation[]
+  mealRequirements: MealRequirement[]
   confirmedAt: string
   actualOutput?: OutputAmount
   preparedFoodLotId: string
@@ -331,7 +348,6 @@ export function confirmCookEvent(input: {
   const { recipe, cookEvent, batch } = input
   if (cookEvent.state === 'completed' || cookEvent.state === 'cancelled' || batch.state !== 'planned') throw new Error('Only an active unprepared cook event can be confirmed')
   if (cookEvent.batchId !== batch.batchId || batch.recipeRevisionId !== recipe.identity.revisionId) throw new Error('Cook event, batch, and recipe revision do not match')
-  if (Date.parse(input.confirmedAt) < Date.parse(cookEvent.intendedAt)) throw new Error('Cook completion cannot precede its intended cook event')
   const actualOutput = outputAmountSchema.parse(input.actualOutput ?? batch.plannedOutput)
   if (!sameOutputUnit(batch.plannedOutput, actualOutput) || actualOutput.amount <= 0) throw new Error('Actual output must be positive and use the planned output unit')
   const active = input.allocations.filter((allocation) => allocation.state !== 'cancelled' && allocation.source.kind === 'planned-batch' && allocation.source.batchId === batch.batchId)
@@ -344,9 +360,19 @@ export function confirmCookEvent(input: {
   const storedAmount = sumOutputs(actualOutput, stored.map(({ amount }) => amount))
   const remaining = subtractOutput(leftoverInitial, storedAmount)
   const storage = leftoverInitial.amount > 0 ? storageForMode(recipe, input.storageMode) : null
+  const requirements = new Map(input.mealRequirements.map((requirement) => {
+    const parsed = mealRequirementSchema.parse(requirement)
+    return [parsed.mealRequirementId, parsed]
+  }))
+  if (requirements.size !== input.mealRequirements.length) throw new Error('Cook confirmation meal requirements must have unique ids')
   stored.forEach((allocation) => {
     const expectedMode = storageModeForService(allocation.service)
     if (expectedMode !== input.storageMode) throw new Error('Stored allocation service must match the prepared lot storage mode')
+    const requirement = requirements.get(allocation.mealRequirementId)
+    if (!requirement?.intendedAt) throw new Error(`Stored allocation ${allocation.allocationId} needs its timed meal requirement at confirmation`)
+    const elapsedHours = (Date.parse(requirement.intendedAt) - Date.parse(input.confirmedAt)) / 3_600_000
+    if (elapsedHours < 0) throw new Error(`Stored allocation ${allocation.allocationId} occurs before actual cook completion`)
+    if (!storage || elapsedHours > storage.maxDurationHours!) throw new Error(`Stored allocation ${allocation.allocationId} exceeds its storage window after cook confirmation`)
   })
   const preparedFoodLot = storage ? preparedFoodLotSchema.parse({
     preparedFoodLotId: input.preparedFoodLotId,
@@ -390,13 +416,15 @@ function serviceMatchesLot(service: MealAllocation['service'], mode: PreparedFoo
 
 export function reservePreparedFood(lot: PreparedFoodLot, allocation: MealAllocation, requirement: MealRequirement, expectedVersion: number): { lot: PreparedFoodLot; allocation: MealAllocation } {
   requireLotVersion(lot, expectedVersion)
+  const parsedRequirement = mealRequirementSchema.parse(requirement)
   if (lot.state !== 'available') throw new Error('Prepared lot has no available inventory')
   if (allocation.source.kind !== 'prepared-lot' || allocation.source.preparedFoodLotId !== lot.preparedFoodLotId || allocation.state !== 'proposed') throw new Error('Allocation is not a proposed reservation for this lot')
-  if (allocation.mealRequirementId !== requirement.mealRequirementId || requirement.status === 'skipped' || allocation.mealPortionsSatisfied > requirement.requestedPortions) throw new Error('Prepared-food allocation does not match active meal demand')
+  if (allocation.mealRequirementId !== parsedRequirement.mealRequirementId || parsedRequirement.status === 'skipped' || allocation.mealPortionsSatisfied > parsedRequirement.requestedPortions) throw new Error('Prepared-food allocation does not match active meal demand')
   if (!serviceMatchesLot(allocation.service, lot.storageMode)) throw new Error('Allocation storage service does not match the lot')
   if (allocation.storageEvidenceIds.some((evidenceId) => !lot.bestUseWindow.evidenceIds.includes(evidenceId))) throw new Error('Allocation storage evidence does not match the prepared lot')
-  if (!requirement.intendedAt) throw new Error('Prepared-food reservation needs an exact meal time')
-  if (lot.bestUseWindow.end && Date.parse(requirement.intendedAt) > Date.parse(lot.bestUseWindow.end)) throw new Error('Prepared-food reservation exceeds the best-use window')
+  if (!parsedRequirement.intendedAt) throw new Error('Prepared-food reservation needs an exact meal time')
+  if (Date.parse(parsedRequirement.intendedAt) < Math.max(Date.parse(lot.storedAt), Date.parse(lot.bestUseWindow.start))) throw new Error('Prepared-food reservation cannot occur before the food is prepared and stored')
+  if (lot.bestUseWindow.end && Date.parse(parsedRequirement.intendedAt) > Date.parse(lot.bestUseWindow.end)) throw new Error('Prepared-food reservation exceeds the best-use window')
   const remainingAmount = subtractOutput(lot.remainingAmount, allocation.amount)
   return {
     lot: preparedFoodLotSchema.parse({ ...lot, remainingAmount, state: remainingAmount.amount > 0 ? 'available' : 'depleted', version: lot.version + 1 }),
@@ -554,6 +582,7 @@ export function changeRequestedPortions(plan: PlanningSnapshot, mealRequirementI
   if (!requirement) throw new Error(`Unknown meal requirement ${mealRequirementId}`)
   if (requirement.lock.locked) throw new Error(`Locked meal ${mealRequirementId} cannot change portions`)
   const invalidated = plan.allocations.filter((allocation) => activeAllocation(allocation) && allocation.mealRequirementId === mealRequirementId)
+  if (invalidated.some(({ state }) => state === 'served')) throw new Error('A served meal is history and cannot be changed by a prospective plan edit; use an audited correction')
   if (invalidated.some(({ source }) => source.kind === 'prepared-lot')) throw new Error('Cancel the versioned prepared-food reservation before changing this meal')
   const invalidatedIds = new Set(invalidated.map(({ allocationId }) => allocationId))
   const affectedBatchIds = new Set(invalidated.flatMap((allocation) => allocation.source.kind === 'planned-batch' ? [allocation.source.batchId] : []))
@@ -585,7 +614,9 @@ export function replaceMealAllocation(plan: PlanningSnapshot, mealRequirementId:
   if (!requirement) throw new Error(`Unknown meal requirement ${mealRequirementId}`)
   if (requirement.lock.locked) throw new Error(`Locked meal ${mealRequirementId} cannot be replaced`)
   const current = plan.allocations.find((allocation) => activeAllocation(allocation) && allocation.mealRequirementId === mealRequirementId)
-  if (!current || current.source.kind !== 'planned-batch') throw new Error('Meal replacement needs an existing planned-batch allocation')
+  if (!current) throw new Error('Meal replacement needs an existing allocation')
+  if (current.state === 'served') throw new Error('A served meal is history and cannot be replaced by a prospective plan edit; use an audited correction')
+  if (current.source.kind !== 'planned-batch') throw new Error('Meal replacement needs an existing planned-batch allocation')
   const cancelled = cancelPlannedBatch(plan, current.source.batchId)
   if (replacement.allocation.mealRequirementId !== mealRequirementId || replacement.allocation.source.kind !== 'planned-batch' || replacement.allocation.source.batchId !== replacement.batch.batchId || replacement.cookEvent.batchId !== replacement.batch.batchId) throw new Error('Replacement entities are not linked consistently')
   if (replacement.allocation.mealPortionsSatisfied !== requirement.requestedPortions || replacement.allocation.state === 'cancelled') throw new Error('Replacement allocation must completely satisfy the selected meal')

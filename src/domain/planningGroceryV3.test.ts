@@ -43,6 +43,7 @@ describe('batch-derived grocery demand', () => {
       recipes: [recipe],
       ingredients: [ingredient],
       batches: [batch(recipe, 'monday'), batch(recipe, 'thursday')],
+      scope: 'historical',
       pantry,
     })
     expect(demand.lines).toHaveLength(1)
@@ -57,6 +58,7 @@ describe('batch-derived grocery demand', () => {
       recipes: [recipe],
       ingredients: [ingredient],
       batches: [batch(recipe, 'one')],
+      scope: 'outstanding',
       pantry: [{ availabilityId: 'availability-parsley-volume', canonicalIngredientId: ingredient.id, variantId: ingredient.variants[0].id, confidence: 'confirmed-measured', quantity: { amount: 1, unit: 'cup' } }],
     })
     expect(demand.lines[0].pantry).toMatchObject({ applied: 0, toBuy: 20, checkAvailabilityIds: ['availability-parsley-volume'] })
@@ -69,6 +71,7 @@ describe('batch-derived grocery demand', () => {
       recipes: [recipe],
       ingredients: [ingredient],
       batches: [batch(recipe, 'one')],
+      scope: 'outstanding',
       pantry: [
         { availabilityId: 'availability-likely', canonicalIngredientId: ingredient.id, variantId: ingredient.variants[0].id, confidence: 'likely-owned', quantity: null },
         { availabilityId: 'availability-wrong-variant', canonicalIngredientId: ingredient.id, variantId: 'variant-parsley-curly', confidence: 'confirmed-measured', quantity: { amount: 20, unit: 'g' } },
@@ -82,7 +85,7 @@ describe('batch-derived grocery demand', () => {
   it('keeps unresolved amounts visible and does not present a false precise total', () => {
     const { recipe, ingredient } = parsleyFixture()
     recipe.requirements[0] = { ...recipe.requirements[0], selectedPlanningQuantity: null, sourceQuantity: null, nonQuantified: 'as-needed' }
-    const line = buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')] }).lines[0]
+    const line = buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')], scope: 'outstanding' }).lines[0]
     expect(line).toMatchObject({ total: null, knownSubtotal: 0, unresolved: true, pantry: { toBuy: null, knownToBuy: 0 } })
     expect(line.uncertainties[0]).toMatch(/Non-quantified/)
   })
@@ -90,16 +93,26 @@ describe('batch-derived grocery demand', () => {
   it('excludes optional requirements by default and includes them only when requested', () => {
     const { recipe, ingredient } = parsleyFixture()
     recipe.requirements[0].optional = true
-    expect(buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')] }).lines).toEqual([])
-    expect(buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')], includeOptional: true }).lines[0].optional).toBe(true)
+    expect(buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')], scope: 'outstanding' }).lines).toEqual([])
+    expect(buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')], scope: 'outstanding', includeOptional: true }).lines[0].optional).toBe(true)
+  })
+
+  it('distinguishes historical ingredient demand from outstanding shopping requirements', () => {
+    const { recipe, ingredient } = parsleyFixture()
+    const planned = batch(recipe, 'cooked')
+    const prepared = { ...planned, state: 'prepared' as const, actualOutput: planned.plannedOutput }
+    const historical = buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [prepared], scope: 'historical' })
+    const outstanding = buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [prepared], scope: 'outstanding' })
+    expect(historical).toMatchObject({ scope: 'historical', lines: [{ total: 20 }] })
+    expect(outstanding).toEqual({ scope: 'outstanding', lines: [], uncertainties: [] })
   })
 
   it('rejects duplicate batch identities and missing exact recipe revisions', () => {
     const { recipe, ingredient } = parsleyFixture()
     const one = batch(recipe, 'one')
-    expect(() => buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [one, one] })).toThrow(/only once/)
-    expect(() => buildBatchGroceryDemand({ recipes: [{ ...recipe, identity: { ...recipe.identity, revisionId: 'revision-other' } }], ingredients: [ingredient], batches: [one] })).toThrow(/Missing exact recipe revision/)
+    expect(() => buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [one, one], scope: 'outstanding' })).toThrow(/only once/)
+    expect(() => buildBatchGroceryDemand({ recipes: [{ ...recipe, identity: { ...recipe.identity, revisionId: 'revision-other' } }], ingredients: [ingredient], batches: [one], scope: 'outstanding' })).toThrow(/Missing exact recipe revision/)
     const availability = { availabilityId: 'availability-duplicate', canonicalIngredientId: ingredient.id, variantId: ingredient.variants[0].id, confidence: 'confirmed-measured' as const, quantity: { amount: 5, unit: 'g' as const } }
-    expect(() => buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [one], pantry: [availability, availability] })).toThrow(/only once/)
+    expect(() => buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [one], scope: 'outstanding', pantry: [availability, availability] })).toThrow(/only once/)
   })
 })
