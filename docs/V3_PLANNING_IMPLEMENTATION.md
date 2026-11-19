@@ -41,7 +41,7 @@ The implementation also adds stable `recipeId` beside `recipeRevisionId`, eviden
 - Discrete-item output and allocation amounts are integers.
 - A planned batch is not food inventory. A prepared lot is created only by explicit cook confirmation with actual output.
 - Fresh allocations become served on confirmation. Stored allocations become versioned prepared-lot reservations. Unallocated actual output becomes available inventory.
-- Cook confirmation revalidates every stored allocation against the actual completion instant. A reservation before `storedAt`/the best-use start is invalid even if it was feasible against the originally planned cook time.
+- Cook confirmation revalidates every allocation against the actual completion instant. A timed fresh meal cannot precede completion, and its local meal date must match the completion date in its IANA zone. When a fresh requirement intentionally omits `intendedAt`, confirmation can enforce only the local date; that remains an explicit lower-confidence, no-specific-time case. Stored reservations cannot precede `storedAt`/the best-use start even if they were feasible against the originally planned cook time.
 - Reservation checks use the caller's expected lot version, so a stale concurrent write fails.
 - Cancelling a planned batch invalidates its allocations, derived task IDs, and grocery-demand ID. Unrelated entities retain their IDs; a locked dependent meal blocks the destructive edit.
 - A `served` allocation is immutable to prospective portion/replacement edits. Correcting history requires a future separately audited adjustment operation; this foundation never rewrites consumption as cancelled planning.

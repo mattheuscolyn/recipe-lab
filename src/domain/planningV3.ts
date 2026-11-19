@@ -365,6 +365,12 @@ export function confirmCookEvent(input: {
     return [parsed.mealRequirementId, parsed]
   }))
   if (requirements.size !== input.mealRequirements.length) throw new Error('Cook confirmation meal requirements must have unique ids')
+  fresh.forEach((allocation) => {
+    const requirement = requirements.get(allocation.mealRequirementId)
+    if (!requirement) throw new Error(`Fresh allocation ${allocation.allocationId} needs its meal requirement at confirmation`)
+    if (localDateForInstant(input.confirmedAt, requirement.timeZone) !== requirement.date) throw new Error(`Fresh allocation ${allocation.allocationId} actual completion does not match its local meal date`)
+    if (requirement.intendedAt && Date.parse(requirement.intendedAt) < Date.parse(input.confirmedAt)) throw new Error(`Fresh allocation ${allocation.allocationId} occurs before actual cook completion`)
+  })
   stored.forEach((allocation) => {
     const expectedMode = storageModeForService(allocation.service)
     if (expectedMode !== input.storageMode) throw new Error('Stored allocation service must match the prepared lot storage mode')

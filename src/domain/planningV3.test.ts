@@ -48,7 +48,7 @@ function reviewedRecipe(overrides: { sourceServingsPerMealPortion?: number; allo
   return recipe
 }
 
-function meal(id: string, date: string, mealName: MealRequirement['meal'], requestedPortions: number, intendedAt = `${date}T19:00:00.000Z`, locked = false, timeZone = 'America/Los_Angeles'): MealRequirement {
+function meal(id: string, date: string, mealName: MealRequirement['meal'], requestedPortions: number, intendedAt: string | null = `${date}T19:00:00.000Z`, locked = false, timeZone = 'America/Los_Angeles'): MealRequirement {
   return mealRequirementSchema.parse({
     mealRequirementId: `meal-requirement-${id}`,
     date,
@@ -227,6 +227,21 @@ describe('prepared-food inventory', () => {
     expect(planned.allocations[0].state).toBe('proposed')
   })
 
+  it('revalidates fresh service against actual completion time and Pacific local midnight', () => {
+    const lateSetup = plan(reviewedRecipe(), 1, 'late-fresh')
+    const lateDinner = meal('late-fresh-dinner', '2026-11-16', 'dinner', 1, '2026-11-16T19:00:00.000Z')
+    const latePlanned = allocateBatchToMeals(lateSetup.recipe, lateSetup.batch, lateSetup.event, [{ allocationId: 'allocation-late-fresh', requirement: lateDinner, mealPortions: 1, service: 'fresh' }])
+    expect(() => confirmCookEvent({ recipe: lateSetup.recipe, cookEvent: lateSetup.event, batch: lateSetup.batch, allocations: latePlanned.allocations, mealRequirements: latePlanned.mealRequirements, confirmedAt: '2026-11-16T20:00:00.000Z', preparedFoodLotId: 'prepared-lot-late-fresh', storageMode: 'refrigerated' })).toThrow(/before actual cook completion/)
+
+    const midnightRecipe = reviewedRecipe()
+    const midnightBatch = planCookingBatch(midnightRecipe, { batchId: 'batch-pacific-midnight-confirmation', groceryDemandId: 'grocery-demand-pacific-midnight-confirmation', multiplier: 1 })
+    const midnightEvent = scheduleCookEvent(midnightRecipe, midnightBatch, { cookEventId: 'cook-event-pacific-midnight-confirmation', intendedAt: '2026-11-16T07:30:00.000Z' })
+    const untimedFreshMeal = meal('pacific-midnight-untimed', '2026-11-15', 'dinner', 1, null)
+    const midnightPlanned = allocateBatchToMeals(midnightRecipe, midnightBatch, midnightEvent, [{ allocationId: 'allocation-pacific-midnight-confirmation', requirement: untimedFreshMeal, mealPortions: 1, service: 'fresh' }])
+    expect(() => confirmCookEvent({ recipe: midnightRecipe, cookEvent: midnightEvent, batch: midnightBatch, allocations: midnightPlanned.allocations, mealRequirements: midnightPlanned.mealRequirements, confirmedAt: '2026-11-16T08:05:00.000Z', preparedFoodLotId: 'prepared-lot-pacific-midnight', storageMode: 'refrigerated' })).toThrow(/does not match its local meal date/)
+    expect(midnightPlanned.allocations[0].state).toBe('proposed')
+  })
+
   it('supports reserve, serve, cancel, adjust, and discard transitions without double consumption', () => {
     const confirmed = confirmedLot()
     const lot = confirmed.preparedFoodLot!
@@ -295,7 +310,7 @@ describe('planning edits and invariants', () => {
     const confirmedSnapshot = (suffix: string, requirements: MealRequirement[]): PlanningSnapshot => {
       const setup = plan(reviewedRecipe(), 1, suffix)
       const planned = allocateBatchToMeals(setup.recipe, setup.batch, setup.event, requirements.map((requirement, index) => ({ allocationId: `allocation-${suffix}-${index + 1}`, requirement, mealPortions: 1, service: 'fresh' as const })))
-      const confirmed = confirmCookEvent({ recipe: setup.recipe, cookEvent: setup.event, batch: setup.batch, allocations: planned.allocations, mealRequirements: planned.mealRequirements, confirmedAt: '2026-11-16T20:00:00.000Z', preparedFoodLotId: `prepared-lot-${suffix}`, storageMode: 'refrigerated' })
+      const confirmed = confirmCookEvent({ recipe: setup.recipe, cookEvent: setup.event, batch: setup.batch, allocations: planned.allocations, mealRequirements: planned.mealRequirements, confirmedAt: '2026-11-16T17:00:00.000Z', preparedFoodLotId: `prepared-lot-${suffix}`, storageMode: 'refrigerated' })
       return { mealRequirements: planned.mealRequirements, cookEvents: [confirmed.cookEvent], batches: [confirmed.batch], allocations: confirmed.allocations, preparedFoodLots: confirmed.preparedFoodLot ? [confirmed.preparedFoodLot] : [] }
     }
     const sharedMeals = [
