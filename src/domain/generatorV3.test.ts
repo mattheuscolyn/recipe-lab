@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import committedReadinessReport from '../../docs/data/G1_RECIPE_READINESS.json'
 import { canonicalIngredients, pilotRecipes } from '../data/pilotCatalog'
 import { computeRecipeV3Readiness, recipeV3Schema } from './recipeV3'
 import { adaptRecipeCatalogV2ToV3 } from './recipeV3Migration'
@@ -171,7 +170,6 @@ describe('actual catalog recommendation readiness', () => {
   it('is deterministic and JSON serializable', () => {
     expect(buildGeneratorReadinessReport(migrated)).toEqual(report)
     expect(generatorReadinessReportSchema.parse(JSON.parse(JSON.stringify(report)))).toEqual(report)
-    const committedReport = JSON.parse(readFileSync(resolve(process.cwd(), 'docs/data/G1_RECIPE_READINESS.json'), 'utf8'))
-    expect(committedReport).toEqual(report)
+    expect(committedReadinessReport).toEqual(report)
   })
 })
