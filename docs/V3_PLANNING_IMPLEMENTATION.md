@@ -61,7 +61,7 @@ The implementation also adds stable `recipeId` beside `recipeRevisionId`, eviden
 | S10 | Discrete output, allocations, multipliers, and whole-item inputs reject fractions. |
 | S11 | Planned batches create no inventory; confirmed lots use version-safe reservations. |
 
-S06 (thaw-task policy execution) and S12 (candidate feasibility for the lunch-cooking policy) are intentionally deferred. This milestone records and invalidates derived task IDs but does not implement task generation or an optimizer/candidate engine.
+S06 (thaw-task policy execution) remains deferred. S12 candidate feasibility is implemented separately in `src/domain/generatorV3.ts`; it reuses this module's batch and allocation rules, but does not implement the whole-week optimizer.
 
 ## Grocery uncertainty behavior
 
@@ -73,4 +73,4 @@ Offers, package rounding, and price totals remain in the existing v2 grocery pip
 
 ## Future integration boundary
 
-Later milestones may persist these entities, adapt legacy weeks, generate prep/defrost tasks, evaluate lunch feasibility, or optimize a plan. Integration must remain explicit and previewable. It must not infer actual leftovers from a calendar entry, mutate pantry from a read-only estimate, or silently replace v2 personal data.
+Later milestones may persist these entities, adapt legacy weeks, generate prep/defrost tasks, or optimize a complete plan. G1 now evaluates individual candidate feasibility as documented in `G1_GENERATOR_FEASIBILITY.md`. Integration must remain explicit and previewable. It must not infer actual leftovers from a calendar entry, mutate pantry from a read-only estimate, or silently replace v2 personal data.
