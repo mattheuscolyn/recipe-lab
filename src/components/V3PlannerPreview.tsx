@@ -23,7 +23,7 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
   const weekEnd = week[6]
   const choices = new Map(preview.data.legacyRecipeChoices.map((choice) => [choice.legacySlotId, choice]))
   const requirements = new Map(preview.data.mealRequirements.map((requirement) => [requirement.mealRequirementId, requirement]))
-  const issues = new Map(preview.issues.map((issue) => [issue.legacySlotId, issue]))
+  const issues = new Map(preview.issues.filter((issue) => issue.entity === 'meal-slot').map((issue) => [issue.legacySlotId, issue]))
   const weekSlots = preview.data.plan.filter(({ date }) => date >= weekStart && date <= weekEnd)
   const save = () => {
     const result = onCommit()
@@ -68,7 +68,7 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
       }) : <p className="v3-day-empty">No saved meals</p>}</article>
     })}</section> : <section className="v3-preview-empty"><span>7 days</span><h2>No saved meals in this week</h2><p>The preview does not fill open days or recommend recipes automatically.</p></section>}
 
-    {preview.issues.length ? <section className="v3-migration-issues" aria-labelledby="migration-issues-title"><div><p className="eyebrow">Needs your decision</p><h2 id="migration-issues-title">Some legacy meals stay unchanged.</h2><p>They remain safe in the original planner and recovery backup; nothing is rounded or discarded.</p></div><ul>{preview.issues.map((issue) => <li key={`${issue.legacySlotId}:${issue.code}`}><strong>{friendlyDate(issue.date)} · {issue.meal}</strong><span>{issue.message}</span></li>)}</ul></section> : null}
+    {preview.issues.length ? <section className="v3-migration-issues" aria-labelledby="migration-issues-title"><div><p className="eyebrow">Needs your decision</p><h2 id="migration-issues-title">Some original records stay unchanged.</h2><p>They remain in the preview and exact recovery backup; nothing is rounded, filtered, or discarded.</p></div><ul>{preview.issues.map((issue) => <li key={issue.entity === 'meal-slot' ? `${issue.legacySlotId}:${issue.code}` : `${issue.pantryLotId}:${issue.code}`}><strong>{issue.entity === 'meal-slot' ? `${friendlyDate(issue.date)} · ${issue.meal}` : `Pantry · ${issue.pantryLotId}`}</strong><span>{issue.message}</span></li>)}</ul></section> : null}
 
     <section className="v3-capability-grid" aria-label="Preview availability">
       <article><span>Available now</span><h3>Manual choices, portions, and locks</h3><p>Compatible meals become unallocated needs while their original recipe choices stay visible.</p></article>
@@ -86,5 +86,15 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
       </div>}
       {commitMessage ? <p className="v3-commit-message" role="status">{commitMessage}</p> : null}
     </section>
+  </main>
+}
+
+export function V3MigrationBlocked({ error, canDownloadRaw, onExit, onDownloadRaw }: { error: string; canDownloadRaw: boolean; onExit: () => void; onDownloadRaw: () => void }) {
+  return <main className="content-page v3-preview-page">
+    <section className="v3-preview-hero">
+      <div><p className="eyebrow">Optional planning preview · conversion blocked</p><h1>Your original data comes first.</h1><p>The stored planner could not be preserved as a validated v2 payload, so Recipe Lab will not create or replace a v3 snapshot.</p><div className="v3-preview-actions"><button type="button" className="primary" onClick={onExit}>← Return to original planner</button>{canDownloadRaw ? <button type="button" onClick={onDownloadRaw}>Download raw recovery copy</button> : null}</div></div>
+      <aside aria-label="Migration blocked"><span><strong>0</strong> records converted</span><span><strong>0</strong> v3 writes allowed</span><span><strong>1</strong> recovery action</span></aside>
+    </section>
+    <section className="v3-preview-alert danger" role="alert"><div><strong>Conversion is unavailable</strong><span>{error}</span></div></section>
   </main>
 }

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { pilotRecipes } from '../data/pilotCatalog'
 import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY, type PersonalData } from './personalData'
-import { commitPersonalDataV3, exportPersonalDataV3, importPersonalDataV3, loadPersonalDataV3, personalDataFingerprint, personalDataV3Schema, PERSONAL_DATA_V3_KEY, previewPersonalDataV3Migration } from './personalDataV3'
+import { commitPersonalDataV3, exportPersonalDataV3, importPersonalDataV3, loadPersonalDataV3, loadPersonalDataV3MigrationSource, personalDataFingerprint, personalDataV3Schema, PERSONAL_DATA_V3_KEY, previewPersonalDataV3Migration } from './personalDataV3'
 
 const knownRecipeIds = new Set(pilotRecipes.map(({ id }) => id))
 const slot = (id: string, date: string, meal: 'Breakfast' | 'Lunch' | 'Dinner', recipeId = pilotRecipes[0].id, servings = 2, locked = false) => ({ id, date, meal, recipeId, servings, locked })
@@ -47,11 +47,11 @@ describe('PersonalDataV3 migration preview', () => {
       ],
     }
     const preview = previewPersonalDataV3Migration(source, { timeZone: 'America/Los_Angeles', knownRecipeIds })
-    expect(preview.issues.map(({ code }) => code)).toEqual(['fractional-portions', 'duplicate-meal', 'unknown-recipe', 'duplicate-slot-id'])
+    expect(preview.issues.map(({ code }) => code)).toEqual(['fractional-portions', 'duplicate-slot-id', 'duplicate-meal', 'unknown-recipe', 'duplicate-slot-id'])
     expect(preview.data.plan).toEqual(source.plan)
     expect(preview.data.migrationRecovery?.originalPayload.plan).toEqual(source.plan)
-    expect(preview.data.mealRequirements).toHaveLength(1)
-    expect(preview.data.legacyRecipeChoices).toHaveLength(1)
+    expect(preview.data.mealRequirements).toHaveLength(0)
+    expect(preview.data.legacyRecipeChoices).toHaveLength(0)
     expect(preview.data.cookEvents).toEqual([])
     expect(preview.data.batches).toEqual([])
     expect(preview.data.allocations).toEqual([])
@@ -66,6 +66,25 @@ describe('PersonalDataV3 migration preview', () => {
     expect(first.data.mealRequirements.every(({ intendedAt }) => intendedAt === null)).toBe(true)
     expect(() => previewPersonalDataV3Migration(source, { timeZone: 'Not/A_Time_Zone', knownRecipeIds })).toThrow(/IANA time zone/)
   })
+
+  it('rejects corrupted legacy choice links and requirement identity fields', () => {
+    const preview = previewPersonalDataV3Migration(realisticData(), { timeZone: 'America/Los_Angeles', knownRecipeIds }).data
+    const cases: Array<[string, (data: typeof preview) => void]> = [
+      ['original plan slot', (data) => { data.legacyRecipeChoices[0].legacySlotId = 'missing-slot' }],
+      ['recipe must match', (data) => { data.legacyRecipeChoices[0].recipeId = pilotRecipes[2].id }],
+      ['date must match', (data) => { data.mealRequirements[0].date = '2026-11-18' }],
+      ['meal must match', (data) => { data.mealRequirements[0].meal = 'breakfast' }],
+      ['portions must match', (data) => { data.mealRequirements[0].requestedPortions = 3 }],
+      ['lock must match', (data) => { data.mealRequirements[0].lock.locked = false }],
+    ]
+    cases.forEach(([message, mutate]) => {
+      const corrupted = structuredClone(preview)
+      mutate(corrupted)
+      const result = personalDataV3Schema.safeParse(corrupted)
+      expect(result.success, message).toBe(false)
+      if (!result.success) expect(result.error.issues.map(({ message: issue }) => issue).join(' ')).toMatch(new RegExp(message, 'i'))
+    })
+  })
 })
 
 describe('PersonalDataV3 safe storage and recovery', () => {
@@ -79,7 +98,7 @@ describe('PersonalDataV3 safe storage and recovery', () => {
     const original = JSON.stringify(source)
     const { values, storage } = memoryStorage({ [PERSONAL_DATA_KEY]: original })
     const preview = previewPersonalDataV3Migration(source, { timeZone: 'America/Los_Angeles', knownRecipeIds })
-    expect(commitPersonalDataV3(storage, preview.data, source)).toEqual({ persisted: true, error: null })
+    expect(commitPersonalDataV3(storage, preview.data)).toEqual({ persisted: true, error: null })
     expect(values.get(PERSONAL_DATA_KEY)).toBe(original)
     expect(JSON.parse(values.get(PERSONAL_DATA_V3_KEY)!)).toEqual(preview.data)
     expect(loadPersonalDataV3(storage, source)).toMatchObject({ data: preview.data, stale: false, error: null })
@@ -87,14 +106,32 @@ describe('PersonalDataV3 safe storage and recovery', () => {
 
   it('detects v2 changes and refuses stale or silent replacement', () => {
     const source = realisticData()
-    const { storage } = memoryStorage()
+    const original = JSON.stringify(source)
+    const { values, storage } = memoryStorage({ [PERSONAL_DATA_KEY]: original })
     const preview = previewPersonalDataV3Migration(source, { timeZone: 'America/Los_Angeles', knownRecipeIds })
-    expect(commitPersonalDataV3(storage, preview.data, source).persisted).toBe(true)
+    expect(commitPersonalDataV3(storage, preview.data).persisted).toBe(true)
     const changed = { ...source, checkedGroceries: { ...source.checkedGroceries, changed: true } }
     expect(loadPersonalDataV3(storage, changed).stale).toBe(true)
-    expect(commitPersonalDataV3(storage, preview.data, changed).error).toMatch(/changed after this preview/i)
-    expect(commitPersonalDataV3(storage, preview.data, source).error).toMatch(/already exists/i)
-    expect(commitPersonalDataV3(storage, preview.data, source, { replaceExisting: true }).persisted).toBe(true)
+    values.set(PERSONAL_DATA_KEY, JSON.stringify(changed))
+    expect(commitPersonalDataV3(storage, preview.data).error).toMatch(/persisted original planner changed/i)
+    values.set(PERSONAL_DATA_KEY, original)
+    expect(commitPersonalDataV3(storage, preview.data).error).toMatch(/already exists/i)
+    expect(commitPersonalDataV3(storage, preview.data, { replaceExisting: true }).persisted).toBe(true)
+  })
+
+  it('allows replacement of an empty compatibility snapshot but protects meaningful v3-only state', () => {
+    const source = realisticData()
+    const original = JSON.stringify(source)
+    const preview = previewPersonalDataV3Migration(source, { timeZone: 'America/Los_Angeles', knownRecipeIds })
+    const { values, storage } = memoryStorage({ [PERSONAL_DATA_KEY]: original, [PERSONAL_DATA_V3_KEY]: JSON.stringify(preview.data) })
+    expect(commitPersonalDataV3(storage, preview.data, { replaceExisting: true }).persisted).toBe(true)
+
+    const populated = structuredClone(preview.data)
+    populated.tasks.push({ taskId: 'task-existing-prep', cookEventId: null, mealRequirementId: null, kind: 'prep', title: 'Existing v3-only prep', timingWindow: { earliest: null, latest: null }, durationMinutes: 10, evidenceIds: [], state: 'scheduled', safetyNote: null })
+    values.set(PERSONAL_DATA_V3_KEY, JSON.stringify(populated))
+    const before = values.get(PERSONAL_DATA_V3_KEY)
+    expect(commitPersonalDataV3(storage, preview.data, { replaceExisting: true }).error).toMatch(/contains planning, cooking, inventory, or task state/i)
+    expect(values.get(PERSONAL_DATA_V3_KEY)).toBe(before)
   })
 
   it('keeps v2 untouched when storage fails and reports corrupt v3 recovery text', () => {
@@ -102,7 +139,7 @@ describe('PersonalDataV3 safe storage and recovery', () => {
     const original = JSON.stringify(source)
     const failing = { getItem: (key: string) => key === PERSONAL_DATA_KEY ? original : null, setItem: () => { throw new Error('quota') } }
     const preview = previewPersonalDataV3Migration(source, { timeZone: 'America/Los_Angeles', knownRecipeIds })
-    expect(commitPersonalDataV3(failing, preview.data, source)).toMatchObject({ persisted: false, error: expect.stringContaining('original planner remains unchanged') })
+    expect(commitPersonalDataV3(failing, preview.data)).toMatchObject({ persisted: false, error: expect.stringContaining('original planner remains unchanged') })
     expect(failing.getItem(PERSONAL_DATA_KEY)).toBe(original)
 
     const corrupt = memoryStorage({ [PERSONAL_DATA_KEY]: original, [PERSONAL_DATA_V3_KEY]: '{broken' })
@@ -116,5 +153,14 @@ describe('PersonalDataV3 safe storage and recovery', () => {
     expect(importPersonalDataV3(exportPersonalDataV3(preview.data))).toEqual(preview.data)
     expect(() => importPersonalDataV3('{"schemaVersion":3}')).toThrow()
     expect(preview.data.migrationRecovery?.sourceFingerprint).toBe(personalDataFingerprint(source))
+  })
+
+  it('reads the unfiltered persisted source exactly and blocks an unparseable source', () => {
+    const source = realisticData()
+    const raw = `  ${JSON.stringify(source)}\n`
+    const valid = memoryStorage({ [PERSONAL_DATA_KEY]: JSON.stringify(emptyPersonalData()) })
+    expect(loadPersonalDataV3MigrationSource(valid.storage, emptyPersonalData(), raw)).toEqual({ data: source, raw, error: null })
+    const corrupt = memoryStorage({ [PERSONAL_DATA_KEY]: '{not-json' })
+    expect(loadPersonalDataV3MigrationSource(corrupt.storage, emptyPersonalData())).toMatchObject({ data: null, raw: '{not-json', error: expect.stringContaining('conversion is disabled') })
   })
 })

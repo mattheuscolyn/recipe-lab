@@ -27,7 +27,7 @@ The new collections use the existing v3 planning schemas and referential-integri
 
 ## Deterministic compatibility rules
 
-The preview accepts validated v2 personal data, an IANA time zone, and the known recipe IDs. Identical inputs produce byte-identical JSON.
+The preview reads and validates the original persisted v2 record before catalog quarantine, then accepts an IANA time zone plus the known recipe and ingredient catalogs. Identical inputs produce byte-identical JSON. Unknown recipes, duplicate meal slots, and catalog-invalid pantry lots therefore remain visible in the preview and recovery payload even though the unchanged v2 runtime correctly excludes them from live planning calculations.
 
 For every unambiguous legacy slot with a known recipe and whole-number servings, it:
 
@@ -44,9 +44,10 @@ The preview quarantines rather than guesses when it encounters:
 - fractional legacy servings;
 - a recipe no longer present in the catalog;
 - a repeated legacy slot ID; or
-- more than one slot for the same date and meal.
+- more than one slot for the same date and meal; or
+- a pantry ingredient or variant outside the current catalog.
 
-The original slot remains recoverable and visible with a review message. Fractional values are not rounded.
+Every affected original record remains recoverable and visible with a review message. Fractional values are not rounded, and neither member of an ambiguous duplicate pair is converted.
 
 ## Persistence, coexistence, and recovery
 
@@ -55,12 +56,17 @@ The original app continues to read and write `recipe-lab.personal.v1`. A confirm
 Before saving, the UI offers an exact v2 backup and requires a review acknowledgement. Recovery metadata contains:
 
 - the validated original v2 payload;
+- the exact raw pre-quarantine source text;
 - a deterministic fingerprint of that payload;
 - the source version and storage key;
 - migration issues; and
 - the explicit `v2-authoritative-v3-snapshot` coexistence policy.
 
-If v2 changes after a snapshot was created, the saved v3 snapshot is marked stale. A stale preview cannot silently replace current data. Replacing any existing v3 snapshot is explicit. A validation, storage, or quota failure leaves v2 untouched; corrupt v3 text is surfaced for recovery instead of being treated as valid data.
+Immediately before every write, Recipe Lab re-reads and validates the persisted v2 key and compares its fingerprint with the reviewed preview. A changed or unparseable persisted record blocks the write. An unparseable source can be downloaded exactly as stored, but cannot be converted.
+
+If v2 changes after a snapshot was created, the saved v3 snapshot is marked stale. A stale preview cannot silently replace current data. Replacing an empty compatibility snapshot is explicit. A snapshot containing any cooking, batch, allocation, prepared-food, task, or other meaningful v3-only planning state cannot be replaced by this preview while reconciliation and rollback semantics remain undecided. A validation, storage, or quota failure leaves v2 untouched; corrupt v3 text is surfaced for recovery instead of being treated as valid data.
+
+Snapshot validation also proves that every legacy choice names exactly one preserved plan slot, retains its recipe, and links to a requirement with the same date, meal, portion count, and lock. The top-level v2 fields and raw recovery copy must match the immutable original payload. Corrupted imports are rejected before they can be written.
 
 `exportPersonalDataV3` validates before export. `importPersonalDataV3` parses and validates completely before returning a value, so callers can keep imports atomic by writing only after it succeeds. The current UI intentionally exposes the pre-migration v2 backup and snapshot creation, not a general v3 import or activation flow.
 
