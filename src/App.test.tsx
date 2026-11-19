@@ -5,6 +5,7 @@ import App from './App'
 import { pilotRecipes } from './data/pilotCatalog'
 import { defaultScheduleDate, startOfWeek, weekDates } from './domain/mealPlan'
 import { emptyPersonalData, emptyPreference, PERSONAL_DATA_KEY } from './domain/personalData'
+import { PERSONAL_DATA_V3_KEY } from './domain/personalDataV3'
 
 describe('Recipe Lab personal planning experience', () => {
   beforeEach(() => window.localStorage.clear())
@@ -425,5 +426,83 @@ describe('Recipe Lab personal planning experience', () => {
     await user.click(screen.getByRole('button', { name: 'Grocery' }))
     const remainingGarlic = screen.getByText('Garlic').closest('article')!
     expect(within(within(remainingGarlic).getByText('Required').parentElement!).getByText('2 clove')).toBeInTheDocument()
+  })
+
+  it('keeps the original planner as default and offers a read-only weekly migration preview', async () => {
+    const user = userEvent.setup()
+    const now = new Date()
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const monday = weekDates(startOfWeek(iso))[0]
+    const source = { ...emptyPersonalData(), plan: [{ id: 'preview-monday-dinner', date: monday, meal: 'Dinner' as const, recipeId: pilotRecipes[0].id, servings: 2, locked: true }] }
+    const original = JSON.stringify(source)
+    window.localStorage.setItem(PERSONAL_DATA_KEY, original)
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    expect(screen.queryByRole('heading', { name: /safer look at your week/i })).not.toBeInTheDocument()
+    expect(window.localStorage.getItem(PERSONAL_DATA_V3_KEY)).toBeNull()
+    await user.click(screen.getByRole('button', { name: 'Preview New Planner' }))
+    expect(screen.getByRole('heading', { name: /safer look at your week/i })).toBeInTheDocument()
+    expect(screen.getByText('2 whole meal portions')).toBeInTheDocument()
+    expect(screen.getByText(/Recipe choice preserved · not allocated/i)).toBeInTheDocument()
+    expect(screen.getByText('Locked')).toBeInTheDocument()
+    expect(screen.getByLabelText('Migration preview summary')).toHaveTextContent(/0 cooking batches inferred/i)
+    await user.click(screen.getByRole('button', { name: 'Next preview week' }))
+    expect(screen.getByRole('heading', { name: /No saved meals in this week/i })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /Return to original planner/i }))
+    expect(screen.getByRole('heading', { name: 'Make the week yours.' })).toBeInTheDocument()
+    expect(window.localStorage.getItem(PERSONAL_DATA_KEY)).toBe(original)
+    expect(window.localStorage.getItem(PERSONAL_DATA_V3_KEY)).toBeNull()
+  })
+
+  it('requires review and confirmation before saving a separate recoverable v3 snapshot', async () => {
+    const user = userEvent.setup()
+    const now = new Date()
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const monday = weekDates(startOfWeek(iso))[0]
+    const source = { ...emptyPersonalData(), preferences: { [pilotRecipes[0].id]: { ...emptyPreference(), status: 'saved' as const } }, plan: [{ id: 'convert-monday-dinner', date: monday, meal: 'Dinner' as const, recipeId: pilotRecipes[0].id, servings: 2, locked: false }], checkedGroceries: { checked: true }, pantry: [{ id: 'preview-garlic', canonicalIngredientId: 'ingredient-garlic', variantId: 'variant-garlic-fresh-clove', quantity: 3, unit: 'clove' as const, bestBy: null, note: '' }] }
+    const original = JSON.stringify(source)
+    window.localStorage.setItem(PERSONAL_DATA_KEY, original)
+    const createObjectURL = vi.fn(() => 'blob:backup')
+    const revokeObjectURL = vi.fn()
+    Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: createObjectURL })
+    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revokeObjectURL })
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined)
+    const view = render(<App />)
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    await user.click(screen.getByRole('button', { name: 'Preview New Planner' }))
+    await user.click(screen.getByRole('button', { name: 'Download original backup' }))
+    expect(createObjectURL).toHaveBeenCalledOnce()
+    await user.click(screen.getByRole('button', { name: 'Review conversion' }))
+    expect(screen.getByText(/1 original slots, 1 preferences, 1 pantry lots/i)).toBeInTheDocument()
+    const save = screen.getByRole('button', { name: 'Save separate preview snapshot' })
+    expect(save).toBeDisabled()
+    await user.click(screen.getByRole('checkbox', { name: /I reviewed what changes/i }))
+    await user.click(save)
+    expect(screen.getByText(/Preview snapshot saved separately/i)).toBeInTheDocument()
+    const v3 = JSON.parse(window.localStorage.getItem(PERSONAL_DATA_V3_KEY) ?? '{}')
+    expect(v3).toMatchObject({ schemaVersion: 3, preferences: source.preferences, plan: source.plan, checkedGroceries: source.checkedGroceries, pantry: source.pantry, cookEvents: [], batches: [], allocations: [], preparedFoodLots: [], tasks: [] })
+    expect(v3.migrationRecovery.originalPayload).toEqual(source)
+    expect(window.localStorage.getItem(PERSONAL_DATA_KEY)).toBe(original)
+    view.unmount()
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    expect(screen.getByRole('button', { name: 'Preview New Planner' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /safer look at your week/i })).not.toBeInTheDocument()
+  })
+
+  it('shows fractional legacy servings as an explicit review issue without rounding them', async () => {
+    const user = userEvent.setup()
+    const now = new Date()
+    const iso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const monday = weekDates(startOfWeek(iso))[0]
+    const source = { ...emptyPersonalData(), plan: [{ id: 'fractional-preview', date: monday, meal: 'Dinner' as const, recipeId: pilotRecipes[0].id, servings: 1.5, locked: false }] }
+    window.localStorage.setItem(PERSONAL_DATA_KEY, JSON.stringify(source))
+    render(<App />)
+    await user.click(screen.getByRole('button', { name: /^Plan/ }))
+    await user.click(screen.getByRole('button', { name: 'Preview New Planner' }))
+    expect(screen.getByText('1.5 legacy servings')).toBeInTheDocument()
+    expect(screen.getAllByText(/cannot be reinterpreted as whole meal portions/i).length).toBeGreaterThan(0)
+    expect(screen.queryByText('2 whole meal portions')).not.toBeInTheDocument()
+    expect(window.localStorage.getItem(PERSONAL_DATA_V3_KEY)).toBeNull()
   })
 })
