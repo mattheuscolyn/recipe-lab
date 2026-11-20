@@ -1,0 +1,1569 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "deterministic-v3-catalog-audit",
+  "recipeCount": 25,
+  "recommendationReadyCount": 0,
+  "recommendedFirstReviewGroup": [
+    "10000000-0000-4000-8000-000000000015",
+    "10000000-0000-4000-8000-000000000008",
+    "10000000-0000-4000-8000-000000000014",
+    "10000000-0000-4000-8000-000000000009",
+    "10000000-0000-4000-8000-000000000005",
+    "10000000-0000-4000-8000-000000000001",
+    "10000000-0000-4000-8000-000000000003",
+    "10000000-0000-4000-8000-000000000016",
+    "10000000-0000-4000-8000-000000000019"
+  ],
+  "entries": [
+    {
+      "rank": 1,
+      "recipeId": "10000000-0000-4000-8000-000000000015",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000015-v2",
+      "slug": "overnight-oats-base-recipe",
+      "title": "Overnight Oats Base Recipe",
+      "primaryMealRoles": [
+        "breakfast"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 2,
+      "recipeId": "10000000-0000-4000-8000-000000000008",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000008-v2",
+      "slug": "banana-flax-muffins",
+      "title": "Banana Flax Muffins",
+      "primaryMealRoles": [
+        "breakfast"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 3,
+      "recipeId": "10000000-0000-4000-8000-000000000014",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000014-v2",
+      "slug": "southwest-tofu-scramble",
+      "title": "Southwest Tofu Scramble",
+      "primaryMealRoles": [
+        "breakfast"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 4,
+      "recipeId": "10000000-0000-4000-8000-000000000009",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000009-v2",
+      "slug": "greek-chicken-pasta-salad",
+      "title": "Greek Chicken Pasta Salad",
+      "primaryMealRoles": [
+        "lunch"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 5,
+      "recipeId": "10000000-0000-4000-8000-000000000005",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000005-v2",
+      "slug": "hearty-black-bean-quesadillas",
+      "title": "Hearty Black Bean Quesadillas",
+      "primaryMealRoles": [
+        "lunch"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 6,
+      "recipeId": "10000000-0000-4000-8000-000000000001",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000001-v2",
+      "slug": "sheet-pan-chicken-fajitas",
+      "title": "Sheet Pan Chicken Fajitas",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 7,
+      "recipeId": "10000000-0000-4000-8000-000000000003",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000003-v2",
+      "slug": "beef-and-cabbage-stir-fry",
+      "title": "Beef and Cabbage Stir Fry",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 8,
+      "recipeId": "10000000-0000-4000-8000-000000000016",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000016-v2",
+      "slug": "easy-vegetable-stir-fry",
+      "title": "Easy Vegetable Stir Fry",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 9,
+      "recipeId": "10000000-0000-4000-8000-000000000019",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000019-v2",
+      "slug": "salmon-patties",
+      "title": "Salmon Patties",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 10,
+      "recipeId": "813d36f1-f9ce-431b-b2f4-594af0510b78",
+      "revisionId": "revision-813d36f1-f9ce-431b-b2f4-594af0510b78-v2",
+      "slug": "smoky-black-bean-soup",
+      "title": "Smoky Black Bean Soup",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 11,
+      "recipeId": "28ccf614-3016-4d60-89e5-92fca5fe9e5e",
+      "revisionId": "revision-28ccf614-3016-4d60-89e5-92fca5fe9e5e-v2",
+      "slug": "simply-perfect-pancakes",
+      "title": "Simply Perfect Pancakes",
+      "primaryMealRoles": [
+        "breakfast"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 12,
+      "recipeId": "a53576e1-0688-4427-9727-097eab3eca95",
+      "revisionId": "revision-a53576e1-0688-4427-9727-097eab3eca95-v2",
+      "slug": "white-bean-soup",
+      "title": "White Bean Soup",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 13,
+      "recipeId": "9368d51e-0f15-4fb1-9e9b-34d77df3bdbc",
+      "revisionId": "revision-9368d51e-0f15-4fb1-9e9b-34d77df3bdbc-v2",
+      "slug": "best-lentil-soup",
+      "title": "Best Lentil Soup",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 14,
+      "recipeId": "f4d10e84-fc42-4f6f-baa5-b5a305cabfc9",
+      "revisionId": "revision-f4d10e84-fc42-4f6f-baa5-b5a305cabfc9-v2",
+      "slug": "chickpea-coriander-lime-soup",
+      "title": "Chickpea, Coriander & Lime Soup",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 15,
+      "recipeId": "10000000-0000-4000-8000-000000000002",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000002-v2",
+      "slug": "creamy-pesto-chicken",
+      "title": "Creamy Pesto Chicken",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 16,
+      "recipeId": "10000000-0000-4000-8000-000000000004",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000004-v2",
+      "slug": "one-pot-cheeseburger-pasta",
+      "title": "One Pot Cheeseburger Pasta",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 17,
+      "recipeId": "10000000-0000-4000-8000-000000000006",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000006-v2",
+      "slug": "one-pot-creamy-cajun-chicken-pasta",
+      "title": "One Pot Creamy Cajun Chicken Pasta",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 18,
+      "recipeId": "10000000-0000-4000-8000-000000000007",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000007-v2",
+      "slug": "spinach-feta-grilled-cheese",
+      "title": "Spinach Feta Grilled Cheese",
+      "primaryMealRoles": [
+        "lunch"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 19,
+      "recipeId": "10000000-0000-4000-8000-000000000010",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000010-v2",
+      "slug": "sesame-tempeh-bowls",
+      "title": "Sesame Tempeh Bowls",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 20,
+      "recipeId": "10000000-0000-4000-8000-000000000011",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000011-v2",
+      "slug": "beef-burrito-casserole",
+      "title": "Beef Burrito Casserole",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 21,
+      "recipeId": "10000000-0000-4000-8000-000000000012",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000012-v2",
+      "slug": "classic-tuna-salad",
+      "title": "Classic Tuna Salad",
+      "primaryMealRoles": [
+        "lunch"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 22,
+      "recipeId": "10000000-0000-4000-8000-000000000013",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000013-v2",
+      "slug": "bacon-ranch-turkey-burgers",
+      "title": "Bacon Ranch Turkey Burgers",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 23,
+      "recipeId": "10000000-0000-4000-8000-000000000017",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000017-v2",
+      "slug": "easy-sesame-chicken",
+      "title": "Easy Sesame Chicken",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 24,
+      "recipeId": "10000000-0000-4000-8000-000000000018",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000018-v2",
+      "slug": "smothered-pork-chops",
+      "title": "Smothered Pork Chops",
+      "primaryMealRoles": [
+        "dinner"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    },
+    {
+      "rank": 25,
+      "recipeId": "10000000-0000-4000-8000-000000000020",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000020-v2",
+      "slug": "avocado-toast",
+      "title": "Avocado Toast",
+      "primaryMealRoles": [
+        "breakfast"
+      ],
+      "minimumSafeImport": true,
+      "recommendationReady": false,
+      "missingForRecommendation": [
+        {
+          "code": "output-scaling-review-required",
+          "fields": [
+            "output.scaling"
+          ]
+        },
+        {
+          "code": "meal-portion-guidance-missing",
+          "fields": [
+            "output.planningGuidance.sourceServingsPerMealPortion"
+          ]
+        },
+        {
+          "code": "active-time-unknown",
+          "fields": [
+            "effort.activeMinutes"
+          ]
+        },
+        {
+          "code": "suitability-unknown",
+          "fields": [
+            "suitability.prepareAhead",
+            "suitability.leftoverQuality",
+            "suitability.storageModes",
+            "suitability.reheatMethod"
+          ]
+        },
+        {
+          "code": "rights-review-required",
+          "fields": [
+            "source.rights.factualMetadataUse"
+          ]
+        }
+      ],
+      "coverage": {
+        "reviewedIngredientCompleteness": true,
+        "reviewedScaling": false,
+        "reviewedMealPortionGuidance": false,
+        "reviewedActiveTime": false,
+        "reviewedElapsedTime": true,
+        "reviewedSuitability": false,
+        "reviewedRefrigeratedStorageHours": null,
+        "reviewedFrozenStorageHours": null,
+        "reviewedPrepareAhead": false,
+        "reviewedLeftoverQuality": false,
+        "reviewedReheatMethod": false,
+        "reviewedLunchService": false,
+        "approvedMetadataRights": false
+      }
+    }
+  ]
+}
