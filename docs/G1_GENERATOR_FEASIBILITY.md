@@ -1,5 +1,7 @@
 # G1 weekly generator contracts and candidate feasibility
 
+The first real-recipe review overlay that consumes these contracts is documented in [G2A real recipe review](./G2A_REAL_RECIPE_REVIEW.md). G2A leaves the generator and live application inactive.
+
 > **Status:** reusable domain foundation for [Issue #21](https://github.com/mattheuscolyn/recipe-lab/issues/21). It is not connected to the live planner and does not generate or persist a week.
 
 ## Implemented boundary

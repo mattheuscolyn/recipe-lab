@@ -1,0 +1,493 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "g2a-reviewed-v3-overlay",
+  "recipeCount": 25,
+  "reviewedRecipeCount": 7,
+  "recommendationReadyBefore": 0,
+  "recommendationReadyAfter": 0,
+  "blockedReviewedRecipeCount": 7,
+  "coverage": {
+    "sourceFactsReviewed": 7,
+    "publisherNutritionCaptured": 7,
+    "originalBatchScalingReviewed": 7,
+    "mealPortionGuidanceReviewed": 7,
+    "activeTimeReviewed": 7,
+    "suitabilitySourceClaimsCaptured": 4,
+    "explicitStorageWindowCaptured": 1,
+    "metadataRightsApproved": 0
+  },
+  "entries": [
+    {
+      "recipeId": "813d36f1-f9ce-431b-b2f4-594af0510b78",
+      "revisionId": "revision-813d36f1-f9ce-431b-b2f4-594af0510b78-v2",
+      "slug": "smoky-black-bean-soup",
+      "title": "Smoky Black Bean Soup",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "28ccf614-3016-4d60-89e5-92fca5fe9e5e",
+      "revisionId": "revision-28ccf614-3016-4d60-89e5-92fca5fe9e5e-v2",
+      "slug": "simply-perfect-pancakes",
+      "title": "Simply Perfect Pancakes",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "a53576e1-0688-4427-9727-097eab3eca95",
+      "revisionId": "revision-a53576e1-0688-4427-9727-097eab3eca95-v2",
+      "slug": "white-bean-soup",
+      "title": "White Bean Soup",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "9368d51e-0f15-4fb1-9e9b-34d77df3bdbc",
+      "revisionId": "revision-9368d51e-0f15-4fb1-9e9b-34d77df3bdbc-v2",
+      "slug": "best-lentil-soup",
+      "title": "Best Lentil Soup",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "f4d10e84-fc42-4f6f-baa5-b5a305cabfc9",
+      "revisionId": "revision-f4d10e84-fc42-4f6f-baa5-b5a305cabfc9-v2",
+      "slug": "chickpea-coriander-lime-soup",
+      "title": "Chickpea, Coriander & Lime Soup",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000001",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000001-g2a-1",
+      "slug": "sheet-pan-chicken-fajitas",
+      "title": "Sheet Pan Chicken Fajitas",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "storage-window-unreported",
+          "field": "suitability.storageModes[refrigerated].maxDurationHours",
+          "requiredDecision": "Obtain a recipe-specific reviewed maximum before leftover allocation."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000002",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000002-v2",
+      "slug": "creamy-pesto-chicken",
+      "title": "Creamy Pesto Chicken",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000003",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000003-g2a-1",
+      "slug": "beef-and-cabbage-stir-fry",
+      "title": "Beef and Cabbage Stir Fry",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "suitability-review-required",
+          "field": "suitability",
+          "requiredDecision": "A human food-safety/editorial review needs recipe-specific storage and service evidence."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000004",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000004-v2",
+      "slug": "one-pot-cheeseburger-pasta",
+      "title": "One Pot Cheeseburger Pasta",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000005",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000005-v2",
+      "slug": "hearty-black-bean-quesadillas",
+      "title": "Hearty Black Bean Quesadillas",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000006",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000006-v2",
+      "slug": "one-pot-creamy-cajun-chicken-pasta",
+      "title": "One Pot Creamy Cajun Chicken Pasta",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000007",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000007-v2",
+      "slug": "spinach-feta-grilled-cheese",
+      "title": "Spinach Feta Grilled Cheese",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000008",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+      "slug": "banana-flax-muffins",
+      "title": "Banana Flax Muffins",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "flour-conversion-provisional",
+          "field": "requirements[flour].selectedPlanningQuantity",
+          "requiredDecision": "Approve or replace the v2 120 g-per-cup planning approximation."
+        },
+        {
+          "code": "storage-window-unreported",
+          "field": "suitability.storageModes[refrigerated].maxDurationHours",
+          "requiredDecision": "Obtain a recipe-specific reviewed maximum before later-meal allocation."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000009",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000009-g2a-1",
+      "slug": "greek-chicken-pasta-salad",
+      "title": "Greek Chicken Pasta Salad",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "source-yield-selection-required",
+          "field": "output.sourceYield",
+          "requiredDecision": "Choose 4 meal-sized or 6 smaller side portions for each planned batch."
+        },
+        {
+          "code": "chicken-weight-provisional",
+          "field": "requirements[chicken].selectedPlanningQuantity",
+          "requiredDecision": "Approve or replace the v2 planning weight for two chicken thighs."
+        },
+        {
+          "code": "office-odor-unreviewed",
+          "field": "serviceAssessment.odor",
+          "requiredDecision": "Human reviewer must assess office odor acceptability; the recipe cannot self-certify it."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000010",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000010-v2",
+      "slug": "sesame-tempeh-bowls",
+      "title": "Sesame Tempeh Bowls",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000011",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000011-v2",
+      "slug": "beef-burrito-casserole",
+      "title": "Beef Burrito Casserole",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000012",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000012-v2",
+      "slug": "classic-tuna-salad",
+      "title": "Classic Tuna Salad",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000013",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000013-v2",
+      "slug": "bacon-ranch-turkey-burgers",
+      "title": "Bacon Ranch Turkey Burgers",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000014",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000014-g2a-1",
+      "slug": "southwest-tofu-scramble",
+      "title": "Southwest Tofu Scramble",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "suitability-review-required",
+          "field": "suitability",
+          "requiredDecision": "A human food-safety/editorial review needs recipe-specific storage and service evidence."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000015",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
+      "slug": "overnight-oats-base-recipe",
+      "title": "Overnight Oats Base Recipe",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "storage-window-unreported",
+          "field": "suitability.storageModes[refrigerated].maxDurationHours",
+          "requiredDecision": "Obtain a recipe-specific reviewed maximum before allocating multiple later meals."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000016",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000016-g2a-1",
+      "slug": "easy-vegetable-stir-fry",
+      "title": "Easy Vegetable Stir Fry",
+      "reviewStage": "g2a-source-reviewed",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": [
+        {
+          "code": "vegetable-branching-unmodeled",
+          "field": "requirements",
+          "requiredDecision": "The publisher permits broad vegetable substitutions; keep the captured ingredient set fixed until alternatives are normalized."
+        },
+        {
+          "code": "suitability-review-required",
+          "field": "suitability",
+          "requiredDecision": "A human food-safety/editorial review needs recipe-specific storage and service evidence."
+        },
+        {
+          "code": "rights-approval-required",
+          "field": "source.rights.factualMetadataUse",
+          "requiredDecision": "Owner or legal reviewer must approve factual metadata use."
+        }
+      ]
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000017",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000017-v2",
+      "slug": "easy-sesame-chicken",
+      "title": "Easy Sesame Chicken",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000018",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000018-v2",
+      "slug": "smothered-pork-chops",
+      "title": "Smothered Pork Chops",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000019",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000019-v2",
+      "slug": "salmon-patties",
+      "title": "Salmon Patties",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000020",
+      "revisionId": "revision-10000000-0000-4000-8000-000000000020-v2",
+      "slug": "avocado-toast",
+      "title": "Avocado Toast",
+      "reviewStage": "not-selected",
+      "recommendationReady": false,
+      "recommendationBlockers": [
+        "output-scaling-review-required",
+        "meal-portion-guidance-missing",
+        "active-time-unknown",
+        "suitability-unknown",
+        "rights-review-required"
+      ],
+      "unresolvedReviewIssues": []
+    }
+  ]
+}

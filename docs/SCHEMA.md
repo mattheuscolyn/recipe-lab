@@ -1,6 +1,6 @@
 # Recipe schema v2
 
-> **Active runtime contract:** this document describes the live v2 application schema. The v3 foundation is implemented but not used by the application; see the [implemented contract](./V3_IMPLEMENTATION.md), [migration results](./V3_MIGRATION_RESULTS.md), [approved architecture](./V3_ARCHITECTURE.md), [25-recipe readiness audit](./V3_RECIPE_AUDIT.md), and [acceptance scenarios](./V3_ACCEPTANCE_SCENARIOS.md).
+> **Active runtime contract:** this document describes the live v2 application schema. The v3 foundation is implemented but not used by the application; see the [implemented contract](./V3_IMPLEMENTATION.md), [migration results](./V3_MIGRATION_RESULTS.md), [approved architecture](./V3_ARCHITECTURE.md), [25-recipe readiness audit](./V3_RECIPE_AUDIT.md), [G2A real-recipe review overlay](./G2A_REAL_RECIPE_REVIEW.md), and [acceptance scenarios](./V3_ACCEPTANCE_SCENARIOS.md).
 
 Schema v2 separates facts that schema v1 conflated:
 
