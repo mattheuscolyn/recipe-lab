@@ -23,6 +23,10 @@ Office suitability cannot be asserted by a generated candidate. A candidate only
 
 Batch projections delegate to the existing v3 planning functions. G1 therefore cannot produce a candidate that passes different portion, whole-item, timing, or storage rules than the eventual plan entities.
 
+Ingredient avoids are evaluated against the candidate's resolved selection state, not every primary ingredient in the source recipe. A selected optional ingredient or substitute is subject to hard avoids; an excluded optional ingredient or replaced primary is not. If an unresolved optional/alternative branch could contain an avoided ingredient, feasibility is `review-needed` rather than optimistic.
+
+The current batch/grocery derivation still reads the recipe revision's primary requirement branch. G1 therefore returns `ingredient-selection-grocery-review-required` for every selected substitute or explicit optional include/exclude branch. Such a candidate may satisfy must-use and avoid checks, but cannot be `eligible` for grocery-complete generation until G3 passes the selection branch through batch grocery demand without inventing quantities. Primary selections for required requirements remain compatible with current demand derivation.
+
 ## Executable acceptance scenario
 
 `src/domain/generatorV3Fixtures.ts` contains a permanent seven-day request and candidates using explicitly synthetic, fully reviewed recipes. The week includes two-person dinners, varying lunch portions, Sunday meal prep, a dinner feeding later leftovers, repeating breakfasts, varied dinner intent, one skipped lunch, one locked dinner, a no-cook/no-assembly office policy, and conflicting household votes. Candidate expectations cover eligible prep and leftovers, rejected lunchtime cooking and office assembly, lock protection, and review-needed unknown service facts.

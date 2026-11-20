@@ -9,6 +9,26 @@ import { generatorFixtureRecipes, generatorFixtureServiceAssessments, infeasible
 
 const codes = (candidate: Parameters<typeof evaluateCandidateFeasibility>[1]) => evaluateCandidateFeasibility(wholeWeekPlanningRequest, candidate).reasons.map(({ code }) => code)
 
+function selectedAlternativeFixture() {
+  const request = structuredClone(wholeWeekPlanningRequest)
+  const recipe = structuredClone(generatorFixtureRecipes.prepLunch)
+  const alternativeRequirement = recipe.requirements[0]
+  const alternative = {
+    alternativeId: 'alternative-must-use-fixture',
+    label: 'Synthetic alternate ingredient',
+    canonicalIngredientId: 'ingredient-must-use-alternate',
+    variantId: 'variant-must-use-alternate',
+    quantity: alternativeRequirement.selectedPlanningQuantity,
+    relationship: 'substitution' as const,
+  }
+  alternativeRequirement.alternatives.push(alternative)
+  request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+  const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
+  candidate.candidateId = 'candidate-selected-alternative'
+  candidate.ingredientSelections.push({ requirementId: alternativeRequirement.requirementId, selection: 'alternative', alternativeId: alternative.alternativeId })
+  return { request, candidate, alternativeRequirement, alternative }
+}
+
 describe('G1 planning contracts', () => {
   it('validates a complete week with differing portions, a skip, a lock, preferences, and constraints', () => {
     const request = planningRequestSchema.parse(wholeWeekPlanningRequest)
@@ -179,32 +199,66 @@ describe('G1 candidate feasibility and S12', () => {
   })
 
   it('enforces must-use ingredients with explicit alternative selection', () => {
-    const request = structuredClone(wholeWeekPlanningRequest)
-    const recipe = structuredClone(generatorFixtureRecipes.prepLunch)
-    const alternativeRequirement = recipe.requirements[0]
-    const alternative = {
-      alternativeId: 'alternative-must-use-fixture',
-      label: 'Synthetic alternate ingredient',
-      canonicalIngredientId: 'ingredient-must-use-alternate',
-      variantId: 'variant-must-use-alternate',
-      quantity: alternativeRequirement.selectedPlanningQuantity,
-      relationship: 'substitution' as const,
-    }
-    alternativeRequirement.alternatives.push(alternative)
-    request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+    const { request, candidate: selected, alternativeRequirement, alternative } = selectedAlternativeFixture()
     request.mealRequirements = request.mealRequirements.map((requirement) => requirement.mealRequirementId === 'meal-requirement-2026-11-16-lunch'
       ? { ...requirement, constraints: { ...requirement.constraints, mustUseIngredientIds: [alternative.canonicalIngredientId] } }
       : requirement)
-    const selected = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
-    selected.candidateId = 'candidate-selected-alternative'
-    selected.ingredientSelections.push({ requirementId: alternativeRequirement.requirementId, selection: 'alternative', alternativeId: alternative.alternativeId })
-    expect(evaluateCandidateFeasibility(request, selected).status).toBe('eligible')
+    const selectedResult = evaluateCandidateFeasibility(request, selected)
+    expect(selectedResult.status).toBe('review-needed')
+    expect(selectedResult.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
+    expect(selectedResult.reasons.map(({ code }) => code)).not.toContain('must-use-ingredient-missing')
     const unresolved = structuredClone(selected)
     unresolved.candidateId = 'candidate-unresolved-alternative'
     unresolved.ingredientSelections = unresolved.ingredientSelections.filter(({ requirementId }) => requirementId !== alternativeRequirement.requirementId)
     const unresolvedResult = evaluateCandidateFeasibility(request, unresolved)
     expect(unresolvedResult.status).toBe('review-needed')
     expect(unresolvedResult.reasons.map(({ code }) => code)).toContain('must-use-ingredient-unresolved')
+  })
+
+  it('does not reject an avoided primary ingredient when a substitute is selected', () => {
+    const { request, candidate, alternativeRequirement } = selectedAlternativeFixture()
+    request.hardConstraints.avoidedIngredientIds = [alternativeRequirement.canonicalIngredientId]
+    const result = evaluateCandidateFeasibility(request, candidate)
+    expect(result.status).toBe('review-needed')
+    expect(result.reasons.map(({ code }) => code)).not.toContain('hard-ingredient-avoid')
+    expect(result.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
+  })
+
+  it('rejects a selected substitute when that substitute is avoided', () => {
+    const { request, candidate, alternative } = selectedAlternativeFixture()
+    request.hardConstraints.avoidedIngredientIds = [alternative.canonicalIngredientId]
+    const result = evaluateCandidateFeasibility(request, candidate)
+    expect(result.status).toBe('rejected')
+    expect(result.reasons.map(({ code }) => code)).toContain('hard-ingredient-avoid')
+  })
+
+  it('requires review when an unresolved branch could contain an avoided ingredient', () => {
+    const { request, candidate, alternativeRequirement, alternative } = selectedAlternativeFixture()
+    candidate.candidateId = 'candidate-unresolved-avoid'
+    candidate.ingredientSelections = candidate.ingredientSelections.filter(({ requirementId }) => requirementId !== alternativeRequirement.requirementId)
+    request.hardConstraints.avoidedIngredientIds = [alternative.canonicalIngredientId]
+    const result = evaluateCandidateFeasibility(request, candidate)
+    expect(result.status).toBe('review-needed')
+    expect(result.reasons.map(({ code }) => code)).toContain('hard-ingredient-avoid-unresolved')
+    expect(result.reasons.map(({ code }) => code)).not.toContain('hard-ingredient-avoid')
+  })
+
+  it('handles optional ingredient avoids from the explicit selection state', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    const recipe = generatorFixtureRecipes.dinner
+    const optionalRequirement = recipe.requirements.find(({ optional }) => optional)
+    if (!optionalRequirement) throw new Error('Fixture needs an optional ingredient')
+    request.hardConstraints.avoidedIngredientIds = [optionalRequirement.canonicalIngredientId]
+    const unresolved = evaluateCandidateFeasibility(request, wholeWeekCandidateFixtures.dinnerWithLeftoverLunch)
+    expect(unresolved.status).toBe('review-needed')
+    expect(unresolved.reasons.map(({ code }) => code)).toContain('hard-ingredient-avoid-unresolved')
+    const selected = structuredClone(wholeWeekCandidateFixtures.dinnerWithLeftoverLunch)
+    selected.candidateId = 'candidate-selected-optional-avoid'
+    selected.ingredientSelections.push({ requirementId: optionalRequirement.requirementId, selection: 'primary', alternativeId: null })
+    const selectedResult = evaluateCandidateFeasibility(request, selected)
+    expect(selectedResult.status).toBe('rejected')
+    expect(selectedResult.reasons.map(({ code }) => code)).toContain('hard-ingredient-avoid')
+    expect(selectedResult.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
   })
 
   it('rejects a must-use ingredient absent from the selected recipe', () => {

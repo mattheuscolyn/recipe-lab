@@ -91,7 +91,7 @@ export const generatorFixtureServiceAssessments = {
 }
 
 const ingredientSelectionsFor = (recipe: RecipeV3): GeneratorCandidate['ingredientSelections'] => recipe.requirements
-  .filter((requirement) => requirement.optional || requirement.alternatives.length)
+  .filter((requirement) => !requirement.optional && requirement.alternatives.length)
   .map(({ requirementId }) => ({ requirementId, selection: 'primary', alternativeId: null }))
 
 const dateByDay = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20', '2026-11-21', '2026-11-22']

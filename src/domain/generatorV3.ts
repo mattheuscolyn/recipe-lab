@@ -181,6 +181,8 @@ export const rejectedReasonCodeSchema = z.enum([
   'locked-choice-mismatch',
   'hard-recipe-avoid',
   'hard-ingredient-avoid',
+  'hard-ingredient-avoid-unresolved',
+  'ingredient-selection-grocery-review-required',
   'recommendation-readiness-required',
   'meal-role-mismatch',
   'lunch-cooking-not-allowed',
@@ -291,6 +293,7 @@ function selectedIngredientState(recipe: PlanningRequest['recipeSnapshot'][numbe
   const selections = new Map(candidate.ingredientSelections.map((selection) => [selection.requirementId, selection]))
   const selected = new Set<string>()
   const unresolved = new Map<string, string[]>()
+  const downstreamUnrepresentedRequirementIds: string[] = []
   for (const requirement of recipe.requirements) {
     const selection = selections.get(requirement.requirementId)
     const possible = [requirement.canonicalIngredientId, ...requirement.alternatives.map(({ canonicalIngredientId }) => canonicalIngredientId)]
@@ -301,12 +304,15 @@ function selectedIngredientState(recipe: PlanningRequest['recipeSnapshot'][numbe
     }
     if (selection.selection === 'excluded-optional') {
       if (!requirement.optional) reasons.push(reason('candidate-planning-invalid', 'rejected', 'A required ingredient cannot be excluded.', [candidate.candidateId, requirement.requirementId]))
+      else downstreamUnrepresentedRequirementIds.push(requirement.requirementId)
       continue
     }
     if (selection.selection === 'primary') {
       selected.add(requirement.canonicalIngredientId)
+      if (requirement.optional) downstreamUnrepresentedRequirementIds.push(requirement.requirementId)
       continue
     }
+    downstreamUnrepresentedRequirementIds.push(requirement.requirementId)
     const alternative = requirement.alternatives.find(({ alternativeId }) => alternativeId === selection.alternativeId)
     if (!alternative) reasons.push(reason('candidate-planning-invalid', 'rejected', 'Ingredient selection references an alternative outside its requirement.', [candidate.candidateId, requirement.requirementId, selection.alternativeId!]))
     else selected.add(alternative.canonicalIngredientId)
@@ -314,7 +320,7 @@ function selectedIngredientState(recipe: PlanningRequest['recipeSnapshot'][numbe
   for (const requirementId of selections.keys()) {
     if (!recipe.requirements.some((requirement) => requirement.requirementId === requirementId)) reasons.push(reason('candidate-planning-invalid', 'rejected', 'Ingredient selection references a requirement outside this recipe revision.', [candidate.candidateId, requirementId]))
   }
-  return { selected, unresolved }
+  return { selected, unresolved, downstreamUnrepresentedRequirementIds }
 }
 
 function classifyPlanningError(message: string, candidate: GeneratorCandidate): RejectedReason {
@@ -344,13 +350,18 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
 
   if (!recipe.review.readiness.recommendationReady) reasons.push(reason('recommendation-readiness-required', 'review-needed', 'Automatic selection requires a recommendation-ready recipe revision.', [recipe.identity.recipeId, recipe.identity.revisionId], recipe.review.readiness.blockers.flatMap((blocker) => recommendationBlockerFields[blocker] ?? [])))
   if (request.hardConstraints.avoidedRecipeIds.includes(recipe.identity.recipeId)) reasons.push(reason('hard-recipe-avoid', 'rejected', 'The recipe is on the request hard-avoid list.', [recipe.identity.recipeId]))
-  const avoidedIngredients = recipe.requirements.filter((requirement) => !requirement.optional && request.hardConstraints.avoidedIngredientIds.includes(requirement.canonicalIngredientId))
-  if (avoidedIngredients.length) reasons.push(reason('hard-ingredient-avoid', 'rejected', 'The recipe contains a required ingredient on the hard-avoid list.', [recipe.identity.recipeId, ...avoidedIngredients.map(({ canonicalIngredientId }) => canonicalIngredientId)]))
   if (request.preferences.preferredRecipeIds.includes(recipe.identity.recipeId)) explanations.push({ code: 'preferred-recipe', message: 'The recipe is explicitly preferred.', entityIds: [recipe.identity.recipeId] })
   const votes = request.preferences.householdRecipePreferences.find(({ recipeId: preferenceRecipeId }) => preferenceRecipeId === recipe.identity.recipeId)
   if (votes && votes.likedVotes > 0 && votes.dislikedVotes > 0) explanations.push({ code: 'household-preference-conflict', message: 'Household taste votes conflict; a later optimizer must not treat this as universally liked.', entityIds: [recipe.identity.recipeId] })
 
   const ingredientState = selectedIngredientState(recipe, candidate, reasons)
+  const selectedAvoidedIngredients = request.hardConstraints.avoidedIngredientIds.filter((ingredientId) => ingredientState.selected.has(ingredientId))
+  if (selectedAvoidedIngredients.length) reasons.push(reason('hard-ingredient-avoid', 'rejected', 'The candidate explicitly selects an ingredient on the hard-avoid list.', [recipe.identity.recipeId, ...selectedAvoidedIngredients]))
+  for (const ingredientId of request.hardConstraints.avoidedIngredientIds) {
+    const unresolvedRequirementIds = ingredientState.unresolved.get(ingredientId)
+    if (unresolvedRequirementIds?.length) reasons.push(reason('hard-ingredient-avoid-unresolved', 'review-needed', 'An unresolved optional or alternative branch could select an avoided ingredient.', [candidate.candidateId, ingredientId, ...unresolvedRequirementIds], ['ingredientSelections']))
+  }
+  if (ingredientState.downstreamUnrepresentedRequirementIds.length) reasons.push(reason('ingredient-selection-grocery-review-required', 'review-needed', 'Selected alternative or optional ingredient branches are not yet applied to downstream grocery demand.', [candidate.candidateId, ...ingredientState.downstreamUnrepresentedRequirementIds], ['groceryDemand.ingredientSelections']))
   const referencedServiceAssessment = request.serviceAssessments.find(({ assessmentId, assessmentRevisionId }) => assessmentId === candidate.serviceAssessmentId && assessmentRevisionId === candidate.serviceAssessmentRevisionId)
   const serviceAssessment = referencedServiceAssessment?.recipeId === recipe.identity.recipeId && referencedServiceAssessment.recipeRevisionId === recipe.identity.revisionId ? referencedServiceAssessment : null
 
