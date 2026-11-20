@@ -108,12 +108,12 @@ Base revision: `revision-10000000-0000-4000-8000-000000000003-g2a-1`
 - Rights: approve/restrict factual metadata separately.
 - Food safety: storage, quality, and reheating are unknown; only fresh use can be considered after universal approvals.
 
-### Sheet Pan Chicken Fajitas — do not prioritize until household preference is confirmed
+### Sheet Pan Chicken Fajitas — private preference confirmation required
 
 Source: <https://www.budgetbytes.com/sheet-pan-chicken-fajitas/>  
 Base revision: `revision-10000000-0000-4000-8000-000000000001-g2a-1`
 
-- **Household preference:** Issue #28 reports a prior dislike. Confirm locally whether that still means `passed`; do not encode the taste as a public recipe fact or prioritize this recipe based on source ratings.
+- **Household preference:** Request confirmation through browser-local preferences before prioritizing this recipe. Do not encode the result as a public recipe fact or infer it from source ratings.
 - Source facts/grocery: optional sour cream/cilantro and alternative branches are not selection-integrated downstream, so ingredient approval is rejected for now.
 - Owner/editorial: two fajitas per serving and 20 active/55 elapsed minutes remain provisional.
 - Rights: factual-metadata approval remains required.
@@ -125,6 +125,6 @@ Base revision: `revision-10000000-0000-4000-8000-000000000001-g2a-1`
 2. Name the source-facts, owner/editorial, and factual-metadata-rights reviewers and their authority references.
 3. Record decisions against the exact G2A revision fingerprints. Applying the bundle creates a new immutable revision.
 4. Keep storage and office decisions deferred unless a food-safety or service reviewer supplies specific evidence.
-5. Confirm Sheet Pan Chicken Fajitas as passed or reconsidered in browser-local preferences; never put that personal decision in the public approval manifest.
+5. Review each candidate's browser-local preference status before prioritization; never put a personal taste decision in the public approval manifest.
 
 No production approval record exists in this PR. Synthetic records demonstrate the complete path in tests but are rejected by the production readiness report.
