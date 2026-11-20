@@ -34,6 +34,58 @@ const cookingWindowSchema = z.object({
   maxActiveMinutes: z.number().int().nonnegative(),
 }).refine(({ start, end }) => Date.parse(end) >= Date.parse(start), { path: ['end'], message: 'Cooking window cannot end before it starts' })
 
+const serviceClaimSchema = z.enum(['assembly', 'reheating', 'odor', 'rice-based', 'active-minutes', 'elapsed-minutes'])
+const serviceEvidenceSchema = z.object({
+  evidenceId: id('evidence'),
+  kind: z.enum(['manual-source-review', 'editorial-judgment']),
+  capturedAt: z.iso.datetime(),
+  reviewerNote: z.string().trim().min(1).max(500),
+  claims: z.array(serviceClaimSchema).min(1),
+})
+const reviewedServiceFact = <T>(value: z.ZodType<T>) => z.object({
+  value: value.nullable(),
+  confidence: z.enum(['reported', 'reviewed', 'unknown']),
+  evidenceIds: z.array(id('evidence')),
+  unknownReason: z.string().trim().min(1).max(300).nullable(),
+}).superRefine((fact, context) => {
+  if (fact.value === null) {
+    if (fact.confidence !== 'unknown' || fact.evidenceIds.length || !fact.unknownReason) context.addIssue({ code: 'custom', message: 'An unknown service fact needs an explicit reason and cannot claim evidence' })
+  } else if (fact.confidence === 'unknown' || !fact.evidenceIds.length || fact.unknownReason !== null) context.addIssue({ code: 'custom', message: 'A known service fact needs reviewed or reported evidence' })
+})
+const officeServiceAssessmentSchema = z.object({
+  assessmentId: id('service-assessment'),
+  assessmentRevisionId: id('service-assessment-revision'),
+  recipeId,
+  recipeRevisionId: id('revision'),
+  reviewedAt: z.iso.datetime(),
+  applicableServices: z.array(z.enum(['fresh', 'refrigerated-leftover', 'frozen-leftover'])).min(1),
+  evidence: z.array(serviceEvidenceSchema).min(1),
+  assembly: reviewedServiceFact(z.enum(['none', 'simple', 'intensive'])),
+  reheating: reviewedServiceFact(z.enum(['not-needed', 'suitable', 'unsuitable'])),
+  odor: reviewedServiceFact(z.enum(['low', 'intrusive'])),
+  riceBased: reviewedServiceFact(z.boolean()),
+  activeMinutes: reviewedServiceFact(z.number().int().nonnegative()),
+  elapsedMinutes: reviewedServiceFact(z.number().int().nonnegative()),
+}).superRefine((assessment, context) => {
+  const evidence = new Map(assessment.evidence.map((item) => [item.evidenceId, item]))
+  if (evidence.size !== assessment.evidence.length) context.addIssue({ code: 'custom', path: ['evidence'], message: 'Service evidence ids must be unique within an assessment revision' })
+  if (assessment.evidence.some(({ capturedAt }) => Date.parse(capturedAt) > Date.parse(assessment.reviewedAt))) context.addIssue({ code: 'custom', path: ['reviewedAt'], message: 'A service assessment cannot predate its supporting evidence' })
+  const facts = [
+    ['assembly', assessment.assembly],
+    ['reheating', assessment.reheating],
+    ['odor', assessment.odor],
+    ['rice-based', assessment.riceBased],
+    ['active-minutes', assessment.activeMinutes],
+    ['elapsed-minutes', assessment.elapsedMinutes],
+  ] as const
+  for (const [claim, fact] of facts) {
+    for (const evidenceId of fact.evidenceIds) {
+      const item = evidence.get(evidenceId)
+      if (!item || !item.claims.includes(claim)) context.addIssue({ code: 'custom', path: [claim, 'evidenceIds'], message: `Service evidence must specifically support ${claim}` })
+    }
+  }
+})
+
 export const planningRequestSchema = z.object({
   requestId: id('planning-request'),
   horizon: z.object({ start: z.iso.date(), end: z.iso.date() }),
@@ -43,6 +95,7 @@ export const planningRequestSchema = z.object({
   preparedLots: z.array(preparedFoodLotSchema),
   recentMeals: z.array(z.object({ recipeId, servedAt: z.iso.datetime() })),
   cookingWindows: z.array(cookingWindowSchema),
+  serviceAssessments: z.array(officeServiceAssessmentSchema),
   hardConstraints: z.object({
     avoidedRecipeIds: z.array(recipeId),
     avoidedIngredientIds: z.array(id('ingredient')),
@@ -62,6 +115,7 @@ export const planningRequestSchema = z.object({
   unique(request.preparedLots.map(({ preparedFoodLotId }) => preparedFoodLotId), ['preparedLots'], 'Prepared lot ids must be unique')
   unique(request.lockedChoices.map(({ mealRequirementId }) => mealRequirementId), ['lockedChoices'], 'Locked choices must be unique by meal requirement')
   unique(request.cookingWindows.map(({ cookingWindowId }) => cookingWindowId), ['cookingWindows'], 'Cooking window ids must be unique')
+  unique(request.serviceAssessments.map(({ assessmentId, assessmentRevisionId }) => `${assessmentId}:${assessmentRevisionId}`), ['serviceAssessments'], 'Service assessment revisions must be unique')
   unique(request.preferences.householdRecipePreferences.map(({ recipeId: preferenceRecipeId }) => preferenceRecipeId), ['preferences', 'householdRecipePreferences'], 'Household recipe preferences must be unique')
   const requirements = new Map(request.mealRequirements.map((requirement) => [requirement.mealRequirementId, requirement]))
   const recipeRevisions = new Set(request.recipeSnapshot.map(({ identity }) => `${identity.recipeId}:${identity.revisionId}`))
@@ -77,18 +131,9 @@ export const planningRequestSchema = z.object({
   request.preparedLots.forEach((lot, index) => {
     if (!recipeRevisions.has(`${lot.recipeId}:${lot.recipeRevisionId}`)) context.addIssue({ code: 'custom', path: ['preparedLots', index], message: 'Prepared food must reference an exact recipe revision in the request snapshot' })
   })
-})
-
-export const candidateServiceProfileSchema = z.object({
-  reviewState: z.enum(['unknown', 'reviewed']),
-  assembly: z.enum(['none', 'simple', 'intensive', 'unknown']),
-  reheating: z.enum(['not-needed', 'suitable', 'unsuitable', 'unknown']),
-  odor: z.enum(['low', 'intrusive', 'unknown']),
-  riceBased: z.boolean().nullable(),
-  evidenceIds: z.array(id('evidence')),
-}).superRefine((profile, context) => {
-  if (profile.reviewState === 'reviewed' && !profile.evidenceIds.length) context.addIssue({ code: 'custom', path: ['evidenceIds'], message: 'Reviewed service profile needs evidence' })
-  if (profile.reviewState === 'unknown' && profile.evidenceIds.length) context.addIssue({ code: 'custom', path: ['evidenceIds'], message: 'Unknown service profile cannot claim evidence' })
+  request.serviceAssessments.forEach((assessment, index) => {
+    if (!recipeRevisions.has(`${assessment.recipeId}:${assessment.recipeRevisionId}`)) context.addIssue({ code: 'custom', path: ['serviceAssessments', index], message: 'Service assessment must reference an exact recipe revision in the request snapshot' })
+  })
 })
 
 const candidateAllocationSchema = z.object({
@@ -97,23 +142,35 @@ const candidateAllocationSchema = z.object({
   service: z.enum(['fresh', 'refrigerated-leftover', 'frozen-leftover']),
 })
 
+const ingredientSelectionSchema = z.object({
+  requirementId: id('requirement'),
+  selection: z.enum(['primary', 'alternative', 'excluded-optional']),
+  alternativeId: id('alternative').nullable(),
+}).superRefine((selection, context) => {
+  if ((selection.selection === 'alternative') !== (selection.alternativeId !== null)) context.addIssue({ code: 'custom', path: ['alternativeId'], message: 'Only an alternative selection names an alternative id' })
+})
+
 export const generatorCandidateSchema = z.object({
   candidateId: id('candidate'),
   recipeId,
   recipeRevisionId: id('revision'),
   strategy: z.enum(['meal-time-cook', 'prior-meal-batch', 'dedicated-prep']),
-  cookAt: z.iso.datetime(),
+  cookingStartsAt: z.iso.datetime(),
   batchMultiplier: z.number().positive().finite(),
   sourceYieldSelection: z.object({ amount: z.number().positive().finite(), evidenceIds: z.array(id('evidence')).min(1), confidence: z.enum(['reported', 'reviewed']) }).nullable(),
   allocations: z.array(candidateAllocationSchema).min(1),
   originMealRequirementId: id('meal-requirement').nullable(),
-  serviceProfile: candidateServiceProfileSchema,
-}).superRefine((candidate, context) => {
+  ingredientSelections: z.array(ingredientSelectionSchema),
+  serviceAssessmentId: id('service-assessment').nullable(),
+  serviceAssessmentRevisionId: id('service-assessment-revision').nullable(),
+}).strict().superRefine((candidate, context) => {
   if (new Set(candidate.allocations.map(({ mealRequirementId }) => mealRequirementId)).size !== candidate.allocations.length) context.addIssue({ code: 'custom', path: ['allocations'], message: 'A candidate may allocate to each meal requirement only once' })
   if (candidate.strategy === 'prior-meal-batch' && !candidate.originMealRequirementId) context.addIssue({ code: 'custom', path: ['originMealRequirementId'], message: 'Prior-meal batch needs an origin meal requirement' })
   if (candidate.strategy !== 'prior-meal-batch' && candidate.originMealRequirementId) context.addIssue({ code: 'custom', path: ['originMealRequirementId'], message: 'Only a prior-meal batch may identify an origin meal' })
   if (candidate.originMealRequirementId && !candidate.allocations.some(({ mealRequirementId, service }) => mealRequirementId === candidate.originMealRequirementId && service === 'fresh')) context.addIssue({ code: 'custom', path: ['originMealRequirementId'], message: 'The origin meal must receive a fresh allocation from its batch' })
   if (candidate.strategy === 'dedicated-prep' && candidate.allocations.some(({ service }) => service === 'fresh')) context.addIssue({ code: 'custom', path: ['allocations'], message: 'Dedicated prep allocations must use reviewed storage' })
+  if (new Set(candidate.ingredientSelections.map(({ requirementId }) => requirementId)).size !== candidate.ingredientSelections.length) context.addIssue({ code: 'custom', path: ['ingredientSelections'], message: 'A candidate may select each ingredient requirement only once' })
+  if ((candidate.serviceAssessmentId === null) !== (candidate.serviceAssessmentRevisionId === null)) context.addIssue({ code: 'custom', path: ['serviceAssessmentRevisionId'], message: 'A service assessment reference needs both stable and revision ids' })
 })
 
 export const rejectedReasonCodeSchema = z.enum([
@@ -131,10 +188,18 @@ export const rejectedReasonCodeSchema = z.enum([
   'leftover-quality-not-approved',
   'storage-evidence-missing',
   'storage-window-exceeded',
-  'meal-before-cooking',
+  'meal-before-food-ready',
+  'meal-service-time-required',
   'cooking-window-unavailable',
+  'cooking-window-duration-exceeded',
+  'cooking-duration-review-required',
   'active-time-exceeded',
   'elapsed-time-exceeded',
+  'service-effort-review-required',
+  'service-active-time-exceeded',
+  'service-elapsed-time-exceeded',
+  'must-use-ingredient-missing',
+  'must-use-ingredient-unresolved',
   'office-assembly-not-allowed',
   'office-reheating-unsuitable',
   'office-odor-not-allowed',
@@ -169,6 +234,7 @@ export const candidateFeasibilitySchema = z.object({
   recipeRevisionId: id('revision'),
   reasons: z.array(rejectedReasonSchema),
   explanations: z.array(candidateExplanationSchema),
+  timing: z.object({ cookingStartsAt: z.iso.datetime(), expectedReadyAt: z.iso.datetime(), cookingWindowId: id('cooking-window') }).nullable(),
   projection: z.object({ batchOutput: outputAmountSchema, allocatedOutput: outputAmountSchema, remainder: outputAmountSchema }).nullable(),
 })
 
@@ -176,6 +242,7 @@ export type PlanningRequest = z.infer<typeof planningRequestSchema>
 export type GeneratorCandidate = z.infer<typeof generatorCandidateSchema>
 export type RejectedReason = z.infer<typeof rejectedReasonSchema>
 export type CandidateFeasibility = z.infer<typeof candidateFeasibilitySchema>
+export type OfficeServiceAssessment = z.infer<typeof officeServiceAssessmentSchema>
 
 const recommendationBlockerFields: Record<string, string[]> = {
   'ingredient-completeness-unreviewed': ['review.ingredientCompletenessReviewed'],
@@ -194,21 +261,60 @@ function reviewedSourced(value: { value: unknown; confidence: string; evidenceId
   return Boolean(value && value.value !== null && ['reported', 'reviewed'].includes(value.confidence) && value.evidenceIds.length)
 }
 
-function addOfficeLunchReasons(request: PlanningRequest, candidate: GeneratorCandidate, requirement: MealRequirement, reasons: RejectedReason[]) {
+function addOfficeLunchReasons(request: PlanningRequest, candidate: GeneratorCandidate, requirement: MealRequirement, assessment: OfficeServiceAssessment | null, reasons: RejectedReason[]) {
   const policy = request.officeLunchPolicy
   if (!policy.enabled || requirement.meal !== 'lunch') return
-  const profile = candidate.serviceProfile
   const entityIds = [candidate.candidateId, requirement.mealRequirementId]
-  const unknown = profile.reviewState === 'unknown'
-  if (unknown) {
-    reasons.push(reason('office-suitability-review-required', 'review-needed', 'Office-lunch service details have not been reviewed.', entityIds, ['serviceProfile']))
+  if (!assessment) {
+    reasons.push(reason('office-suitability-review-required', 'review-needed', 'Office-lunch service details need a specific reviewed assessment revision for this recipe revision and service mode.', entityIds, ['serviceAssessmentId', 'serviceAssessmentRevisionId']))
     return
   }
-  if (policy.maxAssembly === 'none' && profile.assembly !== 'none') reasons.push(reason('office-assembly-not-allowed', profile.assembly === 'unknown' ? 'review-needed' : 'rejected', 'This office lunch exceeds the allowed assembly level.', entityIds, profile.assembly === 'unknown' ? ['serviceProfile.assembly'] : []))
-  if (policy.maxAssembly === 'simple' && profile.assembly === 'intensive') reasons.push(reason('office-assembly-not-allowed', 'rejected', 'This office lunch requires intensive assembly.', entityIds))
-  if (policy.requireReheatingSuitable && !['not-needed', 'suitable'].includes(profile.reheating)) reasons.push(reason(profile.reheating === 'unknown' ? 'office-suitability-review-required' : 'office-reheating-unsuitable', profile.reheating === 'unknown' ? 'review-needed' : 'rejected', 'This lunch does not have reviewed office-suitable reheating.', entityIds, profile.reheating === 'unknown' ? ['serviceProfile.reheating'] : []))
-  if (!policy.allowIntrusiveOdors && profile.odor !== 'low') reasons.push(reason(profile.odor === 'unknown' ? 'office-suitability-review-required' : 'office-odor-not-allowed', profile.odor === 'unknown' ? 'review-needed' : 'rejected', 'This lunch does not satisfy the configured office odor policy.', entityIds, profile.odor === 'unknown' ? ['serviceProfile.odor'] : []))
-  if (!policy.allowRiceBased && profile.riceBased !== false) reasons.push(reason(profile.riceBased === null ? 'office-suitability-review-required' : 'office-rice-not-allowed', profile.riceBased === null ? 'review-needed' : 'rejected', 'This lunch does not satisfy the configured rice policy.', entityIds, profile.riceBased === null ? ['serviceProfile.riceBased'] : []))
+  const missing = (field: keyof Pick<OfficeServiceAssessment, 'assembly' | 'reheating' | 'odor' | 'riceBased'>) => reasons.push(reason('office-suitability-review-required', 'review-needed', `Office-lunch ${field} suitability is not reviewed.`, entityIds, [`serviceAssessment.${field}`]))
+  if (assessment.assembly.value === null) missing('assembly')
+  else if (policy.maxAssembly === 'none' && assessment.assembly.value !== 'none') reasons.push(reason('office-assembly-not-allowed', 'rejected', 'This office lunch exceeds the allowed assembly level.', entityIds))
+  else if (policy.maxAssembly === 'simple' && assessment.assembly.value === 'intensive') reasons.push(reason('office-assembly-not-allowed', 'rejected', 'This office lunch requires intensive assembly.', entityIds))
+  if (policy.requireReheatingSuitable) {
+    if (assessment.reheating.value === null) missing('reheating')
+    else if (!['not-needed', 'suitable'].includes(assessment.reheating.value)) reasons.push(reason('office-reheating-unsuitable', 'rejected', 'This lunch does not have reviewed office-suitable reheating.', entityIds))
+  }
+  if (!policy.allowIntrusiveOdors) {
+    if (assessment.odor.value === null) missing('odor')
+    else if (assessment.odor.value !== 'low') reasons.push(reason('office-odor-not-allowed', 'rejected', 'This lunch does not satisfy the configured office odor policy.', entityIds))
+  }
+  if (!policy.allowRiceBased) {
+    if (assessment.riceBased.value === null) missing('riceBased')
+    else if (assessment.riceBased.value) reasons.push(reason('office-rice-not-allowed', 'rejected', 'This lunch does not satisfy the configured rice policy.', entityIds))
+  }
+}
+
+function selectedIngredientState(recipe: PlanningRequest['recipeSnapshot'][number], candidate: GeneratorCandidate, reasons: RejectedReason[]) {
+  const selections = new Map(candidate.ingredientSelections.map((selection) => [selection.requirementId, selection]))
+  const selected = new Set<string>()
+  const unresolved = new Map<string, string[]>()
+  for (const requirement of recipe.requirements) {
+    const selection = selections.get(requirement.requirementId)
+    const possible = [requirement.canonicalIngredientId, ...requirement.alternatives.map(({ canonicalIngredientId }) => canonicalIngredientId)]
+    if (!selection) {
+      if (!requirement.optional && !requirement.alternatives.length) selected.add(requirement.canonicalIngredientId)
+      else for (const ingredientId of possible) unresolved.set(ingredientId, [...(unresolved.get(ingredientId) ?? []), requirement.requirementId])
+      continue
+    }
+    if (selection.selection === 'excluded-optional') {
+      if (!requirement.optional) reasons.push(reason('candidate-planning-invalid', 'rejected', 'A required ingredient cannot be excluded.', [candidate.candidateId, requirement.requirementId]))
+      continue
+    }
+    if (selection.selection === 'primary') {
+      selected.add(requirement.canonicalIngredientId)
+      continue
+    }
+    const alternative = requirement.alternatives.find(({ alternativeId }) => alternativeId === selection.alternativeId)
+    if (!alternative) reasons.push(reason('candidate-planning-invalid', 'rejected', 'Ingredient selection references an alternative outside its requirement.', [candidate.candidateId, requirement.requirementId, selection.alternativeId!]))
+    else selected.add(alternative.canonicalIngredientId)
+  }
+  for (const requirementId of selections.keys()) {
+    if (!recipe.requirements.some((requirement) => requirement.requirementId === requirementId)) reasons.push(reason('candidate-planning-invalid', 'rejected', 'Ingredient selection references a requirement outside this recipe revision.', [candidate.candidateId, requirementId]))
+  }
+  return { selected, unresolved }
 }
 
 function classifyPlanningError(message: string, candidate: GeneratorCandidate): RejectedReason {
@@ -219,7 +325,8 @@ function classifyPlanningError(message: string, candidate: GeneratorCandidate): 
   if (message.includes('fractional item')) return reason('whole-item-constraint', 'rejected', message, ids)
   if (message.includes('Storage window')) return reason('storage-window-exceeded', 'rejected', message, ids)
   if (message.includes('reviewed refrigerated') || message.includes('reviewed frozen') || message.includes('reviewed suitability')) return reason('storage-evidence-missing', 'review-needed', message, ids, ['recipe.suitability.storageModes'])
-  if (message.includes('before the cook event')) return reason('meal-before-cooking', 'rejected', message, ids)
+  if (message.includes('before the cook event')) return reason('meal-before-food-ready', 'rejected', 'Meal service occurs before the batch is expected to be ready.', [...ids, ...candidate.allocations.map(({ mealRequirementId }) => mealRequirementId)])
+  if (message.includes('exact intended meal time')) return reason('meal-service-time-required', 'review-needed', message, ids, ['mealRequirement.intendedAt'])
   if (message.includes('negative')) return reason('batch-output-insufficient', 'rejected', message, ids)
   return reason('candidate-planning-invalid', 'rejected', message, ids)
 }
@@ -232,11 +339,9 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
   const recipe = request.recipeSnapshot.find(({ identity }) => identity.recipeId === candidate.recipeId && identity.revisionId === candidate.recipeRevisionId)
   if (!recipe) {
     reasons.push(reason('recipe-revision-not-found', 'rejected', 'The candidate recipe revision is not in this planning snapshot.', [candidate.recipeId, candidate.recipeRevisionId]))
-    return candidateFeasibilitySchema.parse({ candidateId: candidate.candidateId, status: 'rejected', recipeId: candidate.recipeId, recipeRevisionId: candidate.recipeRevisionId, reasons, explanations, projection: null })
+    return candidateFeasibilitySchema.parse({ candidateId: candidate.candidateId, status: 'rejected', recipeId: candidate.recipeId, recipeRevisionId: candidate.recipeRevisionId, reasons, explanations, timing: null, projection: null })
   }
 
-  const recipeEvidenceIds = new Set(recipe.source.evidence.map(({ evidenceId }) => evidenceId))
-  if (candidate.serviceProfile.evidenceIds.some((evidenceId) => !recipeEvidenceIds.has(evidenceId))) reasons.push(reason('office-suitability-review-required', 'review-needed', 'Candidate service evidence does not belong to this recipe revision.', [candidate.candidateId], ['serviceProfile.evidenceIds']))
   if (!recipe.review.readiness.recommendationReady) reasons.push(reason('recommendation-readiness-required', 'review-needed', 'Automatic selection requires a recommendation-ready recipe revision.', [recipe.identity.recipeId, recipe.identity.revisionId], recipe.review.readiness.blockers.flatMap((blocker) => recommendationBlockerFields[blocker] ?? [])))
   if (request.hardConstraints.avoidedRecipeIds.includes(recipe.identity.recipeId)) reasons.push(reason('hard-recipe-avoid', 'rejected', 'The recipe is on the request hard-avoid list.', [recipe.identity.recipeId]))
   const avoidedIngredients = recipe.requirements.filter((requirement) => !requirement.optional && request.hardConstraints.avoidedIngredientIds.includes(requirement.canonicalIngredientId))
@@ -245,11 +350,24 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
   const votes = request.preferences.householdRecipePreferences.find(({ recipeId: preferenceRecipeId }) => preferenceRecipeId === recipe.identity.recipeId)
   if (votes && votes.likedVotes > 0 && votes.dislikedVotes > 0) explanations.push({ code: 'household-preference-conflict', message: 'Household taste votes conflict; a later optimizer must not treat this as universally liked.', entityIds: [recipe.identity.recipeId] })
 
+  const ingredientState = selectedIngredientState(recipe, candidate, reasons)
+  const referencedServiceAssessment = request.serviceAssessments.find(({ assessmentId, assessmentRevisionId }) => assessmentId === candidate.serviceAssessmentId && assessmentRevisionId === candidate.serviceAssessmentRevisionId)
+  const serviceAssessment = referencedServiceAssessment?.recipeId === recipe.identity.recipeId && referencedServiceAssessment.recipeRevisionId === recipe.identity.revisionId ? referencedServiceAssessment : null
+
   const requirements = new Map(request.mealRequirements.map((requirement) => [requirement.mealRequirementId, requirement]))
-  const cookingWindow = request.cookingWindows.find(({ start, end }) => Date.parse(start) <= Date.parse(candidate.cookAt) && Date.parse(candidate.cookAt) <= Date.parse(end))
-  if (!cookingWindow) reasons.push(reason('cooking-window-unavailable', 'rejected', 'The proposed cook event is outside every active cooking window.', [candidate.candidateId]))
-  else if (recipe.effort.activeMinutes.value === null) reasons.push(reason('recommendation-readiness-required', 'review-needed', 'Active time is unknown for the selected cooking window.', [candidate.candidateId], ['recipe.effort.activeMinutes']))
-  else if (recipe.effort.activeMinutes.value > cookingWindow.maxActiveMinutes) reasons.push(reason('active-time-exceeded', 'rejected', 'Recipe active time exceeds the selected cooking-window capacity.', [candidate.candidateId, cookingWindow.cookingWindowId]))
+  const reviewedTotalMinutes = reviewedSourced(recipe.effort.totalMinutes) ? recipe.effort.totalMinutes.value : null
+  const reviewedActiveMinutes = reviewedSourced(recipe.effort.activeMinutes) ? recipe.effort.activeMinutes.value : null
+  const expectedReadyAt = typeof reviewedTotalMinutes === 'number' ? new Date(Date.parse(candidate.cookingStartsAt) + reviewedTotalMinutes * 60_000).toISOString() : null
+  const startingWindows = request.cookingWindows.filter(({ start, end }) => Date.parse(start) <= Date.parse(candidate.cookingStartsAt) && Date.parse(candidate.cookingStartsAt) <= Date.parse(end))
+  const durationWindows = expectedReadyAt === null ? startingWindows : startingWindows.filter(({ end }) => Date.parse(expectedReadyAt) <= Date.parse(end))
+  const cookingWindow = (typeof reviewedActiveMinutes === 'number' ? durationWindows.find(({ maxActiveMinutes }) => reviewedActiveMinutes <= maxActiveMinutes) : durationWindows[0]) ?? durationWindows[0] ?? startingWindows[0] ?? null
+  if (expectedReadyAt === null) reasons.push(reason('cooking-duration-review-required', 'review-needed', 'Expected readiness requires reviewed elapsed cooking or preparation time.', [candidate.candidateId], ['recipe.effort.totalMinutes']))
+  if (!cookingWindow) reasons.push(reason('cooking-window-unavailable', 'rejected', 'The proposed cooking start is outside every active cooking window.', [candidate.candidateId]))
+  else if (expectedReadyAt !== null && Date.parse(expectedReadyAt) > Date.parse(cookingWindow.end)) reasons.push(reason('cooking-window-duration-exceeded', 'rejected', 'The full cooking interval does not fit inside the selected cooking window.', [candidate.candidateId, cookingWindow.cookingWindowId]))
+  if (cookingWindow) {
+    if (reviewedActiveMinutes === null) reasons.push(reason('cooking-duration-review-required', 'review-needed', 'Cooking-window capacity requires reviewed active time.', [candidate.candidateId], ['recipe.effort.activeMinutes']))
+    else if (reviewedActiveMinutes > cookingWindow.maxActiveMinutes) reasons.push(reason('active-time-exceeded', 'rejected', 'Recipe active time exceeds the selected cooking-window capacity.', [candidate.candidateId, cookingWindow.cookingWindowId]))
+  }
   const allocationRequests: { allocationId: string; requirement: MealRequirement; mealPortions: number; service: 'fresh' | 'refrigerated-leftover' | 'frozen-leftover' }[] = []
   candidate.allocations.forEach((allocation, index) => {
     const requirement = requirements.get(allocation.mealRequirementId)
@@ -264,6 +382,12 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
     if (requirement.lock.locked && !lockedChoice) reasons.push(reason('locked-choice-missing', 'review-needed', 'The locked meal has no immutable recipe choice in the request.', entityIds, ['lockedChoices']))
     if (lockedChoice && (lockedChoice.recipeId !== recipe.identity.recipeId || lockedChoice.recipeRevisionId !== recipe.identity.revisionId)) reasons.push(reason('locked-choice-mismatch', 'rejected', 'Candidate does not match the locked recipe revision.', [...entityIds, lockedChoice.recipeId]))
     if (requirement.constraints.avoidRecipeIds.includes(recipe.identity.recipeId)) reasons.push(reason('hard-recipe-avoid', 'rejected', 'This meal requirement explicitly avoids the recipe.', entityIds))
+    for (const ingredientId of requirement.constraints.mustUseIngredientIds) {
+      if (ingredientState.selected.has(ingredientId)) continue
+      const unresolvedRequirementIds = ingredientState.unresolved.get(ingredientId)
+      if (unresolvedRequirementIds?.length) reasons.push(reason('must-use-ingredient-unresolved', 'review-needed', 'The required ingredient is available only through an unresolved optional or alternative selection.', [...entityIds, ingredientId, ...unresolvedRequirementIds], ['ingredientSelections']))
+      else reasons.push(reason('must-use-ingredient-missing', 'rejected', 'The candidate does not use a required ingredient for this meal.', [...entityIds, ingredientId]))
+    }
     const roleMatches = recipe.mealRoles.primary.includes(requirement.meal) || (requirement.meal === 'lunch' && allocation.service !== 'fresh' && recipe.mealRoles.primary.includes('dinner'))
     if (!roleMatches) reasons.push(reason('meal-role-mismatch', 'rejected', 'Recipe role does not match the requested meal or a reviewed stored-lunch route.', entityIds))
     if (requirement.meal === 'lunch' && allocation.service === 'fresh' && !requirement.constraints.allowLunchCooking) reasons.push(reason('lunch-cooking-not-allowed', 'rejected', 'This lunch would require cooking at lunchtime, which is disabled for the meal.', entityIds))
@@ -280,22 +404,29 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
         else if (!['good', 'acceptable'].includes(quality.value as string)) reasons.push(reason('leftover-quality-not-approved', 'rejected', 'The reviewed leftover quality is not suitable for this allocation.', entityIds))
       }
     }
-    if (requirement.constraints.maxActiveMinutes !== null) {
-      if (recipe.effort.activeMinutes.value === null) reasons.push(reason('recommendation-readiness-required', 'review-needed', 'Active time is unknown for a constrained meal.', entityIds, ['recipe.effort.activeMinutes']))
-      else if (recipe.effort.activeMinutes.value > requirement.constraints.maxActiveMinutes) reasons.push(reason('active-time-exceeded', 'rejected', 'Recipe active time exceeds the meal limit.', entityIds))
+    const applicableServiceAssessment = serviceAssessment?.applicableServices.includes(allocation.service) ? serviceAssessment : null
+    if (allocation.service === 'fresh') {
+      if (requirement.intendedAt === null) reasons.push(reason('meal-service-time-required', 'review-needed', 'An exact fresh meal time is required to prove the food will be ready before service.', entityIds, ['mealRequirement.intendedAt']))
+      if (requirement.constraints.maxActiveMinutes !== null && reviewedSourced(recipe.effort.activeMinutes) && (recipe.effort.activeMinutes.value as number) > requirement.constraints.maxActiveMinutes) reasons.push(reason('active-time-exceeded', 'rejected', 'Recipe active time exceeds the fresh meal limit.', entityIds))
+      if (requirement.constraints.maxElapsedMinutes !== null && reviewedTotalMinutes !== null && reviewedTotalMinutes > requirement.constraints.maxElapsedMinutes) reasons.push(reason('elapsed-time-exceeded', 'rejected', 'Recipe elapsed time exceeds the fresh meal limit.', entityIds))
+    } else {
+      if (requirement.constraints.maxActiveMinutes !== null) {
+        if (!applicableServiceAssessment || !reviewedSourced(applicableServiceAssessment.activeMinutes)) reasons.push(reason('service-effort-review-required', 'review-needed', 'Stored meal service needs reviewed active serving or reheating time.', entityIds, ['serviceAssessment.activeMinutes']))
+        else if ((applicableServiceAssessment.activeMinutes.value as number) > requirement.constraints.maxActiveMinutes) reasons.push(reason('service-active-time-exceeded', 'rejected', 'Reviewed serving or reheating active time exceeds the meal limit.', entityIds))
+      }
+      if (requirement.constraints.maxElapsedMinutes !== null) {
+        if (!applicableServiceAssessment || !reviewedSourced(applicableServiceAssessment.elapsedMinutes)) reasons.push(reason('service-effort-review-required', 'review-needed', 'Stored meal service needs reviewed elapsed serving or reheating time.', entityIds, ['serviceAssessment.elapsedMinutes']))
+        else if ((applicableServiceAssessment.elapsedMinutes.value as number) > requirement.constraints.maxElapsedMinutes) reasons.push(reason('service-elapsed-time-exceeded', 'rejected', 'Reviewed serving or reheating elapsed time exceeds the meal limit.', entityIds))
+      }
     }
-    if (requirement.constraints.maxElapsedMinutes !== null) {
-      if (recipe.effort.totalMinutes.value === null) reasons.push(reason('recommendation-readiness-required', 'review-needed', 'Elapsed time is unknown for a constrained meal.', entityIds, ['recipe.effort.totalMinutes']))
-      else if (recipe.effort.totalMinutes.value > requirement.constraints.maxElapsedMinutes) reasons.push(reason('elapsed-time-exceeded', 'rejected', 'Recipe elapsed time exceeds the meal limit.', entityIds))
-    }
-    addOfficeLunchReasons(request, candidate, requirement, reasons)
+    addOfficeLunchReasons(request, candidate, requirement, applicableServiceAssessment, reasons)
     allocationRequests.push({ allocationId: `allocation-${candidate.candidateId.replace(/^candidate-/, '')}-${index + 1}`, requirement, mealPortions: allocation.mealPortions, service: allocation.service })
   })
 
   let projection: CandidateFeasibility['projection'] = null
-  try {
+  if (expectedReadyAt !== null) try {
     const batch = planCookingBatch(recipe, { batchId: `batch-${candidate.candidateId.replace(/^candidate-/, '')}`, groceryDemandId: `grocery-demand-${candidate.candidateId.replace(/^candidate-/, '')}`, multiplier: candidate.batchMultiplier, sourceYieldSelection: candidate.sourceYieldSelection ?? undefined })
-    const event = scheduleCookEvent(recipe, batch, { cookEventId: `cook-event-${candidate.candidateId.replace(/^candidate-/, '')}`, intendedAt: candidate.cookAt })
+    const event = scheduleCookEvent(recipe, batch, { cookEventId: `cook-event-${candidate.candidateId.replace(/^candidate-/, '')}`, intendedAt: expectedReadyAt })
     const allocated = allocateBatchToMeals(recipe, batch, event, allocationRequests)
     const allocatedAmount = allocated.allocations.reduce((sum, allocation) => sum + allocation.amount.amount, 0)
     projection = { batchOutput: batch.plannedOutput, allocatedOutput: { ...batch.plannedOutput, amount: allocatedAmount }, remainder: allocated.remainder }
@@ -306,5 +437,6 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
   const deduplicatedReasons = reasons.filter((item, index) => reasons.findIndex((candidateReason) => candidateReason.code === item.code && JSON.stringify(candidateReason.entityIds) === JSON.stringify(item.entityIds)) === index)
   const status: CandidateFeasibility['status'] = deduplicatedReasons.some(({ disposition }) => disposition === 'rejected') ? 'rejected' : deduplicatedReasons.length ? 'review-needed' : 'eligible'
   if (status === 'eligible') explanations.push({ code: 'candidate-valid', message: 'Candidate satisfies the implemented G1 hard constraints.', entityIds: [candidate.candidateId] })
-  return candidateFeasibilitySchema.parse({ candidateId: candidate.candidateId, status, recipeId: recipe.identity.recipeId, recipeRevisionId: recipe.identity.revisionId, reasons: deduplicatedReasons, explanations, projection })
+  const timing = expectedReadyAt !== null && cookingWindow ? { cookingStartsAt: candidate.cookingStartsAt, expectedReadyAt, cookingWindowId: cookingWindow.cookingWindowId } : null
+  return candidateFeasibilitySchema.parse({ candidateId: candidate.candidateId, status, recipeId: recipe.identity.recipeId, recipeRevisionId: recipe.identity.revisionId, reasons: deduplicatedReasons, explanations, timing, projection })
 }

@@ -5,7 +5,7 @@ import { computeRecipeV3Readiness, recipeV3Schema } from './recipeV3'
 import { adaptRecipeCatalogV2ToV3 } from './recipeV3Migration'
 import { buildGeneratorReadinessReport, generatorReadinessReportSchema } from './generatorReadinessV3'
 import { candidateFeasibilitySchema, evaluateCandidateFeasibility, generatorCandidateSchema, planningRequestSchema } from './generatorV3'
-import { generatorFixtureRecipes, infeasibleWeekScenario, wholeWeekCandidateFixtures, wholeWeekGeneratorScenario, wholeWeekPlanningRequest } from './generatorV3Fixtures'
+import { generatorFixtureRecipes, generatorFixtureServiceAssessments, infeasibleWeekScenario, wholeWeekCandidateFixtures, wholeWeekGeneratorScenario, wholeWeekPlanningRequest } from './generatorV3Fixtures'
 
 const codes = (candidate: Parameters<typeof evaluateCandidateFeasibility>[1]) => evaluateCandidateFeasibility(wholeWeekPlanningRequest, candidate).reasons.map(({ code }) => code)
 
@@ -44,6 +44,7 @@ describe('G1 candidate feasibility and S12', () => {
     expect(result.status).toBe('eligible')
     expect(result.projection).toMatchObject({ batchOutput: { amount: 6 }, allocatedOutput: { amount: 6 }, remainder: { amount: 0 } })
     expect(result.explanations.map(({ code }) => code)).toContain('lunch-from-dedicated-prep')
+    expect(result.timing).toMatchObject({ cookingStartsAt: '2026-11-15T19:20:00.000Z', expectedReadyAt: '2026-11-15T20:00:00.000Z' })
   })
 
   it('accepts a dinner batch that safely supplies a later lunch and explains taste conflict', () => {
@@ -102,15 +103,135 @@ describe('G1 candidate feasibility and S12', () => {
   it('rejects storage beyond the reviewed window', () => {
     const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
     candidate.candidateId = 'candidate-storage-window'
-    candidate.cookAt = '2026-11-14T00:00:00.000Z'
+    candidate.cookingStartsAt = '2026-11-14T00:00:00.000Z'
     expect(codes(candidate)).toContain('storage-window-exceeded')
   })
 
   it('rejects cooking outside active windows', () => {
     const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
     candidate.candidateId = 'candidate-no-cooking-window'
-    candidate.cookAt = '2026-11-14T20:00:00.000Z'
+    candidate.cookingStartsAt = '2026-11-14T20:00:00.000Z'
     expect(codes(candidate)).toContain('cooking-window-unavailable')
+  })
+
+  it('requires the full reviewed cooking interval to fit the selected window', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    request.cookingWindows = [{ cookingWindowId: 'cooking-window-short', start: '2026-11-15T19:20:00.000Z', end: '2026-11-15T20:00:00.000Z', maxActiveMinutes: 20 }]
+    expect(evaluateCandidateFeasibility(request, wholeWeekCandidateFixtures.sundayPrepLunches).status).toBe('eligible')
+    const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
+    candidate.candidateId = 'candidate-short-window'
+    candidate.cookingStartsAt = '2026-11-15T19:21:00.000Z'
+    expect(evaluateCandidateFeasibility(request, candidate).reasons.map(({ code }) => code)).toContain('cooking-window-duration-exceeded')
+  })
+
+  it('rejects meal service before expected cooking completion', () => {
+    const candidate = structuredClone(wholeWeekCandidateFixtures.dinnerWithLeftoverLunch)
+    candidate.candidateId = 'candidate-food-not-ready'
+    candidate.cookingStartsAt = '2026-11-17T02:50:00.000Z'
+    expect(codes(candidate)).toContain('meal-before-food-ready')
+  })
+
+  it('measures reviewed storage from expected completion and preserves Pacific local dates', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    const recipe = structuredClone(generatorFixtureRecipes.prepLunch)
+    const refrigerated = recipe.suitability.storageModes.find(({ mode }) => mode === 'refrigerated')
+    if (!refrigerated) throw new Error('Fixture needs refrigerated storage')
+    refrigerated.maxDurationHours = 24
+    request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+    const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
+    candidate.candidateId = 'candidate-completion-based-storage'
+    candidate.allocations = [candidate.allocations[0]]
+    const result = evaluateCandidateFeasibility(request, candidate)
+    expect(result.status).toBe('eligible')
+    expect(result.timing?.expectedReadyAt).toBe('2026-11-15T20:00:00.000Z')
+    expect(evaluateCandidateFeasibility(wholeWeekPlanningRequest, wholeWeekCandidateFixtures.dinnerWithLeftoverLunch).status).toBe('eligible')
+  })
+
+  it('requires review when elapsed cooking duration is not trustworthy', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    const recipe = structuredClone(generatorFixtureRecipes.prepLunch)
+    recipe.effort.totalMinutes = { value: null, confidence: 'unknown', evidenceIds: [], unknownReason: 'Not reviewed.' }
+    recipe.review.readiness = computeRecipeV3Readiness(recipe)
+    request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+    const result = evaluateCandidateFeasibility(request, wholeWeekCandidateFixtures.sundayPrepLunches)
+    expect(result.status).toBe('review-needed')
+    expect(result.reasons).toEqual(expect.arrayContaining([expect.objectContaining({ code: 'cooking-duration-review-required', disposition: 'review-needed' })]))
+    expect(result.projection).toBeNull()
+  })
+
+  it('uses reviewed leftover service effort instead of the original batch cooking effort', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    const recipe = structuredClone(generatorFixtureRecipes.dinner)
+    const evidenceIds = recipe.effort.activeMinutes.evidenceIds
+    recipe.effort.activeMinutes = { value: 45, confidence: 'reviewed', evidenceIds, unknownReason: null }
+    recipe.effort.totalMinutes = { value: 50, confidence: 'reviewed', evidenceIds, unknownReason: null }
+    recipe.review.readiness = computeRecipeV3Readiness(recipe)
+    request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+    request.mealRequirements = request.mealRequirements.map((requirement) => requirement.mealRequirementId === 'meal-requirement-2026-11-17-lunch'
+      ? { ...requirement, constraints: { ...requirement.constraints, maxActiveMinutes: 10, maxElapsedMinutes: 15 } }
+      : requirement)
+    const candidate = structuredClone(wholeWeekCandidateFixtures.dinnerWithLeftoverLunch)
+    candidate.candidateId = 'candidate-quick-leftover-service'
+    candidate.cookingStartsAt = '2026-11-17T02:10:00.000Z'
+    const result = evaluateCandidateFeasibility(request, candidate)
+    expect(result.status).toBe('eligible')
+    expect(result.reasons.map(({ code }) => code)).not.toEqual(expect.arrayContaining(['active-time-exceeded', 'elapsed-time-exceeded']))
+  })
+
+  it('enforces must-use ingredients with explicit alternative selection', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    const recipe = structuredClone(generatorFixtureRecipes.prepLunch)
+    const alternativeRequirement = recipe.requirements[0]
+    const alternative = {
+      alternativeId: 'alternative-must-use-fixture',
+      label: 'Synthetic alternate ingredient',
+      canonicalIngredientId: 'ingredient-must-use-alternate',
+      variantId: 'variant-must-use-alternate',
+      quantity: alternativeRequirement.selectedPlanningQuantity,
+      relationship: 'substitution' as const,
+    }
+    alternativeRequirement.alternatives.push(alternative)
+    request.recipeSnapshot = request.recipeSnapshot.map((item) => item.identity.recipeId === recipe.identity.recipeId ? recipeV3Schema.parse(recipe) : item)
+    request.mealRequirements = request.mealRequirements.map((requirement) => requirement.mealRequirementId === 'meal-requirement-2026-11-16-lunch'
+      ? { ...requirement, constraints: { ...requirement.constraints, mustUseIngredientIds: [alternative.canonicalIngredientId] } }
+      : requirement)
+    const selected = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
+    selected.candidateId = 'candidate-selected-alternative'
+    selected.ingredientSelections.push({ requirementId: alternativeRequirement.requirementId, selection: 'alternative', alternativeId: alternative.alternativeId })
+    expect(evaluateCandidateFeasibility(request, selected).status).toBe('eligible')
+    const unresolved = structuredClone(selected)
+    unresolved.candidateId = 'candidate-unresolved-alternative'
+    unresolved.ingredientSelections = unresolved.ingredientSelections.filter(({ requirementId }) => requirementId !== alternativeRequirement.requirementId)
+    const unresolvedResult = evaluateCandidateFeasibility(request, unresolved)
+    expect(unresolvedResult.status).toBe('review-needed')
+    expect(unresolvedResult.reasons.map(({ code }) => code)).toContain('must-use-ingredient-unresolved')
+  })
+
+  it('rejects a must-use ingredient absent from the selected recipe', () => {
+    const request = structuredClone(wholeWeekPlanningRequest)
+    request.mealRequirements = request.mealRequirements.map((requirement) => requirement.mealRequirementId === 'meal-requirement-2026-11-16-lunch'
+      ? { ...requirement, constraints: { ...requirement.constraints, mustUseIngredientIds: ['ingredient-not-in-recipe'] } }
+      : requirement)
+    expect(evaluateCandidateFeasibility(request, wholeWeekCandidateFixtures.sundayPrepLunches).reasons.map(({ code }) => code)).toContain('must-use-ingredient-missing')
+  })
+
+  it('requires claim-specific reviewed office evidence and ignores candidate self-certification', () => {
+    const falsifiedRequest = structuredClone(wholeWeekPlanningRequest)
+    const assessment = falsifiedRequest.serviceAssessments.find(({ assessmentId }) => assessmentId === generatorFixtureServiceAssessments.prepLunch.assessmentId)
+    if (!assessment) throw new Error('Fixture needs a service assessment')
+    assessment.assembly.evidenceIds = [assessment.odor.evidenceIds[0]]
+    expect(planningRequestSchema.safeParse(falsifiedRequest).success).toBe(false)
+
+    const selfCertifiedInput = {
+      ...wholeWeekCandidateFixtures.sundayPrepLunches,
+      candidateId: 'candidate-self-certified-office',
+      serviceAssessmentId: null,
+      serviceAssessmentRevisionId: null,
+      serviceProfile: { reviewState: 'reviewed', assembly: 'none', reheating: 'suitable', odor: 'low', riceBased: false },
+    }
+    expect(generatorCandidateSchema.safeParse(selfCertifiedInput).success).toBe(false)
+    const selfCertified = { ...wholeWeekCandidateFixtures.sundayPrepLunches, candidateId: 'candidate-unreviewed-office', serviceAssessmentId: null, serviceAssessmentRevisionId: null }
+    expect(evaluateCandidateFeasibility(wholeWeekPlanningRequest, selfCertified).reasons.map(({ code }) => code)).toContain('office-suitability-review-required')
   })
 
   it('never treats an unreviewed migrated recipe as automatically eligible', () => {
@@ -122,7 +243,8 @@ describe('G1 candidate feasibility and S12', () => {
       candidateId: 'candidate-unreviewed-recipe',
       recipeId: migrated.identity.recipeId,
       recipeRevisionId: migrated.identity.revisionId,
-      serviceProfile: { reviewState: 'unknown' as const, assembly: 'unknown' as const, reheating: 'unknown' as const, odor: 'unknown' as const, riceBased: null, evidenceIds: [] },
+      serviceAssessmentId: null,
+      serviceAssessmentRevisionId: null,
     }
     const result = evaluateCandidateFeasibility(request, candidate)
     expect(result.status).not.toBe('eligible')

@@ -1,7 +1,7 @@
 import { pilotRecipes } from '../data/pilotCatalog'
 import { computeRecipeV3Readiness, recipeV3Schema, type RecipeV3 } from './recipeV3'
 import { adaptRecipeV2ToDraftV3 } from './recipeV3Migration'
-import { generatorCandidateSchema, planningRequestSchema, type GeneratorCandidate, type PlanningRequest } from './generatorV3'
+import { generatorCandidateSchema, planningRequestSchema, type GeneratorCandidate, type OfficeServiceAssessment, type PlanningRequest } from './generatorV3'
 
 const fixtureIds = {
   breakfast: '10000000-0000-4000-8000-000000000001',
@@ -57,6 +57,43 @@ export const generatorFixtureRecipes = {
   dinner: reviewedFixture('sheet-pan-chicken-fajitas', fixtureIds.dinner, 'dinner', 4),
 }
 
+const serviceClaims = ['assembly', 'reheating', 'odor', 'rice-based', 'active-minutes', 'elapsed-minutes'] as const
+function reviewedServiceAssessment(recipe: RecipeV3, suffix: string, assembly: 'none' | 'simple' | 'intensive' = 'none'): OfficeServiceAssessment {
+  const evidence = serviceClaims.map((claim) => ({
+    evidenceId: `evidence-service-${suffix}-${claim}`,
+    kind: 'editorial-judgment' as const,
+    capturedAt: '2026-11-15T18:00:00.000Z',
+    reviewerNote: `Synthetic fixture review specifically establishes ${claim}.`,
+    claims: [claim],
+  }))
+  const fact = <T>(claim: typeof serviceClaims[number], value: T) => ({ value, confidence: 'reviewed' as const, evidenceIds: [`evidence-service-${suffix}-${claim}`], unknownReason: null })
+  return {
+    assessmentId: `service-assessment-${suffix}`,
+    assessmentRevisionId: `service-assessment-revision-${suffix}`,
+    recipeId: recipe.identity.recipeId,
+    recipeRevisionId: recipe.identity.revisionId,
+    reviewedAt: '2026-11-15T18:00:00.000Z',
+    applicableServices: ['refrigerated-leftover', 'frozen-leftover'],
+    evidence,
+    assembly: fact('assembly', assembly),
+    reheating: fact('reheating', 'suitable' as const),
+    odor: fact('odor', 'low' as const),
+    riceBased: fact('rice-based', false),
+    activeMinutes: fact('active-minutes', 5),
+    elapsedMinutes: fact('elapsed-minutes', 10),
+  }
+}
+
+export const generatorFixtureServiceAssessments = {
+  prepLunch: reviewedServiceAssessment(generatorFixtureRecipes.prepLunch, 'prep-lunch-v1'),
+  prepLunchIntensive: reviewedServiceAssessment(generatorFixtureRecipes.prepLunch, 'prep-lunch-intensive-v1', 'intensive'),
+  dinner: reviewedServiceAssessment(generatorFixtureRecipes.dinner, 'dinner-v1'),
+}
+
+const ingredientSelectionsFor = (recipe: RecipeV3): GeneratorCandidate['ingredientSelections'] => recipe.requirements
+  .filter((requirement) => requirement.optional || requirement.alternatives.length)
+  .map(({ requirementId }) => ({ requirementId, selection: 'primary', alternativeId: null }))
+
 const dateByDay = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20', '2026-11-21', '2026-11-22']
 const utcForMeal = (date: string, meal: 'breakfast' | 'lunch' | 'dinner') => {
   const hour = meal === 'breakfast' ? '16' : meal === 'lunch' ? '20' : '03'
@@ -98,6 +135,7 @@ export const wholeWeekPlanningRequest: PlanningRequest = planningRequestSchema.p
   preparedLots: [],
   recentMeals: [{ recipeId: fixtureIds.dinner, servedAt: '2026-11-12T03:00:00.000Z' }],
   cookingWindows: [{ cookingWindowId: 'cooking-window-week-capacity', start: '2026-11-15T00:00:00.000Z', end: '2026-11-23T08:00:00.000Z', maxActiveMinutes: 45 }],
+  serviceAssessments: Object.values(generatorFixtureServiceAssessments),
   hardConstraints: { avoidedRecipeIds: [], avoidedIngredientIds: [] },
   preferences: {
     preferredRecipeIds: [fixtureIds.breakfast],
@@ -107,48 +145,47 @@ export const wholeWeekPlanningRequest: PlanningRequest = planningRequestSchema.p
   officeLunchPolicy: { enabled: true, maxAssembly: 'none', requireReheatingSuitable: true, allowIntrusiveOdors: false, allowRiceBased: false },
 })
 
-const reviewedService = (recipe: RecipeV3) => ({ reviewState: 'reviewed' as const, assembly: 'none' as const, reheating: 'suitable' as const, odor: 'low' as const, riceBased: false, evidenceIds: [recipe.source.evidence[0].evidenceId] })
 const candidate = (value: GeneratorCandidate) => generatorCandidateSchema.parse(value)
 
 export const wholeWeekCandidateFixtures = {
   sundayPrepLunches: candidate({
     candidateId: 'candidate-sunday-prep-lunches', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [0, 1, 2, 3].map((day) => ({ mealRequirementId: `meal-requirement-${dateByDay[day]}-lunch`, mealPortions: lunchPortions[day], service: 'refrigerated-leftover' as const })),
-    serviceProfile: reviewedService(generatorFixtureRecipes.prepLunch),
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: generatorFixtureServiceAssessments.prepLunch.assessmentId, serviceAssessmentRevisionId: generatorFixtureServiceAssessments.prepLunch.assessmentRevisionId,
   }),
   dinnerWithLeftoverLunch: candidate({
     candidateId: 'candidate-dinner-leftovers', recipeId: fixtureIds.dinner, recipeRevisionId: generatorFixtureRecipes.dinner.identity.revisionId,
-    strategy: 'prior-meal-batch', cookAt: '2026-11-17T03:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: 'meal-requirement-2026-11-16-dinner',
+    strategy: 'prior-meal-batch', cookingStartsAt: '2026-11-17T02:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: 'meal-requirement-2026-11-16-dinner',
     allocations: [
       { mealRequirementId: 'meal-requirement-2026-11-16-dinner', mealPortions: 2, service: 'fresh' },
       { mealRequirementId: 'meal-requirement-2026-11-17-lunch', mealPortions: 2, service: 'refrigerated-leftover' },
     ],
-    serviceProfile: reviewedService(generatorFixtureRecipes.dinner),
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.dinner), serviceAssessmentId: generatorFixtureServiceAssessments.dinner.assessmentId, serviceAssessmentRevisionId: generatorFixtureServiceAssessments.dinner.assessmentRevisionId,
   }),
   lunchtimeCooking: candidate({
     candidateId: 'candidate-lunchtime-cooking', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'meal-time-cook', cookAt: '2026-11-16T19:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'meal-time-cook', cookingStartsAt: '2026-11-16T19:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-lunch', mealPortions: 1, service: 'fresh' }],
-    serviceProfile: reviewedService(generatorFixtureRecipes.prepLunch),
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: null, serviceAssessmentRevisionId: null,
   }),
   lockedMismatch: candidate({
     candidateId: 'candidate-locked-mismatch', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'meal-time-cook', cookAt: '2026-11-19T03:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'meal-time-cook', cookingStartsAt: '2026-11-19T02:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-18-dinner', mealPortions: 2, service: 'fresh' }],
-    serviceProfile: reviewedService(generatorFixtureRecipes.prepLunch),
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: null, serviceAssessmentRevisionId: null,
   }),
   officeAssembly: candidate({
     candidateId: 'candidate-office-assembly', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-lunch', mealPortions: 1, service: 'refrigerated-leftover' }],
-    serviceProfile: { ...reviewedService(generatorFixtureRecipes.prepLunch), assembly: 'intensive' },
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: generatorFixtureServiceAssessments.prepLunchIntensive.assessmentId, serviceAssessmentRevisionId: generatorFixtureServiceAssessments.prepLunchIntensive.assessmentRevisionId,
   }),
   unknownOfficeSuitability: candidate({
     candidateId: 'candidate-unknown-office', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-lunch', mealPortions: 1, service: 'refrigerated-leftover' }],
-    serviceProfile: { reviewState: 'unknown', assembly: 'unknown', reheating: 'unknown', odor: 'unknown', riceBased: null, evidenceIds: [] },
+    ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: null, serviceAssessmentRevisionId: null,
   }),
 }
 
@@ -185,6 +222,7 @@ export const infeasibleWeekScenario = (() => {
     ...structuredClone(wholeWeekPlanningRequest),
     requestId: 'planning-request-insufficient-options',
     recipeSnapshot: [unreviewedRecipe],
+    serviceAssessments: [],
     preferences: { preferredRecipeIds: [], householdRecipePreferences: [] },
     lockedChoices: [],
     mealRequirements: wholeWeekPlanningRequest.mealRequirements.map((requirement) => ({ ...requirement, lock: { locked: false, reason: null } })),
@@ -194,12 +232,14 @@ export const infeasibleWeekScenario = (() => {
     recipeId: unreviewedRecipe.identity.recipeId,
     recipeRevisionId: unreviewedRecipe.identity.revisionId,
     strategy: 'meal-time-cook',
-    cookAt: '2026-11-17T03:00:00.000Z',
+    cookingStartsAt: '2026-11-17T02:20:00.000Z',
     batchMultiplier: 1,
     sourceYieldSelection: null,
     originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-dinner', mealPortions: 2, service: 'fresh' }],
-    serviceProfile: { reviewState: 'unknown', assembly: 'unknown', reheating: 'unknown', odor: 'unknown', riceBased: null, evidenceIds: [] },
+    ingredientSelections: ingredientSelectionsFor(unreviewedRecipe),
+    serviceAssessmentId: null,
+    serviceAssessmentRevisionId: null,
   })
   return { request, candidateProbes: [candidateProbe], expectedUnfillableMealRequirementIds: request.mealRequirements.filter(({ status }) => status !== 'skipped').map(({ mealRequirementId }) => mealRequirementId) }
 })()

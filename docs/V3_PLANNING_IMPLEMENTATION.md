@@ -63,6 +63,8 @@ The implementation also adds stable `recipeId` beside `recipeRevisionId`, eviden
 
 S06 (thaw-task policy execution) remains deferred. S12 candidate feasibility is implemented separately in `src/domain/generatorV3.ts`; it reuses this module's batch and allocation rules, but does not implement the whole-week optimizer.
 
+For G1 feasibility, `GeneratorCandidate.cookingStartsAt` is an explicit preparation start. The evaluator adds reviewed recipe elapsed time and passes the resulting expected completion to this module as the proposed cook-event readiness instant. Fresh-service and storage-window checks therefore compare meals with expected food readiness, not with the beginning of cooking. Actual completion at confirmation remains authoritative in the existing lifecycle.
+
 ## Grocery uncertainty behavior
 
 Each line exposes both `knownSubtotal` and nullable `total`. If any contribution cannot be quantified safely, `total` and `toBuy` remain `null`; the known portion is not discarded. `likely-owned`, unknown, unquantified, wrong-variant, and incompatible-unit pantry records subtract zero. They remain check/uncertainty signals.

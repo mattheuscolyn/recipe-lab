@@ -4,16 +4,22 @@
 
 ## Implemented boundary
 
-`src/domain/generatorV3.ts` defines Zod-validated, JSON-safe contracts for a `PlanningRequest`, a proposed `GeneratorCandidate`, and a `CandidateFeasibility` result. A request snapshots the planning horizon, requested portions, skips and locks, exact recipe revisions, hard ingredient/recipe avoids, household taste votes, active/elapsed cooking limits, active cooking windows, prepared-food inventory, pantry availability, recent meals, and office-lunch policy. `hardConstraints` is structurally separate from `preferences`; preferences can explain or eventually rank a candidate, but cannot override a rejection.
+`src/domain/generatorV3.ts` defines Zod-validated, JSON-safe contracts for a `PlanningRequest`, a proposed `GeneratorCandidate`, and a `CandidateFeasibility` result. A request snapshots the planning horizon, requested portions, skips and locks, exact recipe revisions, hard ingredient/recipe avoids, household taste votes, active/elapsed cooking limits, active cooking windows, reviewed service-assessment revisions, prepared-food inventory, pantry availability, recent meals, and office-lunch policy. `hardConstraints` is structurally separate from `preferences`; preferences can explain or eventually rank a candidate, but cannot override a rejection.
+
+`GeneratorCandidate.cookingStartsAt` is the expected start of preparation, not completion. Expected readiness is `cookingStartsAt +` the recipe revision's reviewed `totalMinutes`. The whole interval must fit one cooking window, and reviewed `activeMinutes` must fit that window's active capacity. Missing or untrustworthy duration data returns `review-needed`. Fresh service and storage timing are evaluated from expected completion; equality at a window end or meal time is allowed. Absolute timestamps continue to be projected through each meal's IANA timezone by the underlying planning rules.
 
 `evaluateCandidateFeasibility` is deterministic and side-effect free. It returns `eligible`, `rejected`, or `review-needed` with stable reason codes, involved entity IDs, and exact missing fields. It checks:
 
 - exact recipe revision and recommendation-readiness;
-- locks, skips, meal roles, hard avoids, and cooking limits;
+- locks, skips, meal roles, hard avoids, per-meal must-use ingredients, explicit alternative/optional selections, and cooking limits;
 - approved batch multipliers, source yield, whole-item constraints, output conservation, and meal portions;
 - no lunchtime cooking unless a meal explicitly permits it;
 - reviewed prepare-ahead or leftover suitability and evidence-backed storage windows; and
-- reviewed office assembly, reheating, odor, and rice suitability.
+- reviewed office assembly, reheating, odor, rice suitability, and stored-meal service effort.
+
+Cooking effort and service effort are deliberately separate. Recipe `activeMinutes` and `totalMinutes` apply to the new batch and its cooking window (and a fresh receiving meal). A stored allocation uses the selected immutable service-assessment revision's reviewed active/elapsed reheating or serving effort. A lunch therefore does not inherit the original dinner's cooking duration.
+
+Office suitability cannot be asserted by a generated candidate. A candidate only references a service-assessment ID and exact assessment revision from the request snapshot. Each reviewed fact must link to specific manual-review or editorial evidence that explicitly claims that fact; missing, mismatched, generic, or unreviewed evidence produces `review-needed` or fails contract validation.
 
 Batch projections delegate to the existing v3 planning functions. G1 therefore cannot produce a candidate that passes different portion, whole-item, timing, or storage rules than the eventual plan entities.
 
@@ -47,7 +53,8 @@ The prioritized first review group is deliberately diverse:
 
 1. Review enough diverse real recipes to satisfy the readiness gates; today the real eligible pool is empty.
 2. Implement the whole-week search/optimizer that chooses candidates, balances repetition and preferences, proves complete slot coverage, and explains infeasibility.
-3. Integrate prepared inventory and pantry-aware batch grocery demand across the chosen candidates, including S06 thaw/prep tasks.
-4. Add preview, explicit user acceptance, persistence, and rollback without replacing the current v2 plan or original personal data.
+3. Extend the G3 candidate contract and feasibility evaluator to allocate already-confirmed `preparedLots` without proposing a phantom new cook/batch. The request carries prepared inventory now for snapshot completeness, but G1 candidates intentionally cannot consume it. G3 must enforce exact recipe revision, available amount, storage window, lot version, and reservation conservation before claiming multiweek-leftover support.
+4. Integrate pantry-aware batch grocery demand across chosen new-cook candidates, including S06 thaw/prep tasks. Whole-week cooking-window contention across individually feasible candidates also belongs to G3.
+5. Add preview, explicit user acceptance, persistence, and rollback without replacing the current v2 plan or original personal data.
 
 G1 intentionally does not modify v2 data, the public planner, browser storage, UI, deployment, or the active runtime import graph.
