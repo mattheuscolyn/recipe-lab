@@ -24,7 +24,7 @@ export const recipeReviewArtifactSchema = z.object({
   evidence: z.array(evidenceRefSchema).min(1),
   editorialDecisions: z.array(z.object({
     decisionId: id('decision'),
-    subject: z.enum(['meal-portions', 'scaling', 'effort', 'storage', 'make-ahead', 'reheating', 'lunch-service', 'rights']),
+    subject: z.enum(['ingredient-normalization', 'meal-portions', 'scaling', 'effort', 'storage', 'make-ahead', 'reheating', 'lunch-service', 'rights']),
     status: z.enum(['approved', 'provisional', 'blocked']),
     rationale: z.string().trim().min(1).max(500),
     evidenceIds: z.array(id('evidence')),
@@ -43,6 +43,20 @@ export const recipeReviewArtifactSchema = z.object({
   artifact.editorialDecisions.forEach((decision, index) => decision.evidenceIds.forEach((evidenceId) => {
     if (!evidenceIds.has(evidenceId)) context.addIssue({ code: 'custom', path: ['editorialDecisions', index, 'evidenceIds'], message: `Unknown review evidence ${evidenceId}` })
   }))
+  const requiredDecisions = {
+    'ingredient-normalization': 'ingredientNormalization',
+    scaling: 'outputScaling',
+    'meal-portions': 'mealPortions',
+    effort: 'effort',
+  } as const
+  for (const [subject, recipeField] of Object.entries(requiredDecisions) as [keyof typeof requiredDecisions, (typeof requiredDecisions)[keyof typeof requiredDecisions]][]) {
+    const decisions = artifact.editorialDecisions.filter((decision) => decision.subject === subject)
+    if (decisions.length !== 1) {
+      context.addIssue({ code: 'custom', path: ['editorialDecisions'], message: `Review requires exactly one ${subject} recommendation decision` })
+      continue
+    }
+    if (decisions[0].status !== artifact.reviewedRecipe.review.recommendationDecisions[recipeField]) context.addIssue({ code: 'custom', path: ['editorialDecisions'], message: `${subject} decision must match the reviewed recipe readiness state` })
+  }
   artifact.serviceAssessments.forEach((assessment, index) => {
     if (assessment.recipeId !== artifact.recipeId || assessment.recipeRevisionId !== artifact.revisionId) context.addIssue({ code: 'custom', path: ['serviceAssessments', index], message: 'Service assessment must reference the reviewed recipe revision' })
   })

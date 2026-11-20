@@ -8,6 +8,7 @@ G2A adds an opt-in v3 review overlay. The live application still imports the v2 
 
 - `recipeReviewArtifactSchema` is the durable review record. It names the exact base and resulting revision, source-access method, capture checklist, evidence, editorial decisions, unresolved issues, reviewed recipe, and version-specific service assessments.
 - `applyRecipeReviewV3` accepts only the exact immutable base revision. It preserves stable recipe and requirement IDs, the canonical URL, and all prior evidence.
+- Every recipe revision carries explicit ingredient-normalization, output-scaling, meal-portion, and effort decision states. Only `approved` satisfies recommendation readiness; `unreviewed`, `provisional`, and `blocked` create machine-enforced blockers. A review artifact must contain exactly one matching decision for each field.
 - `reviewedRecipeCatalogV3` overlays reviewed revisions on the deterministic v2 migration without editing v2 source records.
 - `G2A_RECIPE_READINESS.json` is reproducible with `npm run report:g2a` and includes all 25 recipes.
 
@@ -41,7 +42,7 @@ Publisher facts cite `manual-source-review` evidence. Recipe Lab interpretations
 | Beef and Cabbage Stir Fry | varied dinner | four servings; time; publisher nutrition | metadata rights; recipe-specific storage/service review |
 | Easy Vegetable Stir Fry | vegetarian dinner | four 1.5-cup servings; time; publisher nutrition | metadata rights; fixed ingredient branch; recipe-specific storage/service review |
 
-The Greek salad refrigerator window is recorded as 72 hours, the conservative lower bound of the publisher's 3–4 day claim.
+The Greek salad refrigerator window is recorded as 72 hours, the conservative lower bound of the publisher's 3–4 day claim. Banana Flax Muffins, Greek Chicken Pasta Salad, and Sheet Pan Chicken Fajitas retain `unknown` categorical leftover quality: refrigeration, meal-prep, or reheating language is not attributed to the publisher as a `good` or `acceptable` rating.
 
 ## Before and after
 
@@ -56,13 +57,13 @@ The Greek salad refrigerator window is recorded as 72 hours, the conservative lo
 | Explicit maximum storage windows | 0 | 1 |
 | Recommendation-ready real recipes | 0 | 0 |
 
-Zero is intentional, not a framework-only outcome: seven concrete revisions now pass substantially more of the executable contract, but every one retains `rights-review-required`. Three also retain unknown suitability; other recipe-specific issues remain explicit in the review artifacts even where the current coarse recommendation gate does not encode them.
+Zero is intentional, not a framework-only outcome. Every recipe retains `rights-review-required`, and the provisional ingredient-normalization, meal-portion, and effort decisions now independently create formal readiness blockers. The original-batch scaling decision remains the already-reviewed, revision-specific approval. Three recipes also retain unknown overall suitability. A simulated rights-only change remains blocked; only a test-only copy with all four recommendation decisions explicitly finalized can pass the gate.
 
 ## G1 compatibility
 
 Every reviewed recipe uses the exact G1 recipe/revision contract and original-batch output math. Regression tests run real reviewed revisions through batch planning and candidate feasibility. The Greek Chicken Pasta Salad has a version-specific refrigerated office-service assessment that supports no assembly, cold service, non-rice status, and zero service effort. Odor remains unknown, so G1 correctly returns `office-suitability-review-required` instead of allowing the recipe to self-certify.
 
-No real recipe is demonstrated as `eligible` because none has all required approvals. G1 produces structured `recommendation-readiness-required` results rather than silently admitting them. Once the owner/legal rights decision and listed recipe-specific reviews are resolved, these same fixtures can demonstrate eligibility without rewriting source capture.
+No real recipe is demonstrated as `eligible` because none has all required approvals. G1 produces structured `recommendation-readiness-required` results with exact rights and editorial decision fields rather than silently admitting them. Once the owner/legal rights decision and listed recipe-specific reviews are resolved, these same fixtures can demonstrate eligibility without rewriting source capture.
 
 ## Required human decisions
 

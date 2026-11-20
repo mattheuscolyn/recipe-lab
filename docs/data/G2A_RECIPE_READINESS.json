@@ -29,7 +29,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -45,7 +49,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -61,7 +69,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -77,7 +89,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -93,7 +109,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -105,7 +125,10 @@
       "reviewStage": "g2a-source-reviewed",
       "recommendationReady": false,
       "recommendationBlockers": [
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -132,7 +155,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -145,7 +172,10 @@
       "recommendationReady": false,
       "recommendationBlockers": [
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -172,7 +202,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -188,7 +222,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -204,7 +242,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -220,7 +262,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -232,7 +278,10 @@
       "reviewStage": "g2a-source-reviewed",
       "recommendationReady": false,
       "recommendationBlockers": [
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -260,7 +309,10 @@
       "reviewStage": "g2a-source-reviewed",
       "recommendationReady": false,
       "recommendationBlockers": [
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -297,7 +349,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -313,7 +369,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -329,7 +389,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -345,7 +409,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -358,7 +426,10 @@
       "recommendationReady": false,
       "recommendationBlockers": [
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -381,7 +452,10 @@
       "reviewStage": "g2a-source-reviewed",
       "recommendationReady": false,
       "recommendationBlockers": [
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -405,7 +479,10 @@
       "recommendationReady": false,
       "recommendationBlockers": [
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": [
         {
@@ -437,7 +514,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -453,7 +534,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -469,7 +554,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     },
@@ -485,7 +574,11 @@
         "meal-portion-guidance-missing",
         "active-time-unknown",
         "suitability-unknown",
-        "rights-review-required"
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "output-scaling-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
       ],
       "unresolvedReviewIssues": []
     }

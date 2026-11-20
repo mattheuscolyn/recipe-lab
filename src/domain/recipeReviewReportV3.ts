@@ -43,6 +43,10 @@ const recommendationBlockers = new Set([
   'essential-subrecipe-unresolved',
   'rights-review-required',
   'rights-restricted',
+  'ingredient-normalization-approval-required',
+  'output-scaling-approval-required',
+  'meal-portion-approval-required',
+  'effort-approval-required',
 ])
 
 export function buildRecipeReviewReadinessReport(baseRecipes: RecipeV3[], reviewedRecipes: RecipeV3[], artifacts: RecipeReviewArtifact[]): RecipeReviewReadinessReport {

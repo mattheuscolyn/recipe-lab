@@ -255,6 +255,10 @@ const recommendationBlockerFields: Record<string, string[]> = {
   'essential-subrecipe-unresolved': ['subrecipes'],
   'rights-review-required': ['source.rights.factualMetadataUse'],
   'rights-restricted': ['source.rights.factualMetadataUse'],
+  'ingredient-normalization-approval-required': ['review.recommendationDecisions.ingredientNormalization'],
+  'output-scaling-approval-required': ['review.recommendationDecisions.outputScaling'],
+  'meal-portion-approval-required': ['review.recommendationDecisions.mealPortions'],
+  'effort-approval-required': ['review.recommendationDecisions.effort'],
 }
 
 const reason = (code: RejectedReason['code'], disposition: RejectedReason['disposition'], message: string, entityIds: string[], missingFields: string[] = []): RejectedReason => ({ code, disposition, message, entityIds, missingFields })

@@ -11,7 +11,6 @@ type Nutrition = { calories: number; protein: number; carbs: number; fat: number
 type Suitability = {
   state: 'unknown' | 'source-reported'
   prepareAhead?: 'yes' | 'no' | 'conditional'
-  leftoverQuality?: 'good' | 'acceptable' | 'poor'
   refrigeratedHours?: number | null
   reheatMethod?: string
   notes: string[]
@@ -55,7 +54,7 @@ const configs: ReviewConfig[] = [
     passiveMinutes: 20,
     effortLevel: 'medium',
     attentionPattern: 'periodic',
-    suitability: { state: 'source-reported', prepareAhead: 'yes', leftoverQuality: 'acceptable', refrigeratedHours: null, notes: ['Publisher instructs cooling completely before refrigerated airtight storage but states no maximum duration.'] },
+    suitability: { state: 'source-reported', prepareAhead: 'yes', refrigeratedHours: null, notes: ['Publisher instructs cooling completely before refrigerated airtight storage but states no maximum duration. Leftover quality remains unknown because no categorical publisher claim was captured.'] },
     unresolved: [
       { code: 'flour-conversion-provisional', field: 'requirements[flour].selectedPlanningQuantity', requiredDecision: 'Approve or replace the v2 120 g-per-cup planning approximation.' },
       { code: 'storage-window-unreported', field: 'suitability.storageModes[refrigerated].maxDurationHours', requiredDecision: 'Obtain a recipe-specific reviewed maximum before later-meal allocation.' },
@@ -86,7 +85,7 @@ const configs: ReviewConfig[] = [
     passiveMinutes: 0,
     effortLevel: 'high',
     attentionPattern: 'periodic',
-    suitability: { state: 'source-reported', prepareAhead: 'yes', leftoverQuality: 'good', refrigeratedHours: 72, reheatMethod: 'Serve cold from refrigeration; no reheating required.', notes: ['Publisher states up to 3–4 refrigerated days; Recipe Lab records the conservative lower bound of 72 hours.'] },
+    suitability: { state: 'source-reported', prepareAhead: 'yes', refrigeratedHours: 72, reheatMethod: 'Serve cold from refrigeration; no reheating required.', notes: ['Publisher states up to 3–4 refrigerated days; Recipe Lab records the conservative lower bound of 72 hours. Leftover quality remains unknown because storage language is not a categorical quality rating.'] },
     serviceAssessment: true,
     unresolved: [
       { code: 'source-yield-selection-required', field: 'output.sourceYield', requiredDecision: 'Choose 4 meal-sized or 6 smaller side portions for each planned batch.' },
@@ -104,7 +103,7 @@ const configs: ReviewConfig[] = [
     passiveMinutes: 35,
     effortLevel: 'medium',
     attentionPattern: 'mostly-hands-off',
-    suitability: { state: 'source-reported', leftoverQuality: 'acceptable', refrigeratedHours: null, reheatMethod: 'Microwave, stovetop, or covered oven until fully heated through.', notes: ['Publisher gives reheating methods but the captured recipe page does not state a maximum storage duration.'] },
+    suitability: { state: 'source-reported', refrigeratedHours: null, reheatMethod: 'Microwave, stovetop, or covered oven until fully heated through.', notes: ['Publisher gives reheating methods but the captured recipe page does not state a maximum storage duration or categorical leftover-quality rating.'] },
     unresolved: [
       { code: 'storage-window-unreported', field: 'suitability.storageModes[refrigerated].maxDurationHours', requiredDecision: 'Obtain a recipe-specific reviewed maximum before leftover allocation.' },
       { code: 'rights-approval-required', field: 'source.rights.factualMetadataUse', requiredDecision: 'Owner or legal reviewer must approve factual metadata use.' },
@@ -234,7 +233,7 @@ function reviewedRevision(base: RecipeV3, config: ReviewConfig): RecipeReviewArt
   } : {
     reviewState: 'source-reported',
     prepareAhead: config.suitability.prepareAhead ? known(config.suitability.prepareAhead, [source.evidenceId], 'reported') : unknown('Publisher did not make a specific prepare-ahead claim.'),
-    leftoverQuality: config.suitability.leftoverQuality ? known(config.suitability.leftoverQuality, [source.evidenceId], 'reported') : unknown('Publisher did not make a specific leftover-quality claim.'),
+    leftoverQuality: unknown('No claim-specific publisher evidence supports a categorical leftover-quality rating.'),
     storageModes: config.suitability.refrigeratedHours !== undefined ? [{ mode: 'refrigerated', maxDurationHours: config.suitability.refrigeratedHours, evidenceIds: [source.evidenceId], confidence: 'reported' }] : [],
     thawRequired: unknown('No frozen-storage path was reviewed.'),
     reheatMethod: config.suitability.reheatMethod ? known(config.suitability.reheatMethod, [source.evidenceId], 'reported') : unknown('No recipe-specific reheating method was reported.'),
@@ -242,6 +241,12 @@ function reviewedRevision(base: RecipeV3, config: ReviewConfig): RecipeReviewArt
   }
   revision.review.sourceFactsReviewedAt = REVIEW_DATE
   revision.review.safetyReviewed = false
+  revision.review.recommendationDecisions = {
+    ingredientNormalization: 'provisional',
+    outputScaling: 'approved',
+    mealPortions: 'provisional',
+    effort: 'provisional',
+  }
   revision.review.readiness = computeRecipeV3Readiness(revision)
   const assessments = config.serviceAssessment ? [buildServiceAssessment(revision, source.evidenceId, editorial.evidenceId)] : []
   return recipeReviewArtifactSchema.parse({
@@ -254,6 +259,7 @@ function reviewedRevision(base: RecipeV3, config: ReviewConfig): RecipeReviewArt
     sourceAccess: 'publisher-page-index-reviewed',
     evidence: [source, editorial],
     editorialDecisions: [
+      { decisionId: `decision-${base.identity.slug}-ingredient-normalization`, subject: 'ingredient-normalization', status: 'provisional', rationale: 'The preserved ingredient set is reviewed for traceability, but recipe-specific assumptions and alternatives require final editorial approval.', evidenceIds: [source.evidenceId, editorial.evidenceId] },
       { decisionId: `decision-${base.identity.slug}-meal-portions`, subject: 'meal-portions', status: 'provisional', rationale: revision.output.planningGuidance.adequacyNote, evidenceIds: [editorial.evidenceId] },
       { decisionId: `decision-${base.identity.slug}-scaling`, subject: 'scaling', status: 'approved', rationale: 'The unchanged source batch multiplier of one is safe from scaling invention.', evidenceIds: [editorial.evidenceId] },
       { decisionId: `decision-${base.identity.slug}-effort`, subject: 'effort', status: 'provisional', rationale: 'Active and passive minutes are conservative planning interpretations of publisher-reported prep, cook, and elapsed time.', evidenceIds: [source.evidenceId, editorial.evidenceId] },

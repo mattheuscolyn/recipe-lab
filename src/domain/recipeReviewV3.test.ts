@@ -6,6 +6,7 @@ import { evaluateCandidateFeasibility, generatorCandidateSchema, planningRequest
 import { planCookingBatch } from './planningV3'
 import { applyRecipeReviewV3, recipeReviewArtifactSchema } from './recipeReviewV3'
 import { buildRecipeReviewReadinessReport, recipeReviewReadinessReportSchema } from './recipeReviewReportV3'
+import { computeRecipeV3Readiness } from './recipeV3'
 import { adaptRecipeCatalogV2ToV3, adaptRecipeV2ToDraftV3 } from './recipeV3Migration'
 
 const bySlug = (slug: string) => {
@@ -65,6 +66,14 @@ describe('G2A real recipe review workflow', () => {
     expect(greek.suitability.storageModes).toEqual([expect.objectContaining({ mode: 'refrigerated', maxDurationHours: 72, confidence: 'reported' })])
     expect(bySlug('sheet-pan-chicken-fajitas').suitability.storageModes[0].maxDurationHours).toBeNull()
     expect(bySlug('southwest-tofu-scramble').suitability.reviewState).toBe('unknown')
+    for (const slug of ['banana-flax-muffins', 'greek-chicken-pasta-salad', 'sheet-pan-chicken-fajitas']) {
+      expect(bySlug(slug).suitability.leftoverQuality).toEqual({
+        value: null,
+        evidenceIds: [],
+        confidence: 'unknown',
+        unknownReason: 'No claim-specific publisher evidence supports a categorical leftover-quality rating.',
+      })
+    }
     expect(greek.review.safetyReviewed).toBe(false)
   })
 
@@ -95,7 +104,7 @@ describe('G2A real recipe review workflow', () => {
     expect(result.reasons.map(({ code }) => code)).toEqual(expect.arrayContaining(['recommendation-readiness-required', 'office-suitability-review-required']))
   })
 
-  it('runs a real dinner revision through G1 and isolates its remaining readiness gate', () => {
+  it('runs a real dinner revision through G1 with enforceable editorial approval gates', () => {
     const recipe = bySlug('sheet-pan-chicken-fajitas')
     const request = planningRequestSchema.parse({
       requestId: 'planning-request-g2a-fajitas', horizon: { start: '2026-11-23', end: '2026-11-23' },
@@ -113,7 +122,49 @@ describe('G2A real recipe review workflow', () => {
     }))
     expect(result.status).toBe('review-needed')
     expect(result.projection).toMatchObject({ batchOutput: { amount: 4 }, allocatedOutput: { amount: 2 }, remainder: { amount: 2 } })
-    expect(result.reasons).toEqual([expect.objectContaining({ code: 'recommendation-readiness-required', missingFields: ['source.rights.factualMetadataUse'] })])
+    expect(result.reasons).toEqual([expect.objectContaining({
+      code: 'recommendation-readiness-required',
+      missingFields: expect.arrayContaining([
+        'source.rights.factualMetadataUse',
+        'review.recommendationDecisions.ingredientNormalization',
+        'review.recommendationDecisions.mealPortions',
+        'review.recommendationDecisions.effort',
+      ]),
+    })])
+  })
+
+  it('does not let a rights-only approval bypass provisional editorial decisions', () => {
+    const recipe = structuredClone(bySlug('sheet-pan-chicken-fajitas'))
+    recipe.source.rights.factualMetadataUse = 'approved'
+    recipe.review.readiness = computeRecipeV3Readiness(recipe)
+    expect(recipe.review.readiness.recommendationReady).toBe(false)
+    expect(recipe.review.readiness.blockers).not.toContain('rights-review-required')
+    expect(recipe.review.readiness.blockers).toEqual(expect.arrayContaining([
+      'ingredient-normalization-approval-required',
+      'meal-portion-approval-required',
+      'effort-approval-required',
+    ]))
+
+    recipe.review.recommendationDecisions = {
+      ingredientNormalization: 'approved',
+      outputScaling: 'blocked',
+      mealPortions: 'approved',
+      effort: 'approved',
+    }
+    recipe.review.readiness = computeRecipeV3Readiness(recipe)
+    expect(recipe.review.readiness.recommendationReady).toBe(false)
+    expect(recipe.review.readiness.blockers).toContain('output-scaling-approval-required')
+
+    recipe.review.recommendationDecisions.outputScaling = 'approved'
+    recipe.review.readiness = computeRecipeV3Readiness(recipe)
+    expect(recipe.review.readiness.recommendationReady).toBe(true)
+  })
+
+  it('rejects an artifact whose decision record disagrees with its recipe revision', () => {
+    const artifact = structuredClone(realRecipeReviewArtifacts[0])
+    artifact.reviewedRecipe.review.recommendationDecisions.mealPortions = 'approved'
+    artifact.reviewedRecipe.review.readiness = computeRecipeV3Readiness(artifact.reviewedRecipe)
+    expect(recipeReviewArtifactSchema.safeParse(artifact).success).toBe(false)
   })
 
   it('reports exact unresolved owner decisions instead of self-approving readiness', () => {
