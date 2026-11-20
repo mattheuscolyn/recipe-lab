@@ -16,6 +16,7 @@ export const provenanceKindSchema = z.enum([
   'manual-source-review',
   'rule-derived',
   'editorial-judgment',
+  'food-safety-policy',
   'approval-record',
   'user-entered',
 ])

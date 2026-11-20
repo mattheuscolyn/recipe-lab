@@ -15,6 +15,10 @@ This packet turns the seven G2A reviews into decisions a named, authorized revie
 
 Every record requires a stable reviewer ID, non-generic display name, authority basis, authorization reference, timestamp, durable approval evidence, exact base recipe revision, and a fingerprint of the value reviewed. A valid bundle creates a new revision. Stale, conflicting, generic, unsupported, or wrong-authority records are rejected.
 
+These fields are an audit record, **not authentication**. Before a production record is committed, a real human review process must verify the reviewer's identity, authority, and authorization reference outside this untrusted manifest. The application path accepts only `production` records; synthetic fixtures can run solely through explicitly named test helpers and cannot enter the production active catalog.
+
+Authorization evidence proves who made a decision. It does not prove a new food-safety or suitability fact. Every new storage window, prepare-ahead claim, or reheating method must separately cite a claim-specific publisher/source record or a documented, versioned safety policy, bound to the exact approved mode and value. An approval record alone is rejected. Subjective leftover-quality judgments may instead cite a clearly identified editorial assessment and must not be attributed to a publisher without a specific source claim.
+
 Household preferences remain browser-local personal data. They are not public recipe facts and are not committed in approval records. “Sounds appealing,” “disliked,” or “exclude” should be confirmed through the existing preference model before automatic selection.
 
 ## Common decision options
@@ -128,3 +132,5 @@ Base revision: `revision-10000000-0000-4000-8000-000000000001-g2a-1`
 5. Review each candidate's browser-local preference status before prioritization; never put a personal taste decision in the public approval manifest.
 
 No production approval record exists in this PR. Synthetic records demonstrate the complete path in tests but are rejected by the production readiness report.
+
+The readiness report uses `frozenUse` only when the full reviewed route is present: fresh recommendation readiness, frozen duration, prepare-ahead suitability, acceptable leftover quality, thaw requirements, and a reheating/service method. A known frozen duration by itself is evidence coverage, not approval to serve a frozen meal. G1 remains authoritative for each concrete allocation.

@@ -53,6 +53,13 @@ const recommendationBlocker = (code: string) => [
 
 const reviewedValue = (fact: { value: unknown; confidence: string; evidenceIds: string[] }) => fact.value !== null && fact.evidenceIds.length > 0 && ['reported', 'reviewed'].includes(fact.confidence)
 const storageReady = (recipe: RecipeV3, mode: 'refrigerated' | 'frozen') => recipe.suitability.storageModes.some((storage) => storage.mode === mode && storage.maxDurationHours !== null && storage.evidenceIds.length > 0 && ['reported', 'reviewed'].includes(storage.confidence))
+const frozenUseReady = (recipe: RecipeV3) => storageReady(recipe, 'frozen')
+  && reviewedValue(recipe.suitability.prepareAhead)
+  && ['yes', 'conditional'].includes(String(recipe.suitability.prepareAhead.value))
+  && reviewedValue(recipe.suitability.leftoverQuality)
+  && ['good', 'acceptable'].includes(String(recipe.suitability.leftoverQuality.value))
+  && reviewedValue(recipe.suitability.thawRequired)
+  && reviewedValue(recipe.suitability.reheatMethod)
 
 export function buildRecipeApprovalReadinessReport(baseRecipes: RecipeV3[], artifacts: RecipeReviewArtifact[], manifestInput: RecipeApprovalManifest): RecipeApprovalReadinessReport {
   const manifest = recipeApprovalManifestSchema.parse(manifestInput)
@@ -80,7 +87,7 @@ export function buildRecipeApprovalReadinessReport(baseRecipes: RecipeV3[], arti
       storedUseReadiness: {
         refrigeratedLeftovers: recommendationReady && refrigerated && reviewedValue(recipe.suitability.leftoverQuality) && ['good', 'acceptable'].includes(String(recipe.suitability.leftoverQuality.value)),
         refrigeratedPrepAhead: recommendationReady && refrigerated && reviewedValue(recipe.suitability.prepareAhead) && ['yes', 'conditional'].includes(String(recipe.suitability.prepareAhead.value)),
-        frozenUse: recommendationReady && storageReady(recipe, 'frozen'),
+        frozenUse: recommendationReady && frozenUseReady(recipe),
       },
       recommendationDecisionStates: {
         ...recipe.review.recommendationDecisions,

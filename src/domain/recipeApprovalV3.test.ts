@@ -7,9 +7,12 @@ import { evaluateCandidateFeasibility, generatorCandidateSchema, planningRequest
 import {
   applyRecipeApprovalBundle,
   applyRecipeApprovalManifest,
+  applySyntheticRecipeApprovalBundleForTest,
+  applySyntheticRecipeApprovalManifestForTest,
   approvalSubjectFingerprint,
   recipeApprovalBundleSchema,
   recipeApprovalRecordSchema,
+  suitabilityAssertionFingerprint,
   type ApprovalAuthority,
   type ApprovalDecision,
   type RecipeApprovalBundle,
@@ -51,13 +54,16 @@ function record(recipe: ReturnType<typeof baseRecipe>, suffix: string, authority
       confidence: 'reviewed',
       reviewerNote: 'Synthetic-only evidence; not a production or human approval.',
     }],
-    decisions: decisions.map((decision, index) => ({
-      ...decision,
-      decisionId: `approval-decision-${suffix}-${index + 1}`,
-      subjectFingerprint: approvalSubjectFingerprint(recipe, decision.subject),
-      rationale: 'Synthetic authorization exercises the immutable approval path without asserting a real decision.',
-      evidenceIds: [evidenceId],
-    })),
+    decisions: decisions.map((decision, index) => {
+      const claimEvidenceIds = 'claimEvidence' in decision ? decision.claimEvidence.map(({ evidenceId: claimEvidenceId }) => claimEvidenceId) : []
+      return {
+        ...decision,
+        decisionId: `approval-decision-${suffix}-${index + 1}`,
+        subjectFingerprint: approvalSubjectFingerprint(recipe, decision.subject),
+        rationale: 'Synthetic authorization exercises the immutable approval path without asserting a real decision.',
+        evidenceIds: [...new Set([evidenceId, ...claimEvidenceIds])],
+      }
+    }),
   })
 }
 
@@ -79,6 +85,37 @@ function fullyAuthorizedBundle(recipe: ReturnType<typeof baseRecipe>): RecipeApp
   })
 }
 
+function storageBundle(recipe: ReturnType<typeof baseRecipe>, suffix: string, hours: number, support: 'approval-only' | 'policy') {
+  const approvalEvidenceId = `evidence-approval-${suffix}`
+  const policyEvidenceId = `evidence-safety-policy-${suffix}`
+  const claimEvidenceId = support === 'policy' ? policyEvidenceId : approvalEvidenceId
+  const assertionFingerprint = suitabilityAssertionFingerprint({ subject: 'storage-window', mode: 'refrigerated', maxDurationHours: hours })
+  const safetyRecord = record(recipe, suffix, 'food-safety', [{
+    kind: 'suitability-decision',
+    subject: 'storage-window',
+    mode: 'refrigerated',
+    maxDurationHours: hours,
+    claimEvidence: [{ evidenceId: claimEvidenceId, assertionFingerprint, supportType: 'safety-policy', supportReference: `synthetic-policy-${suffix}-v1` }],
+  }])
+  if (support === 'policy') safetyRecord.evidence.push({
+    evidenceId: policyEvidenceId,
+    kind: 'food-safety-policy',
+    sourceUrl: null,
+    capturedAt: '2026-11-20T18:58:00.000Z',
+    sourceLabel: 'Synthetic versioned storage policy fixture v1',
+    confidence: 'reviewed',
+    reviewerNote: `Synthetic policy fixture supports exactly ${hours} refrigerated hours; it is not a production safety decision.`,
+  })
+  return recipeApprovalBundleSchema.parse({
+    schemaVersion: 1,
+    bundleId: `approval-bundle-${suffix}`,
+    recipeId: recipe.identity.recipeId,
+    baseRevisionId: recipe.identity.revisionId,
+    resultRevisionId: `revision-10000000-0000-4000-8000-000000000016-${suffix}`,
+    records: [safetyRecord],
+  })
+}
+
 function requestFor(recipe: ReturnType<typeof baseRecipe>) {
   return planningRequestSchema.parse({
     requestId: 'planning-request-g2b1-synthetic', horizon: { start: '2026-11-23', end: '2026-11-24' },
@@ -97,7 +134,7 @@ describe('G2B1 recipe approval records', () => {
   it('creates a new immutable recommendation-ready revision only from complete synthetic authorizations', () => {
     const base = baseRecipe()
     const before = JSON.stringify(base)
-    const result = applyRecipeApprovalBundle(base, fullyAuthorizedBundle(base))
+    const result = applySyntheticRecipeApprovalBundleForTest(base, fullyAuthorizedBundle(base))
 
     expect(JSON.stringify(base)).toBe(before)
     expect(result.history.map(({ identity }) => identity.revisionId)).toEqual([base.identity.revisionId, result.recipe.identity.revisionId])
@@ -108,13 +145,36 @@ describe('G2B1 recipe approval records', () => {
     expect(result.records.every(({ context }) => context === 'synthetic-test')).toBe(true)
   })
 
+  it('fails closed when synthetic approvals are applied through the production catalog boundary', () => {
+    const base = baseRecipe()
+    const manifest = { schemaVersion: 1 as const, bundles: [fullyAuthorizedBundle(base)] }
+
+    expect(() => applyRecipeApprovalBundle(base, manifest.bundles[0])).toThrow('production approval application')
+    expect(() => applyRecipeApprovalManifest([base], manifest)).toThrow('production approval application')
+    expect(applySyntheticRecipeApprovalManifestForTest([base], manifest).activeRecipes[0].review.readiness.recommendationReady).toBe(true)
+  })
+
+  it('rejects approval-record-only storage claims and accepts exact synthetic policy support', () => {
+    const base = baseRecipe()
+    expect(() => applySyntheticRecipeApprovalBundleForTest(base, storageBundle(base, 'unsupported-storage', 10_000, 'approval-only'))).toThrow('not valid safety-policy evidence')
+
+    const mismatched = storageBundle(base, 'mismatched-storage', 72, 'policy')
+    const storageDecision = mismatched.records[0].decisions[0]
+    if (storageDecision.kind !== 'suitability-decision' || storageDecision.subject !== 'storage-window') throw new Error('Expected storage decision fixture')
+    storageDecision.maxDurationHours = 96
+    expect(() => applySyntheticRecipeApprovalBundleForTest(base, mismatched)).toThrow('does not support the exact approved suitability assertion')
+
+    const supported = applySyntheticRecipeApprovalBundleForTest(base, storageBundle(base, 'supported-storage', 72, 'policy')).recipe
+    expect(supported.suitability.storageModes).toContainEqual(expect.objectContaining({ mode: 'refrigerated', maxDurationHours: 72, confidence: 'reviewed' }))
+  })
+
   it('keeps a rights-only revision blocked by incomplete editorial approvals', () => {
     const base = baseRecipe()
     const rightsOnly = structuredClone(fullyAuthorizedBundle(base))
     rightsOnly.bundleId = 'approval-bundle-rights-only'
     rightsOnly.resultRevisionId = 'revision-10000000-0000-4000-8000-000000000016-g2b1-rights-only'
     rightsOnly.records = rightsOnly.records.filter(({ reviewer }) => reviewer.authority === 'factual-metadata-rights')
-    const { recipe } = applyRecipeApprovalBundle(base, rightsOnly)
+    const { recipe } = applySyntheticRecipeApprovalBundleForTest(base, rightsOnly)
     expect(recipe.source.rights.factualMetadataUse).toBe('approved')
     expect(recipe.review.readiness.recommendationReady).toBe(false)
     expect(recipe.review.readiness.blockers).toEqual(expect.arrayContaining(['ingredient-normalization-approval-required', 'meal-portion-approval-required', 'effort-approval-required']))
@@ -136,11 +196,11 @@ describe('G2B1 recipe approval records', () => {
     const stale = structuredClone(bundle)
     stale.baseRevisionId = 'revision-stale-review'
     stale.records.forEach((item) => { item.recipeRevisionId = stale.baseRevisionId })
-    expect(() => applyRecipeApprovalBundle(base, stale)).toThrow('stale')
+    expect(() => applySyntheticRecipeApprovalBundleForTest(base, stale)).toThrow('stale')
 
     const mismatched = structuredClone(bundle)
     mismatched.records[0].decisions[0].subjectFingerprint = '{"different":true}'
-    expect(() => applyRecipeApprovalBundle(base, mismatched)).toThrow('does not match')
+    expect(() => applySyntheticRecipeApprovalBundleForTest(base, mismatched)).toThrow('does not match')
 
     const conflicting = structuredClone(bundle)
     conflicting.records.push(structuredClone(conflicting.records[0]))
@@ -150,7 +210,7 @@ describe('G2B1 recipe approval records', () => {
 
     const invalidChain = structuredClone(bundle)
     invalidChain.records[0].supersedesRecordRevisionId = 'approval-record-revision-missing-v0'
-    expect(() => applyRecipeApprovalManifest([base], { schemaVersion: 1, bundles: [invalidChain] })).toThrow('invalid version chain')
+    expect(() => applySyntheticRecipeApprovalManifestForTest([base], { schemaVersion: 1, bundles: [invalidChain] })).toThrow('invalid version chain')
   })
 
   it('does not approve shopping completeness while ingredient branches remain unresolved', () => {
@@ -165,12 +225,12 @@ describe('G2B1 recipe approval records', () => {
       resultRevisionId: 'revision-10000000-0000-4000-8000-000000000001-g2b1-branch-check',
       records: [sourceRecord],
     })
-    expect(() => applyRecipeApprovalBundle(recipe, bundle)).toThrow('grocery branches')
+    expect(() => applySyntheticRecipeApprovalBundleForTest(recipe, bundle)).toThrow('grocery branches')
   })
 
   it('allows fresh G1 eligibility but keeps unsupported stored service blocked', () => {
     const base = baseRecipe()
-    const approved = applyRecipeApprovalBundle(base, fullyAuthorizedBundle(base)).recipe
+    const approved = applySyntheticRecipeApprovalBundleForTest(base, fullyAuthorizedBundle(base)).recipe
     const request = requestFor(approved)
     const fresh = generatorCandidateSchema.parse({
       candidateId: 'candidate-g2b1-fresh', recipeId: approved.identity.recipeId, recipeRevisionId: approved.identity.revisionId,
@@ -213,5 +273,25 @@ describe('G2B1 recipe approval records', () => {
 
     const base = baseRecipe()
     expect(() => buildRecipeApprovalReadinessReport(reviewedRecipeCatalogV3, realRecipeReviewArtifacts, { schemaVersion: 1, bundles: [fullyAuthorizedBundle(base)] })).toThrow('cannot count synthetic')
+  })
+
+  it('does not report frozen use from a storage window without reviewed service prerequisites', () => {
+    const base = baseRecipe()
+    const approved = applySyntheticRecipeApprovalBundleForTest(base, fullyAuthorizedBundle(base)).recipe
+    approved.suitability.reviewState = 'editor-reviewed'
+    approved.suitability.storageModes.push({
+      mode: 'frozen',
+      maxDurationHours: 168,
+      evidenceIds: [approved.source.evidence[0].evidenceId],
+      confidence: 'reported',
+    })
+    const catalog = reviewedRecipeCatalogV3.map((recipe) => recipe.identity.recipeId === approved.identity.recipeId ? approved : recipe)
+    const report = buildRecipeApprovalReadinessReport(catalog, realRecipeReviewArtifacts, recipeApprovalManifestV3)
+    const entry = report.entries.find(({ recipeId }) => recipeId === approved.identity.recipeId)
+
+    expect(approved.review.readiness.recommendationReady).toBe(true)
+    expect(entry?.storedUseReadiness.frozenUse).toBe(false)
+    expect(approved.suitability.thawRequired.value).toBeNull()
+    expect(approved.suitability.leftoverQuality.value).toBeNull()
   })
 })

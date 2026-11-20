@@ -26,6 +26,13 @@ const decisionBase = {
   evidenceIds: z.array(id('evidence')).min(1),
 }
 
+const claimEvidenceSchema = z.object({
+  evidenceId: id('evidence'),
+  assertionFingerprint: z.string().min(2),
+  supportType: z.enum(['source-claim', 'safety-policy', 'editorial-assessment']),
+  supportReference: text('Claim support reference', 8, 300),
+})
+
 const recommendationDecisionSchema = z.object({
   ...decisionBase,
   kind: z.literal('recommendation-decision'),
@@ -46,12 +53,14 @@ const prepareAheadDecisionSchema = z.object({
   kind: z.literal('suitability-decision'),
   subject: z.literal('prepare-ahead'),
   value: z.enum(['yes', 'no', 'conditional']),
+  claimEvidence: z.array(claimEvidenceSchema).min(1),
 })
 const leftoverQualityDecisionSchema = z.object({
   ...decisionBase,
   kind: z.literal('suitability-decision'),
   subject: z.literal('leftover-quality'),
   value: z.enum(['good', 'acceptable', 'poor']),
+  claimEvidence: z.array(claimEvidenceSchema).min(1),
 })
 const storageWindowDecisionSchema = z.object({
   ...decisionBase,
@@ -59,12 +68,14 @@ const storageWindowDecisionSchema = z.object({
   subject: z.literal('storage-window'),
   mode: z.enum(['refrigerated', 'frozen', 'room-temperature']),
   maxDurationHours: z.number().int().nonnegative(),
+  claimEvidence: z.array(claimEvidenceSchema).min(1),
 })
 const reheatMethodDecisionSchema = z.object({
   ...decisionBase,
   kind: z.literal('suitability-decision'),
   subject: z.literal('reheat-method'),
   value: text('Reheat method', 10, 300),
+  claimEvidence: z.array(claimEvidenceSchema).min(1),
 })
 
 export const approvalDecisionSchema = z.union([
@@ -172,15 +183,45 @@ function reviewedFact<T>(value: T, evidenceIds: string[]) {
 }
 
 function validateDecisionEvidence(base: RecipeV3, record: RecipeApprovalRecord, decision: ApprovalDecision) {
-  const baseEvidence = new Set(base.source.evidence.map(({ evidenceId }) => evidenceId))
+  const baseEvidence = new Map(base.source.evidence.map((evidence) => [evidence.evidenceId, evidence]))
   const recordEvidence = new Map(record.evidence.map((evidence) => [evidence.evidenceId, evidence]))
   for (const evidenceId of decision.evidenceIds) if (!baseEvidence.has(evidenceId) && !recordEvidence.has(evidenceId)) throw new Error(`Approval decision cites unknown evidence ${evidenceId}`)
   if (!decision.evidenceIds.some((evidenceId) => recordEvidence.get(evidenceId)?.kind === 'approval-record')) throw new Error(`Approval decision ${decision.decisionId} must cite its durable approval record`)
+  if (decision.kind !== 'suitability-decision') return
+
+  const assertionFingerprint = suitabilityAssertionFingerprint(decision)
+  for (const claim of decision.claimEvidence) {
+    if (!decision.evidenceIds.includes(claim.evidenceId)) throw new Error(`Claim evidence ${claim.evidenceId} must be cited by decision ${decision.decisionId}`)
+    if (claim.assertionFingerprint !== assertionFingerprint) throw new Error(`Claim evidence ${claim.evidenceId} does not support the exact approved suitability assertion`)
+    const evidence = recordEvidence.get(claim.evidenceId) ?? baseEvidence.get(claim.evidenceId)
+    if (!evidence) throw new Error(`Suitability decision cites unknown claim evidence ${claim.evidenceId}`)
+    const validKind = claim.supportType === 'source-claim'
+      ? ['publisher-jsonld', 'publisher-page', 'manual-source-review'].includes(evidence.kind)
+      : claim.supportType === 'safety-policy'
+        ? evidence.kind === 'food-safety-policy'
+        : evidence.kind === 'editorial-judgment'
+    if (!validKind || evidence.kind === 'approval-record') throw new Error(`Claim evidence ${claim.evidenceId} is not valid ${claim.supportType} evidence`)
+    if (decision.subject !== 'leftover-quality' && claim.supportType === 'editorial-assessment') throw new Error(`${decision.subject} requires a specific source claim or versioned safety policy`)
+  }
 }
 
-export function applyRecipeApprovalBundle(baseInput: RecipeV3, bundleInput: unknown): { recipe: RecipeV3; history: RecipeV3[]; records: RecipeApprovalRecord[] } {
+type ApprovalApplicationContext = z.infer<typeof approvalContextSchema>
+
+type SuitabilityAssertionInput =
+  | { subject: 'prepare-ahead'; value: 'yes' | 'no' | 'conditional' }
+  | { subject: 'leftover-quality'; value: 'good' | 'acceptable' | 'poor' }
+  | { subject: 'storage-window'; mode: 'refrigerated' | 'frozen' | 'room-temperature'; maxDurationHours: number }
+  | { subject: 'reheat-method'; value: string }
+
+export function suitabilityAssertionFingerprint(decision: SuitabilityAssertionInput): string {
+  if (decision.subject === 'storage-window') return JSON.stringify({ subject: decision.subject, mode: decision.mode, maxDurationHours: decision.maxDurationHours })
+  return JSON.stringify({ subject: decision.subject, value: decision.value })
+}
+
+function applyRecipeApprovalBundleInContext(baseInput: RecipeV3, bundleInput: unknown, expectedContext: ApprovalApplicationContext): { recipe: RecipeV3; history: RecipeV3[]; records: RecipeApprovalRecord[] } {
   const base = recipeV3Schema.parse(baseInput)
   const bundle = recipeApprovalBundleSchema.parse(bundleInput)
+  if (bundle.records.some(({ context }) => context !== expectedContext)) throw new Error(`${expectedContext} approval application cannot accept records from another context`)
   if (bundle.recipeId !== base.identity.recipeId || bundle.baseRevisionId !== base.identity.revisionId) throw new Error('Approval bundle is stale or targets a different recipe revision')
   const existingEvidence = new Set(base.source.evidence.map(({ evidenceId }) => evidenceId))
   const next = structuredClone(base)
@@ -224,7 +265,15 @@ export function applyRecipeApprovalBundle(baseInput: RecipeV3, bundleInput: unkn
   return { recipe, history: [structuredClone(base), structuredClone(recipe)], records: bundle.records }
 }
 
-export function applyRecipeApprovalManifest(baseRecipes: RecipeV3[], input: unknown): { activeRecipes: RecipeV3[]; revisionHistory: Map<string, RecipeV3[]> } {
+export function applyRecipeApprovalBundle(baseInput: RecipeV3, bundleInput: unknown) {
+  return applyRecipeApprovalBundleInContext(baseInput, bundleInput, 'production')
+}
+
+export function applySyntheticRecipeApprovalBundleForTest(baseInput: RecipeV3, bundleInput: unknown) {
+  return applyRecipeApprovalBundleInContext(baseInput, bundleInput, 'synthetic-test')
+}
+
+function applyRecipeApprovalManifestInContext(baseRecipes: RecipeV3[], input: unknown, expectedContext: ApprovalApplicationContext): { activeRecipes: RecipeV3[]; revisionHistory: Map<string, RecipeV3[]> } {
   const manifest = recipeApprovalManifestSchema.parse(input)
   const active = new Map(baseRecipes.map((recipe) => [recipe.identity.recipeId, recipeV3Schema.parse(recipe)]))
   const history = new Map(baseRecipes.map((recipe) => [recipe.identity.recipeId, [structuredClone(recipe)]]))
@@ -242,12 +291,20 @@ export function applyRecipeApprovalManifest(baseRecipes: RecipeV3[], input: unkn
       activeRecordRevision.set(record.approvalId, record.recordRevisionId)
       recordRevisionIds.add(record.recordRevisionId)
     }
-    const applied = applyRecipeApprovalBundle(base, bundle)
+    const applied = applyRecipeApprovalBundleInContext(base, bundle, expectedContext)
     active.set(bundle.recipeId, applied.recipe)
     history.get(bundle.recipeId)!.push(applied.recipe)
     recipeRevisionIds.add(bundle.resultRevisionId)
   }
   return { activeRecipes: baseRecipes.map(({ identity }) => active.get(identity.recipeId)!), revisionHistory: history }
+}
+
+export function applyRecipeApprovalManifest(baseRecipes: RecipeV3[], input: unknown) {
+  return applyRecipeApprovalManifestInContext(baseRecipes, input, 'production')
+}
+
+export function applySyntheticRecipeApprovalManifestForTest(baseRecipes: RecipeV3[], input: unknown) {
+  return applyRecipeApprovalManifestInContext(baseRecipes, input, 'synthetic-test')
 }
 
 export function approvalRecordEvidence(record: RecipeApprovalRecord): EvidenceRef[] {
