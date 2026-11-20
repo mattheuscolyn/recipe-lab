@@ -242,6 +242,12 @@ export function adaptRecipeV2ToDraftV3(recipe: RecipeV2): RecipeV3 {
       structuredStepsReviewed: false,
       safetyReviewed: false,
       kitchenTestedAt: null,
+      recommendationDecisions: {
+        ingredientNormalization: 'unreviewed',
+        outputScaling: 'unreviewed',
+        mealPortions: 'unreviewed',
+        effort: 'unreviewed',
+      },
       readiness: { minimumSafeImport: false, recommendationReady: false, cookingModeReady: false, blockers: [] },
     },
   }

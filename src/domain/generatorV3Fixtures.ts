@@ -47,6 +47,12 @@ function reviewedFixture(sourceSlug: string, recipeId: string, role: 'breakfast'
     reheatMethod: { value: 'Reheat until safely hot.', evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null },
     notes: ['Synthetic storage facts exist only for acceptance testing.'],
   }
+  recipe.review.recommendationDecisions = {
+    ingredientNormalization: 'approved',
+    outputScaling: 'approved',
+    mealPortions: 'approved',
+    effort: 'approved',
+  }
   recipe.review.readiness = computeRecipeV3Readiness(recipe)
   return recipeV3Schema.parse(recipe)
 }

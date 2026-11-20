@@ -304,6 +304,12 @@ describe('recipe v3 validation', () => {
     recipe.effort.activeMinutes = { value: 20, evidenceIds: [evidenceId], confidence: 'reviewed', unknownReason: null }
     recipe.suitability.reviewState = 'editor-reviewed'
     recipe.source.rights.factualMetadataUse = 'approved'
+    recipe.review.recommendationDecisions = {
+      ingredientNormalization: 'approved',
+      outputScaling: 'approved',
+      mealPortions: 'approved',
+      effort: 'approved',
+    }
     refreshReadiness(recipe)
     expect(recipe.review.readiness.recommendationReady).toBe(true)
     expect(recipe.review.readiness.cookingModeReady).toBe(false)

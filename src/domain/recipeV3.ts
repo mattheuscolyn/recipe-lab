@@ -206,6 +206,14 @@ export const readinessSchema = z.object({
   blockers: z.array(z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)),
 })
 
+export const recommendationDecisionStatusSchema = z.enum(['unreviewed', 'provisional', 'approved', 'blocked'])
+export const recommendationDecisionsSchema = z.object({
+  ingredientNormalization: recommendationDecisionStatusSchema,
+  outputScaling: recommendationDecisionStatusSchema,
+  mealPortions: recommendationDecisionStatusSchema,
+  effort: recommendationDecisionStatusSchema,
+})
+
 const recipeV3StructureSchema = z.object({
   schemaVersion: z.literal(3),
   identity: z.object({
@@ -297,6 +305,7 @@ const recipeV3StructureSchema = z.object({
     structuredStepsReviewed: z.boolean(),
     safetyReviewed: z.boolean(),
     kitchenTestedAt: z.iso.date().nullable(),
+    recommendationDecisions: recommendationDecisionsSchema,
     readiness: readinessSchema,
   }),
 })
@@ -328,6 +337,10 @@ export function computeRecipeV3Readiness(recipe: RecipeV3): RecipeV3Readiness {
   if (recipe.subrecipes.some(({ required, resolution }) => required && resolution !== 'linked-version')) blockers.push('essential-subrecipe-unresolved')
   if (recipe.source.rights.factualMetadataUse === 'review-needed') blockers.push('rights-review-required')
   if (recipe.source.rights.factualMetadataUse === 'restricted') blockers.push('rights-restricted')
+  if (recipe.review.recommendationDecisions.ingredientNormalization !== 'approved') blockers.push('ingredient-normalization-approval-required')
+  if (recipe.review.recommendationDecisions.outputScaling !== 'approved') blockers.push('output-scaling-approval-required')
+  if (recipe.review.recommendationDecisions.mealPortions !== 'approved') blockers.push('meal-portion-approval-required')
+  if (recipe.review.recommendationDecisions.effort !== 'approved') blockers.push('effort-approval-required')
   const recommendationReady = minimumSafeImport && blockers.length === 0
   if (!recipe.steps.length) blockers.push('structured-steps-missing')
   if (!recipe.review.structuredStepsReviewed) blockers.push('structured-steps-unreviewed')

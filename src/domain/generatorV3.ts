@@ -52,7 +52,7 @@ const reviewedServiceFact = <T>(value: z.ZodType<T>) => z.object({
     if (fact.confidence !== 'unknown' || fact.evidenceIds.length || !fact.unknownReason) context.addIssue({ code: 'custom', message: 'An unknown service fact needs an explicit reason and cannot claim evidence' })
   } else if (fact.confidence === 'unknown' || !fact.evidenceIds.length || fact.unknownReason !== null) context.addIssue({ code: 'custom', message: 'A known service fact needs reviewed or reported evidence' })
 })
-const officeServiceAssessmentSchema = z.object({
+export const officeServiceAssessmentSchema = z.object({
   assessmentId: id('service-assessment'),
   assessmentRevisionId: id('service-assessment-revision'),
   recipeId,
@@ -255,6 +255,10 @@ const recommendationBlockerFields: Record<string, string[]> = {
   'essential-subrecipe-unresolved': ['subrecipes'],
   'rights-review-required': ['source.rights.factualMetadataUse'],
   'rights-restricted': ['source.rights.factualMetadataUse'],
+  'ingredient-normalization-approval-required': ['review.recommendationDecisions.ingredientNormalization'],
+  'output-scaling-approval-required': ['review.recommendationDecisions.outputScaling'],
+  'meal-portion-approval-required': ['review.recommendationDecisions.mealPortions'],
+  'effort-approval-required': ['review.recommendationDecisions.effort'],
 }
 
 const reason = (code: RejectedReason['code'], disposition: RejectedReason['disposition'], message: string, entityIds: string[], missingFields: string[] = []): RejectedReason => ({ code, disposition, message, entityIds, missingFields })
