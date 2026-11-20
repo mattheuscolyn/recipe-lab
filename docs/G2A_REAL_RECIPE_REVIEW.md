@@ -1,5 +1,7 @@
 # G2A real recipe evidence and recommendation readiness
 
+The follow-on owner decision packet and immutable approval workflow are documented in [G2B1 recipe approval decisions](./G2B1_APPROVAL_DECISIONS.md).
+
 Issue: [#26](https://github.com/mattheuscolyn/recipe-lab/issues/26), building on [#21](https://github.com/mattheuscolyn/recipe-lab/issues/21).
 
 ## Implemented scope

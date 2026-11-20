@@ -102,7 +102,6 @@ describe('recipe v2 to v3 compatibility migration', () => {
         'output-scaling-review-required',
         'meal-portion-guidance-missing',
         'active-time-unknown',
-        'suitability-unknown',
         'structured-steps-missing',
         'equipment-unreviewed',
         'rights-review-required',

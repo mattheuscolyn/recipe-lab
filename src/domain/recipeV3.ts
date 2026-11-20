@@ -16,6 +16,8 @@ export const provenanceKindSchema = z.enum([
   'manual-source-review',
   'rule-derived',
   'editorial-judgment',
+  'food-safety-policy',
+  'approval-record',
   'user-entered',
 ])
 
@@ -333,7 +335,6 @@ export function computeRecipeV3Readiness(recipe: RecipeV3): RecipeV3Readiness {
   if (recipe.output.scaling.policy === 'review-required') blockers.push('output-scaling-review-required')
   if (recipe.output.planningGuidance.sourceServingsPerMealPortion?.value == null) blockers.push('meal-portion-guidance-missing')
   if (recipe.effort.activeMinutes.value === null) blockers.push('active-time-unknown')
-  if (recipe.suitability.reviewState === 'unknown') blockers.push('suitability-unknown')
   if (recipe.subrecipes.some(({ required, resolution }) => required && resolution !== 'linked-version')) blockers.push('essential-subrecipe-unresolved')
   if (recipe.source.rights.factualMetadataUse === 'review-needed') blockers.push('rights-review-required')
   if (recipe.source.rights.factualMetadataUse === 'restricted') blockers.push('rights-restricted')
