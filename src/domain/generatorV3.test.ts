@@ -339,7 +339,6 @@ describe('actual catalog recommendation readiness', () => {
       { code: 'output-scaling-review-required', fields: ['output.scaling'] },
       { code: 'meal-portion-guidance-missing', fields: ['output.planningGuidance.sourceServingsPerMealPortion'] },
       { code: 'active-time-unknown', fields: ['effort.activeMinutes'] },
-      { code: 'suitability-unknown', fields: ['suitability.prepareAhead', 'suitability.leftoverQuality', 'suitability.storageModes', 'suitability.reheatMethod'] },
     ]))
   })
 

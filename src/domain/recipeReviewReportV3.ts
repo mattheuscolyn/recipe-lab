@@ -39,7 +39,6 @@ const recommendationBlockers = new Set([
   'output-scaling-review-required',
   'meal-portion-guidance-missing',
   'active-time-unknown',
-  'suitability-unknown',
   'essential-subrecipe-unresolved',
   'rights-review-required',
   'rights-restricted',

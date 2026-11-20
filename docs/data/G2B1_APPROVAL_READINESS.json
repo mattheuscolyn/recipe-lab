@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "g2b1-production-approval-manifest",
+  "reviewedRecipeCount": 7,
+  "productionApprovalRecordCount": 0,
+  "recommendationReadyCount": 0,
+  "awaitingDecisionCount": 7,
+  "entries": [
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000001",
+      "slug": "sheet-pan-chicken-fajitas",
+      "title": "Sheet Pan Chicken Fajitas",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000001-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "storage-window-unreported",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000003",
+      "slug": "beef-and-cabbage-stir-fry",
+      "title": "Beef and Cabbage Stir Fry",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000003-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "suitability-review-required",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000008",
+      "slug": "banana-flax-muffins",
+      "title": "Banana Flax Muffins",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "flour-conversion-provisional",
+        "storage-window-unreported",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000009",
+      "slug": "greek-chicken-pasta-salad",
+      "title": "Greek Chicken Pasta Salad",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000009-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "source-yield-selection-required",
+        "chicken-weight-provisional",
+        "office-odor-unreviewed",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000014",
+      "slug": "southwest-tofu-scramble",
+      "title": "Southwest Tofu Scramble",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000014-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "suitability-review-required",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000015",
+      "slug": "overnight-oats-base-recipe",
+      "title": "Overnight Oats Base Recipe",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "storage-window-unreported",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    },
+    {
+      "recipeId": "10000000-0000-4000-8000-000000000016",
+      "slug": "easy-vegetable-stir-fry",
+      "title": "Easy Vegetable Stir Fry",
+      "activeRevisionId": "revision-10000000-0000-4000-8000-000000000016-g2a-1",
+      "approvalState": "awaiting-decisions",
+      "recommendationReadyForFreshUse": false,
+      "storedUseReadiness": {
+        "refrigeratedLeftovers": false,
+        "refrigeratedPrepAhead": false,
+        "frozenUse": false
+      },
+      "recommendationDecisionStates": {
+        "ingredientNormalization": "provisional",
+        "outputScaling": "approved",
+        "mealPortions": "provisional",
+        "effort": "provisional",
+        "factualMetadataRights": "review-needed"
+      },
+      "recommendationBlockers": [
+        "rights-review-required",
+        "ingredient-normalization-approval-required",
+        "meal-portion-approval-required",
+        "effort-approval-required"
+      ],
+      "unresolvedReviewIssues": [
+        "vegetable-branching-unmodeled",
+        "suitability-review-required",
+        "rights-approval-required"
+      ],
+      "productionApprovalRecordRevisionIds": []
+    }
+  ]
+}

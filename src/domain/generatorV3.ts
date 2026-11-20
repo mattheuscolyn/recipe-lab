@@ -251,7 +251,6 @@ const recommendationBlockerFields: Record<string, string[]> = {
   'output-scaling-review-required': ['output.scaling'],
   'meal-portion-guidance-missing': ['output.planningGuidance.sourceServingsPerMealPortion'],
   'active-time-unknown': ['effort.activeMinutes'],
-  'suitability-unknown': ['suitability.prepareAhead', 'suitability.leftoverQuality', 'suitability.storageModes', 'suitability.reheatMethod'],
   'essential-subrecipe-unresolved': ['subrecipes'],
   'rights-review-required': ['source.rights.factualMetadataUse'],
   'rights-restricted': ['source.rights.factualMetadataUse'],

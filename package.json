@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "report:g1": "node scripts/generateG1ReadinessReport.mjs",
     "report:g2a": "node scripts/generateG2AReadinessReport.mjs",
+    "report:g2b1": "node scripts/generateG2B1ApprovalReadinessReport.mjs",
     "check": "npm run lint && npm run test && npm run build",
     "preview": "vite preview"
   },
