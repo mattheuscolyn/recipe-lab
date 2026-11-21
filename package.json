@@ -13,6 +13,7 @@
     "report:g2a": "node scripts/generateG2AReadinessReport.mjs",
     "report:g2b1": "node scripts/generateG2B1ApprovalReadinessReport.mjs",
     "report:g2b2a": "node scripts/generateG2B2aCoverageReport.mjs",
+    "report:g3a": "node scripts/generateG3aWeekDraft.mjs",
     "check": "npm run lint && npm run test && npm run build",
     "preview": "vite preview"
   },
