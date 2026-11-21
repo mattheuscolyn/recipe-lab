@@ -156,6 +156,7 @@ export const generatorCandidateSchema = z.object({
   recipeRevisionId: id('revision'),
   strategy: z.enum(['meal-time-cook', 'prior-meal-batch', 'dedicated-prep']),
   cookingStartsAt: z.iso.datetime(),
+  storageStartsAt: z.iso.datetime().nullable().optional(),
   batchMultiplier: z.number().positive().finite(),
   sourceYieldSelection: z.object({ amount: z.number().positive().finite(), evidenceIds: z.array(id('evidence')).min(1), confidence: z.enum(['reported', 'reviewed']) }).nullable(),
   allocations: z.array(candidateAllocationSchema).min(1),
@@ -171,6 +172,8 @@ export const generatorCandidateSchema = z.object({
   if (candidate.strategy === 'dedicated-prep' && candidate.allocations.some(({ service }) => service === 'fresh')) context.addIssue({ code: 'custom', path: ['allocations'], message: 'Dedicated prep allocations must use reviewed storage' })
   if (new Set(candidate.ingredientSelections.map(({ requirementId }) => requirementId)).size !== candidate.ingredientSelections.length) context.addIssue({ code: 'custom', path: ['ingredientSelections'], message: 'A candidate may select each ingredient requirement only once' })
   if ((candidate.serviceAssessmentId === null) !== (candidate.serviceAssessmentRevisionId === null)) context.addIssue({ code: 'custom', path: ['serviceAssessmentRevisionId'], message: 'A service assessment reference needs both stable and revision ids' })
+  if (candidate.storageStartsAt && !candidate.allocations.some(({ service }) => service !== 'fresh')) context.addIssue({ code: 'custom', path: ['storageStartsAt'], message: 'A storage start applies only to a stored allocation' })
+  if (candidate.storageStartsAt && Date.parse(candidate.storageStartsAt) < Date.parse(candidate.cookingStartsAt)) context.addIssue({ code: 'custom', path: ['storageStartsAt'], message: 'Storage cannot start before preparation begins' })
 })
 
 export const rejectedReasonCodeSchema = z.enum([
@@ -189,6 +192,7 @@ export const rejectedReasonCodeSchema = z.enum([
   'prepare-ahead-not-approved',
   'leftover-quality-not-approved',
   'storage-evidence-missing',
+  'storage-start-time-required',
   'storage-window-exceeded',
   'meal-before-food-ready',
   'meal-service-time-required',
@@ -372,6 +376,15 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
   const reviewedTotalMinutes = reviewedSourced(recipe.effort.totalMinutes) ? recipe.effort.totalMinutes.value : null
   const reviewedActiveMinutes = reviewedSourced(recipe.effort.activeMinutes) ? recipe.effort.activeMinutes.value : null
   const expectedReadyAt = typeof reviewedTotalMinutes === 'number' ? new Date(Date.parse(candidate.cookingStartsAt) + reviewedTotalMinutes * 60_000).toISOString() : null
+  if (candidate.strategy === 'dedicated-prep' && candidate.allocations.some(({ service }) => service !== 'fresh') && !candidate.storageStartsAt) {
+    reasons.push(reason(
+      'storage-start-time-required',
+      'review-needed',
+      'Dedicated advance preparation needs an explicit storage start; preparation completion cannot stand in for passive refrigerated resting.',
+      [candidate.candidateId],
+      ['candidate.storageStartsAt'],
+    ))
+  }
   const startingWindows = request.cookingWindows.filter(({ start, end }) => Date.parse(start) <= Date.parse(candidate.cookingStartsAt) && Date.parse(candidate.cookingStartsAt) <= Date.parse(end))
   const durationWindows = expectedReadyAt === null ? startingWindows : startingWindows.filter(({ end }) => Date.parse(expectedReadyAt) <= Date.parse(end))
   const cookingWindow = (typeof reviewedActiveMinutes === 'number' ? durationWindows.find(({ maxActiveMinutes }) => reviewedActiveMinutes <= maxActiveMinutes) : durationWindows[0]) ?? durationWindows[0] ?? startingWindows[0] ?? null
@@ -382,7 +395,7 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
     if (reviewedActiveMinutes === null) reasons.push(reason('cooking-duration-review-required', 'review-needed', 'Cooking-window capacity requires reviewed active time.', [candidate.candidateId], ['recipe.effort.activeMinutes']))
     else if (reviewedActiveMinutes > cookingWindow.maxActiveMinutes) reasons.push(reason('active-time-exceeded', 'rejected', 'Recipe active time exceeds the selected cooking-window capacity.', [candidate.candidateId, cookingWindow.cookingWindowId]))
   }
-  const allocationRequests: { allocationId: string; requirement: MealRequirement; mealPortions: number; service: 'fresh' | 'refrigerated-leftover' | 'frozen-leftover' }[] = []
+  const allocationRequests: { allocationId: string; requirement: MealRequirement; mealPortions: number; service: 'fresh' | 'refrigerated-leftover' | 'frozen-leftover'; storageStartedAt?: string | null }[] = []
   candidate.allocations.forEach((allocation, index) => {
     const requirement = requirements.get(allocation.mealRequirementId)
     if (!requirement) {
@@ -434,7 +447,7 @@ export function evaluateCandidateFeasibility(requestInput: PlanningRequest, cand
       }
     }
     addOfficeLunchReasons(request, candidate, requirement, applicableServiceAssessment, reasons)
-    allocationRequests.push({ allocationId: `allocation-${candidate.candidateId.replace(/^candidate-/, '')}-${index + 1}`, requirement, mealPortions: allocation.mealPortions, service: allocation.service })
+    allocationRequests.push({ allocationId: `allocation-${candidate.candidateId.replace(/^candidate-/, '')}-${index + 1}`, requirement, mealPortions: allocation.mealPortions, service: allocation.service, storageStartedAt: allocation.service === 'fresh' ? null : candidate.storageStartsAt })
   })
 
   let projection: CandidateFeasibility['projection'] = null

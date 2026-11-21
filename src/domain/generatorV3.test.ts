@@ -67,6 +67,18 @@ describe('G1 candidate feasibility and S12', () => {
     expect(result.timing).toMatchObject({ cookingStartsAt: '2026-11-15T19:20:00.000Z', expectedReadyAt: '2026-11-15T20:00:00.000Z' })
   })
 
+  it('requires a known storage start for dedicated advance preparation', () => {
+    const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
+    delete candidate.storageStartsAt
+    const result = evaluateCandidateFeasibility(wholeWeekPlanningRequest, candidate)
+    expect(result.status).toBe('review-needed')
+    expect(result.reasons).toEqual(expect.arrayContaining([expect.objectContaining({
+      code: 'storage-start-time-required',
+      disposition: 'review-needed',
+      missingFields: ['candidate.storageStartsAt'],
+    })]))
+  })
+
   it('accepts a dinner batch that safely supplies a later lunch and explains taste conflict', () => {
     const result = evaluateCandidateFeasibility(wholeWeekPlanningRequest, wholeWeekCandidateFixtures.dinnerWithLeftoverLunch)
     expect(result.status).toBe('eligible')
@@ -124,6 +136,7 @@ describe('G1 candidate feasibility and S12', () => {
     const candidate = structuredClone(wholeWeekCandidateFixtures.sundayPrepLunches)
     candidate.candidateId = 'candidate-storage-window'
     candidate.cookingStartsAt = '2026-11-14T00:00:00.000Z'
+    candidate.storageStartsAt = '2026-11-14T00:40:00.000Z'
     expect(codes(candidate)).toContain('storage-window-exceeded')
   })
 

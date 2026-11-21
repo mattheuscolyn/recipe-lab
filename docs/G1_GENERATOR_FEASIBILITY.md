@@ -4,13 +4,17 @@ The first real-recipe review overlay that consumes these contracts is documented
 
 G2B1 defines recommendation readiness as the universal gate for a fresh use. Stored, prep-ahead, reheated, and office-lunch routes still require their own evidence in `evaluateCandidateFeasibility`; fresh readiness never implies those service modes are approved. See [the approval decision packet](./G2B1_APPROVAL_DECISIONS.md).
 
+G2B2a applies these checks to two deterministic real-catalog weeks. See [the real-catalog coverage report and approval shortlist](./G2B2A_REAL_CATALOG_COVERAGE.md). It reports candidate pools and gaps, not an optimized or persisted week.
+
 > **Status:** reusable domain foundation for [Issue #21](https://github.com/mattheuscolyn/recipe-lab/issues/21). It is not connected to the live planner and does not generate or persist a week.
 
 ## Implemented boundary
 
 `src/domain/generatorV3.ts` defines Zod-validated, JSON-safe contracts for a `PlanningRequest`, a proposed `GeneratorCandidate`, and a `CandidateFeasibility` result. A request snapshots the planning horizon, requested portions, skips and locks, exact recipe revisions, hard ingredient/recipe avoids, household taste votes, active/elapsed cooking limits, active cooking windows, reviewed service-assessment revisions, prepared-food inventory, pantry availability, recent meals, and office-lunch policy. `hardConstraints` is structurally separate from `preferences`; preferences can explain or eventually rank a candidate, but cannot override a rejection.
 
-`GeneratorCandidate.cookingStartsAt` is the expected start of preparation, not completion. Expected readiness is `cookingStartsAt +` the recipe revision's reviewed `totalMinutes`. The whole interval must fit one cooking window, and reviewed `activeMinutes` must fit that window's active capacity. Missing or untrustworthy duration data returns `review-needed`. Fresh service and storage timing are evaluated from expected completion; equality at a window end or meal time is allowed. Absolute timestamps continue to be projected through each meal's IANA timezone by the underlying planning rules.
+`GeneratorCandidate.cookingStartsAt` is the expected start of preparation, not completion. Expected readiness is `cookingStartsAt +` the recipe revision's reviewed `totalMinutes`. The whole interval must fit one cooking window, and reviewed `activeMinutes` must fit that window's active capacity. Missing or untrustworthy duration data returns `review-needed`. Fresh service and default cook-then-store timing are evaluated from expected completion; equality at a window end or meal time is allowed. Absolute timestamps continue to be projected through each meal's IANA timezone by the underlying planning rules.
+
+Stored candidates may provide `storageStartsAt` when refrigeration/freezing begins before expected preparation completion—for example, passive overnight refrigeration. Allocation storage limits are then measured from that explicit timestamp while meal readiness remains measured from expected completion. Dedicated advance-preparation routes require this timestamp and return `storage-start-time-required`/`review-needed` when it is unknown. Ordinary prior-meal cook-then-store routes may omit it and retain cook-completion timing. Coverage generators must fail closed when an earlier storage start is relevant but cannot be established; G3 must carry the explicit timestamp into prepared-lot best-use windows rather than resetting it at confirmation.
 
 `evaluateCandidateFeasibility` is deterministic and side-effect free. It returns `eligible`, `rejected`, or `review-needed` with stable reason codes, involved entity IDs, and exact missing fields. It checks:
 

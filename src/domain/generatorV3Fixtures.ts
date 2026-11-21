@@ -156,7 +156,7 @@ const candidate = (value: GeneratorCandidate) => generatorCandidateSchema.parse(
 export const wholeWeekCandidateFixtures = {
   sundayPrepLunches: candidate({
     candidateId: 'candidate-sunday-prep-lunches', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', storageStartsAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [0, 1, 2, 3].map((day) => ({ mealRequirementId: `meal-requirement-${dateByDay[day]}-lunch`, mealPortions: lunchPortions[day], service: 'refrigerated-leftover' as const })),
     ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: generatorFixtureServiceAssessments.prepLunch.assessmentId, serviceAssessmentRevisionId: generatorFixtureServiceAssessments.prepLunch.assessmentRevisionId,
   }),
@@ -183,13 +183,13 @@ export const wholeWeekCandidateFixtures = {
   }),
   officeAssembly: candidate({
     candidateId: 'candidate-office-assembly', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', storageStartsAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-lunch', mealPortions: 1, service: 'refrigerated-leftover' }],
     ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: generatorFixtureServiceAssessments.prepLunchIntensive.assessmentId, serviceAssessmentRevisionId: generatorFixtureServiceAssessments.prepLunchIntensive.assessmentRevisionId,
   }),
   unknownOfficeSuitability: candidate({
     candidateId: 'candidate-unknown-office', recipeId: fixtureIds.prepLunch, recipeRevisionId: generatorFixtureRecipes.prepLunch.identity.revisionId,
-    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
+    strategy: 'dedicated-prep', cookingStartsAt: '2026-11-15T19:20:00.000Z', storageStartsAt: '2026-11-15T20:00:00.000Z', batchMultiplier: 1, sourceYieldSelection: null, originMealRequirementId: null,
     allocations: [{ mealRequirementId: 'meal-requirement-2026-11-16-lunch', mealPortions: 1, service: 'refrigerated-leftover' }],
     ingredientSelections: ingredientSelectionsFor(generatorFixtureRecipes.prepLunch), serviceAssessmentId: null, serviceAssessmentRevisionId: null,
   }),
