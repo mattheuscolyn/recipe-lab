@@ -4,6 +4,8 @@ The first real-recipe review overlay that consumes these contracts is documented
 
 G2B1 defines recommendation readiness as the universal gate for a fresh use. Stored, prep-ahead, reheated, and office-lunch routes still require their own evidence in `evaluateCandidateFeasibility`; fresh readiness never implies those service modes are approved. See [the approval decision packet](./G2B1_APPROVAL_DECISIONS.md).
 
+G2B2a applies these checks to two deterministic real-catalog weeks. See [the real-catalog coverage report and approval shortlist](./G2B2A_REAL_CATALOG_COVERAGE.md). It reports candidate pools and gaps, not an optimized or persisted week.
+
 > **Status:** reusable domain foundation for [Issue #21](https://github.com/mattheuscolyn/recipe-lab/issues/21). It is not connected to the live planner and does not generate or persist a week.
 
 ## Implemented boundary
