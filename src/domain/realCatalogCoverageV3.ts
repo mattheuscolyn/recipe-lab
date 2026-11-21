@@ -23,8 +23,11 @@ const routeSchema = z.object({
   recipeTitle: z.string(),
   sourceReviewed: z.boolean(),
   recommendationReady: z.boolean(),
-  servicePattern: z.enum(['fresh', 'dedicated-prep', 'prior-dinner-leftovers']),
+  servicePattern: z.enum(['fresh', 'advance-breakfast-prep', 'dedicated-prep', 'prior-dinner-leftovers']),
   mealRequirementIds: z.array(z.string()).min(1),
+  cookingStartsAt: z.iso.datetime(),
+  expectedReadyAt: z.iso.datetime().nullable(),
+  cookingWindowId: z.string().nullable(),
   status: z.enum(['eligible', 'review-needed', 'rejected']),
   reasons: z.array(z.object({ code: z.string(), disposition: z.enum(['rejected', 'review-needed']), missingFields: z.array(z.string()) })),
   reasonCodes: z.array(z.string()),
@@ -45,6 +48,7 @@ const slotSchema = z.object({
   skipped: z.boolean(),
   locked: z.boolean(),
   coverage: z.enum(['skipped', 'eligible', 'uncovered']),
+  blockerScope: z.literal('whole-routes-touching-slot'),
   eligibleRouteIds: z.array(z.string()),
   reviewNeededRouteCount: z.number().int().nonnegative(),
   rejectedRouteCount: z.number().int().nonnegative(),
@@ -87,7 +91,7 @@ export const realCatalogCoverageReportSchema = z.object({
 
 export type RealCatalogCoverageReport = z.infer<typeof realCatalogCoverageReportSchema>
 
-type Scenario = { scenarioId: string; label: string; request: PlanningRequest }
+export type RealCatalogCoverageScenario = { scenarioId: string; label: string; request: PlanningRequest }
 type RouteProbe = { routeId: string; servicePattern: z.infer<typeof routeSchema>['servicePattern']; candidate: GeneratorCandidate }
 
 const WEEK_DATES = ['2026-11-23', '2026-11-24', '2026-11-25', '2026-11-26', '2026-11-27', '2026-11-28', '2026-11-29'] as const
@@ -125,13 +129,14 @@ function cookingWindows(constrained: boolean) {
   return [
     { cookingWindowId: 'cooking-window-sunday-prep', start: '2026-11-22T18:00:00.000Z', end: '2026-11-22T23:00:00.000Z', maxActiveMinutes: constrained ? 60 : 90 },
     ...WEEK_DATES.flatMap((date) => [
-      { cookingWindowId: `cooking-window-${date}-breakfast`, start: `${date}T07:30:00.000Z`, end: `${date}T16:00:00.000Z`, maxActiveMinutes: 30 },
+      { cookingWindowId: `cooking-window-${date}-advance-breakfast`, start: `${date}T05:00:00.000Z`, end: `${date}T14:00:00.000Z`, maxActiveMinutes: 30 },
+      { cookingWindowId: `cooking-window-${date}-breakfast`, start: `${date}T14:30:00.000Z`, end: `${date}T16:00:00.000Z`, maxActiveMinutes: 30 },
       { cookingWindowId: `cooking-window-${date}-dinner`, start: `${utcDay(date, 1)}T01:00:00.000Z`, end: `${utcDay(date, 1)}T03:00:00.000Z`, maxActiveMinutes: constrained ? 25 : 45 },
     ]),
   ]
 }
 
-function buildScenario(activeRecipes: RecipeV3[], assessments: OfficeServiceAssessment[], constrained: boolean): Scenario {
+function buildScenario(activeRecipes: RecipeV3[], assessments: OfficeServiceAssessment[], constrained: boolean): RealCatalogCoverageScenario {
   const scenarioId = constrained ? 'scenario-constrained-week' : 'scenario-ordinary-week'
   const lockedRecipe = activeRecipes.find(({ identity }) => identity.slug === 'sheet-pan-chicken-fajitas')
   if (!lockedRecipe) throw new Error('Coverage scenario needs Sheet Pan Chicken Fajitas')
@@ -188,6 +193,15 @@ function cookingStart(recipe: RecipeV3, mealTime: string, fallbackMinutes: numbe
   return new Date(Date.parse(mealTime) - duration * 60_000).toISOString()
 }
 
+function supportsFreshBreakfastProbe(recipe: RecipeV3) {
+  return typeof recipe.effort.totalMinutes.value !== 'number' || recipe.effort.totalMinutes.value <= 90
+}
+
+function supportsAdvanceBreakfastProbe(recipe: RecipeV3) {
+  return (typeof recipe.effort.totalMinutes.value === 'number' && recipe.effort.totalMinutes.value > 90)
+    || ['yes', 'conditional'].includes(String(recipe.suitability.prepareAhead.value))
+}
+
 function assessmentFor(request: PlanningRequest, recipe: RecipeV3, service: 'fresh' | 'refrigerated-leftover') {
   return request.serviceAssessments.find((assessment) => assessment.recipeId === recipe.identity.recipeId
     && assessment.recipeRevisionId === recipe.identity.revisionId
@@ -205,15 +219,52 @@ function candidate(recipe: RecipeV3, input: Omit<GeneratorCandidate, 'recipeId' 
   })
 }
 
-function routeProbes(scenario: Scenario): RouteProbe[] {
+function routeProbes(scenario: RealCatalogCoverageScenario): RouteProbe[] {
   const probes: RouteProbe[] = []
   const request = scenario.request
   for (const requirement of request.mealRequirements) {
     if (requirement.status === 'skipped') continue
-    if (requirement.meal === 'breakfast' || requirement.meal === 'dinner') {
-      for (const recipe of request.recipeSnapshot.filter(({ mealRoles }) => mealRoles.primary.includes(requirement.meal))) {
+    if (requirement.meal === 'breakfast') {
+      for (const recipe of request.recipeSnapshot.filter(({ mealRoles }) => mealRoles.primary.includes('breakfast'))) {
+        if (supportsFreshBreakfastProbe(recipe)) {
+          const suffix = `${scenario.scenarioId.replace(/^scenario-/, '')}-${requirement.date}-breakfast-${recipe.identity.slug}`
+          probes.push({
+            routeId: `route-${suffix}`,
+            servicePattern: 'fresh',
+            candidate: candidate(recipe, {
+              candidateId: `candidate-${suffix}`,
+              strategy: 'meal-time-cook',
+              cookingStartsAt: cookingStart(recipe, requirement.intendedAt!, 60),
+              allocations: [{ mealRequirementId: requirement.mealRequirementId, mealPortions: requirement.requestedPortions, service: 'fresh' }],
+              originMealRequirementId: null,
+              serviceAssessmentId: null,
+              serviceAssessmentRevisionId: null,
+            }),
+          })
+        }
+        if (supportsAdvanceBreakfastProbe(recipe)) {
+          const suffix = `${scenario.scenarioId.replace(/^scenario-/, '')}-${requirement.date}-advance-breakfast-${recipe.identity.slug}`
+          const assessment = assessmentFor(request, recipe, 'refrigerated-leftover')
+          probes.push({
+            routeId: `route-${suffix}`,
+            servicePattern: 'advance-breakfast-prep',
+            candidate: candidate(recipe, {
+              candidateId: `candidate-${suffix}`,
+              strategy: 'dedicated-prep',
+              cookingStartsAt: `${requirement.date}T05:00:00.000Z`,
+              allocations: [{ mealRequirementId: requirement.mealRequirementId, mealPortions: requirement.requestedPortions, service: 'refrigerated-leftover' }],
+              originMealRequirementId: null,
+              serviceAssessmentId: assessment?.assessmentId ?? null,
+              serviceAssessmentRevisionId: assessment?.assessmentRevisionId ?? null,
+            }),
+          })
+        }
+      }
+    }
+    if (requirement.meal === 'dinner') {
+      for (const recipe of request.recipeSnapshot.filter(({ mealRoles }) => mealRoles.primary.includes('dinner'))) {
         const assessment = assessmentFor(request, recipe, 'fresh')
-        const suffix = `${scenario.scenarioId.replace(/^scenario-/, '')}-${requirement.date}-${requirement.meal}-${recipe.identity.slug}`
+        const suffix = `${scenario.scenarioId.replace(/^scenario-/, '')}-${requirement.date}-dinner-${recipe.identity.slug}`
         probes.push({
           routeId: `route-${suffix}`,
           servicePattern: 'fresh',
@@ -307,6 +358,10 @@ function summarizeBlockers(routes: z.infer<typeof routeSchema>[]) {
   return [...byCode.entries()].map(([code, value]) => ({ code, count: value.count, missingFields: [...value.missingFields].sort() })).sort((left, right) => right.count - left.count || left.code.localeCompare(right.code))
 }
 
+export function buildRealCatalogCoverageScenarios(activeRecipes: RecipeV3[], serviceAssessments: OfficeServiceAssessment[]): RealCatalogCoverageScenario[] {
+  return [buildScenario(activeRecipes, serviceAssessments, false), buildScenario(activeRecipes, serviceAssessments, true)]
+}
+
 export function buildRealCatalogCoverageReport(input: {
   baseRecipes: RecipeV3[]
   reviewArtifacts: RecipeReviewArtifact[]
@@ -316,7 +371,7 @@ export function buildRealCatalogCoverageReport(input: {
   const applied = applyRecipeApprovalManifest(input.baseRecipes, input.productionManifest)
   const activeRecipes = applied.activeRecipes
   const reviewedIds = new Set(input.reviewArtifacts.map(({ recipeId }) => recipeId))
-  const scenarios = [buildScenario(activeRecipes, input.serviceAssessments, false), buildScenario(activeRecipes, input.serviceAssessments, true)]
+  const scenarios = buildRealCatalogCoverageScenarios(activeRecipes, input.serviceAssessments)
   const scenarioReports = scenarios.map((scenario) => {
     const evaluatedRoutes = routeProbes(scenario).map((probe) => {
       const recipe = activeRecipes.find(({ identity }) => identity.recipeId === probe.candidate.recipeId && identity.revisionId === probe.candidate.recipeRevisionId)!
@@ -332,6 +387,9 @@ export function buildRealCatalogCoverageReport(input: {
         recommendationReady: recipe.review.readiness.recommendationReady,
         servicePattern: probe.servicePattern,
         mealRequirementIds: probe.candidate.allocations.map(({ mealRequirementId }) => mealRequirementId),
+        cookingStartsAt: probe.candidate.cookingStartsAt,
+        expectedReadyAt: result.timing?.expectedReadyAt ?? null,
+        cookingWindowId: result.timing?.cookingWindowId ?? null,
         status: result.status,
         reasons: result.reasons.map(({ code, disposition, missingFields }) => ({ code, disposition, missingFields })),
         reasonCodes: [...new Set(result.reasons.map(({ code }) => code))].sort(),
@@ -352,6 +410,7 @@ export function buildRealCatalogCoverageReport(input: {
         skipped: requirement.status === 'skipped',
         locked: requirement.lock.locked,
         coverage: requirement.status === 'skipped' ? 'skipped' : eligible.length ? 'eligible' : 'uncovered',
+        blockerScope: 'whole-routes-touching-slot',
         eligibleRouteIds: eligible.map(({ routeId }) => routeId),
         reviewNeededRouteCount: reviewNeeded.length,
         rejectedRouteCount: rejected.length,

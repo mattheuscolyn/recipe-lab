@@ -38,10 +38,10 @@
       "skippedSlotCount": 2,
       "coveredSlotCount": 0,
       "complete": false,
-      "evaluatedRouteCount": 311,
+      "evaluatedRouteCount": 318,
       "eligibleRouteCount": 0,
-      "reviewNeededRouteCount": 301,
-      "rejectedRouteCount": 10,
+      "reviewNeededRouteCount": 315,
+      "rejectedRouteCount": 3,
       "slots": [
         {
           "mealRequirementId": "meal-requirement-2026-11-23-breakfast",
@@ -51,13 +51,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -72,7 +73,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -85,9 +86,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -99,6 +109,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 20,
           "rejectedRouteCount": 0,
@@ -172,6 +183,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 32,
           "rejectedRouteCount": 0,
@@ -244,13 +256,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -265,7 +278,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -278,9 +291,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -292,6 +314,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 36,
           "rejectedRouteCount": 0,
@@ -372,6 +395,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 32,
           "rejectedRouteCount": 0,
@@ -444,13 +468,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -465,7 +490,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -478,9 +503,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -492,6 +526,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 35,
           "rejectedRouteCount": 1,
@@ -577,6 +612,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 32,
           "rejectedRouteCount": 0,
@@ -649,13 +685,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -670,7 +707,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -683,9 +720,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -697,6 +743,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 35,
           "rejectedRouteCount": 1,
@@ -782,6 +829,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 32,
           "rejectedRouteCount": 0,
@@ -854,13 +902,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -875,7 +924,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -888,9 +937,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -902,6 +960,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 35,
           "rejectedRouteCount": 1,
@@ -987,6 +1046,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 16,
           "rejectedRouteCount": 0,
@@ -1030,13 +1090,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -1051,7 +1112,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -1064,9 +1125,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -1078,6 +1148,7 @@
           "skipped": true,
           "locked": false,
           "coverage": "skipped",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 0,
@@ -1091,6 +1162,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 16,
           "rejectedRouteCount": 0,
@@ -1134,13 +1206,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -1155,7 +1228,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -1168,9 +1241,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -1182,6 +1264,7 @@
           "skipped": true,
           "locked": false,
           "coverage": "skipped",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 0,
@@ -1195,6 +1278,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 16,
           "rejectedRouteCount": 0,
@@ -1245,6 +1329,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
+          "cookingStartsAt": "2026-11-23T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-23T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -1274,6 +1361,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-23-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-23-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-23T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -1296,6 +1455,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
+          "cookingStartsAt": "2026-11-23T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-23T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -1335,7 +1497,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-23-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-23-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -1343,11 +1505,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-23T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -1360,19 +1525,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -1395,6 +1572,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -1484,6 +1664,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -1573,6 +1756,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -1624,6 +1810,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -1704,6 +1893,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -1755,6 +1947,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -1806,6 +2001,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -1848,6 +2046,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
+          "cookingStartsAt": "2026-11-24T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-24T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -1877,6 +2078,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-24-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-24-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-24T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -1899,6 +2172,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
+          "cookingStartsAt": "2026-11-24T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-24T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -1938,7 +2214,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-24-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-24-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -1946,11 +2222,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-24T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -1963,19 +2242,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -1998,6 +2289,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -2087,6 +2381,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -2176,6 +2473,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -2227,6 +2527,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -2308,6 +2611,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2398,6 +2704,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2488,6 +2797,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2568,6 +2880,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2619,6 +2934,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2670,6 +2988,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -2712,6 +3033,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
+          "cookingStartsAt": "2026-11-25T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-25T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -2741,6 +3065,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-25-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-25-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-25T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -2763,6 +3159,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
+          "cookingStartsAt": "2026-11-25T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-25T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -2802,7 +3201,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-25-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-25-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -2810,11 +3209,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-25T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -2827,19 +3229,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -2862,6 +3276,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -2951,6 +3368,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -3040,6 +3460,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -3097,6 +3520,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -3178,6 +3604,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3268,6 +3697,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3358,6 +3790,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3438,6 +3873,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3489,6 +3927,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3540,6 +3981,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -3582,6 +4026,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
+          "cookingStartsAt": "2026-11-26T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-26T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -3611,6 +4058,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-26-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-26-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-26T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -3633,6 +4152,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
+          "cookingStartsAt": "2026-11-26T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-26T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -3672,7 +4194,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-26-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-26-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -3680,11 +4202,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-26T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -3697,19 +4222,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -3732,6 +4269,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -3821,6 +4361,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -3910,6 +4453,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -3967,6 +4513,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -4048,6 +4597,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4138,6 +4690,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4228,6 +4783,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4308,6 +4866,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4359,6 +4920,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4410,6 +4974,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -4452,6 +5019,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
+          "cookingStartsAt": "2026-11-27T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-27T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -4481,6 +5051,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-27-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-27-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-27T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -4503,6 +5145,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
+          "cookingStartsAt": "2026-11-27T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-27T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -4542,7 +5187,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-27-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-27-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -4550,11 +5195,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-27T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -4567,19 +5215,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -4602,6 +5262,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -4691,6 +5354,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -4780,6 +5446,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -4837,6 +5506,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -4918,6 +5590,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5008,6 +5683,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5098,6 +5776,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5178,6 +5859,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-dinner"
           ],
+          "cookingStartsAt": "2026-11-28T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-28T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5229,6 +5913,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-dinner"
           ],
+          "cookingStartsAt": "2026-11-28T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-28T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5280,6 +5967,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-dinner"
           ],
+          "cookingStartsAt": "2026-11-28T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-28T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5322,6 +6012,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
+          "cookingStartsAt": "2026-11-28T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-28T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -5351,6 +6044,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-28-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-28-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-28T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -5373,6 +6138,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
+          "cookingStartsAt": "2026-11-28T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-28T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -5412,7 +6180,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-28-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-28-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -5420,11 +6188,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-28T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -5437,19 +6208,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -5472,6 +6255,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5523,6 +6309,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5574,6 +6363,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5616,6 +6408,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
+          "cookingStartsAt": "2026-11-29T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-29T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -5645,6 +6440,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-ordinary-week-2026-11-29-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-ordinary-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-29-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-29T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -5667,6 +6534,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
+          "cookingStartsAt": "2026-11-29T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-29T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -5706,7 +6576,7 @@
           }
         },
         {
-          "routeId": "route-ordinary-week-2026-11-29-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-ordinary-week-2026-11-29-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-ordinary-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -5714,11 +6584,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-29T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -5731,19 +6604,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -5766,6 +6651,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5817,6 +6705,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5868,6 +6759,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -5906,10 +6800,10 @@
       "skippedSlotCount": 3,
       "coveredSlotCount": 0,
       "complete": false,
-      "evaluatedRouteCount": 295,
+      "evaluatedRouteCount": 302,
       "eligibleRouteCount": 0,
-      "reviewNeededRouteCount": 190,
-      "rejectedRouteCount": 105,
+      "reviewNeededRouteCount": 204,
+      "rejectedRouteCount": 98,
       "slots": [
         {
           "mealRequirementId": "meal-requirement-2026-11-23-breakfast",
@@ -5919,13 +6813,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -5940,7 +6835,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -5953,9 +6848,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -5967,6 +6871,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 17,
           "rejectedRouteCount": 3,
@@ -6045,6 +6950,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 20,
           "rejectedRouteCount": 12,
@@ -6132,13 +7038,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -6153,7 +7060,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -6166,9 +7073,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -6180,6 +7096,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 27,
           "rejectedRouteCount": 9,
@@ -6275,6 +7192,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 20,
           "rejectedRouteCount": 12,
@@ -6362,13 +7280,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -6383,7 +7302,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -6396,9 +7315,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -6410,6 +7338,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 26,
           "rejectedRouteCount": 10,
@@ -6510,6 +7439,7 @@
           "skipped": false,
           "locked": true,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 32,
@@ -6602,13 +7532,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -6623,7 +7554,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -6636,9 +7567,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -6650,6 +7590,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 16,
           "rejectedRouteCount": 20,
@@ -6755,6 +7696,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 20,
           "rejectedRouteCount": 12,
@@ -6842,13 +7784,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -6863,7 +7806,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -6876,9 +7819,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -6890,6 +7842,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 26,
           "rejectedRouteCount": 10,
@@ -6990,6 +7943,7 @@
           "skipped": true,
           "locked": false,
           "coverage": "skipped",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 0,
@@ -7003,13 +7957,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -7024,7 +7979,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -7037,9 +7992,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -7051,6 +8015,7 @@
           "skipped": true,
           "locked": false,
           "coverage": "skipped",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 0,
@@ -7064,6 +8029,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 10,
           "rejectedRouteCount": 6,
@@ -7122,13 +8088,14 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
-          "reviewNeededRouteCount": 4,
-          "rejectedRouteCount": 1,
+          "reviewNeededRouteCount": 6,
+          "rejectedRouteCount": 0,
           "blockers": [
             {
               "code": "recommendation-readiness-required",
-              "count": 7,
+              "count": 8,
               "missingFields": [
                 "effort.activeMinutes",
                 "output.planningGuidance.sourceServingsPerMealPortion",
@@ -7143,7 +8110,7 @@
             },
             {
               "code": "ingredient-selection-grocery-review-required",
-              "count": 3,
+              "count": 4,
               "missingFields": [
                 "groceryDemand.ingredientSelections"
               ]
@@ -7156,9 +8123,18 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "count": 1,
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "count": 2,
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "count": 2,
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ]
         },
@@ -7170,6 +8146,7 @@
           "skipped": true,
           "locked": false,
           "coverage": "skipped",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 0,
           "rejectedRouteCount": 0,
@@ -7183,6 +8160,7 @@
           "skipped": false,
           "locked": false,
           "coverage": "uncovered",
+          "blockerScope": "whole-routes-touching-slot",
           "eligibleRouteIds": [],
           "reviewNeededRouteCount": 10,
           "rejectedRouteCount": 6,
@@ -7248,6 +8226,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
+          "cookingStartsAt": "2026-11-23T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-23T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -7277,6 +8258,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-23-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-23-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-23T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -7299,6 +8352,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
+          "cookingStartsAt": "2026-11-23T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-23T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -7338,7 +8394,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-23-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-23-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -7346,11 +8402,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-23T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -7363,19 +8422,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -7398,6 +8469,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -7487,6 +8561,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -7582,6 +8659,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -7633,6 +8713,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -7713,6 +8796,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -7770,6 +8856,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -7838,6 +8927,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-23-dinner"
           ],
+          "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -7880,6 +8972,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
+          "cookingStartsAt": "2026-11-24T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-24T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -7909,6 +9004,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-24-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-24-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-24T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -7931,6 +9098,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
+          "cookingStartsAt": "2026-11-24T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-24T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -7970,7 +9140,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-24-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-24-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -7978,11 +9148,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-24T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -7995,19 +9168,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -8030,6 +9215,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -8119,6 +9307,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -8214,6 +9405,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -8265,6 +9459,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -8346,6 +9543,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -8442,6 +9642,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -8549,6 +9752,9 @@
             "meal-requirement-2026-11-23-dinner",
             "meal-requirement-2026-11-24-lunch"
           ],
+          "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-24T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -8629,6 +9835,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -8686,6 +9895,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -8754,6 +9966,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-24-dinner"
           ],
+          "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -8796,6 +10011,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
+          "cookingStartsAt": "2026-11-25T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-25T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -8825,6 +10043,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-25-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-25-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-25T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -8847,6 +10137,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
+          "cookingStartsAt": "2026-11-25T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-25T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -8886,7 +10179,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-25-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-25-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -8894,11 +10187,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-25T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -8911,19 +10207,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -8946,6 +10254,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -9035,6 +10346,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -9130,6 +10444,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -9187,6 +10504,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -9268,6 +10588,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -9364,6 +10687,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -9471,6 +10797,9 @@
             "meal-requirement-2026-11-24-dinner",
             "meal-requirement-2026-11-25-lunch"
           ],
+          "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-25T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -9551,6 +10880,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -9608,6 +10940,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -9682,6 +11017,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-25-dinner"
           ],
+          "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -9730,6 +11068,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
+          "cookingStartsAt": "2026-11-26T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-26T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -9759,6 +11100,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-26-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-26-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-26T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -9781,6 +11194,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
+          "cookingStartsAt": "2026-11-26T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-26T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -9820,7 +11236,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-26-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-26-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -9828,11 +11244,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-26T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -9845,19 +11264,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -9880,6 +11311,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -9969,6 +11403,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -10064,6 +11501,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -10121,6 +11561,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -10202,6 +11645,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -10298,6 +11744,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -10411,6 +11860,9 @@
             "meal-requirement-2026-11-25-dinner",
             "meal-requirement-2026-11-26-lunch"
           ],
+          "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-26T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -10497,6 +11949,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -10554,6 +12009,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -10622,6 +12080,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-26-dinner"
           ],
+          "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -10664,6 +12125,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
+          "cookingStartsAt": "2026-11-27T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-27T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -10693,6 +12157,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-27-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-27-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-27T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -10715,6 +12251,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
+          "cookingStartsAt": "2026-11-27T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-27T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -10754,7 +12293,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-27-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-27-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -10762,11 +12301,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-27T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -10779,19 +12321,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -10814,6 +12368,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:55:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -10903,6 +12460,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:30:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -10998,6 +12558,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T19:00:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
           "reasons": [
             {
@@ -11055,6 +12618,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "expectedReadyAt": "2026-11-22T18:25:00.000Z",
+          "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
           "reasons": [
             {
@@ -11136,6 +12702,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -11232,6 +12801,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -11339,6 +12911,9 @@
             "meal-requirement-2026-11-26-dinner",
             "meal-requirement-2026-11-27-lunch"
           ],
+          "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-27T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -11419,6 +12994,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
+          "cookingStartsAt": "2026-11-28T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-28T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -11448,6 +13026,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-28-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-28-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-28T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -11470,6 +13120,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
+          "cookingStartsAt": "2026-11-28T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-28T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -11509,7 +13162,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-28-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-28-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -11517,11 +13170,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-28T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -11534,19 +13190,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -11569,6 +13237,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -11626,6 +13297,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -11694,6 +13368,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-28-dinner"
           ],
+          "cookingStartsAt": "2026-11-29T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-29T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
           "reasons": [
             {
@@ -11736,6 +13413,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
+          "cookingStartsAt": "2026-11-29T15:25:00.000Z",
+          "expectedReadyAt": "2026-11-29T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -11765,6 +13445,78 @@
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "source.rights.factualMetadataUse"
+          ],
+          "groceryDemand": {
+            "status": "review-needed",
+            "knownLineCount": 9,
+            "unresolvedLineCount": 0,
+            "uncertaintyCount": 0
+          }
+        },
+        {
+          "routeId": "route-constrained-week-2026-11-29-advance-breakfast-banana-flax-muffins",
+          "scenarioId": "scenario-constrained-week",
+          "recipeId": "10000000-0000-4000-8000-000000000008",
+          "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000008-g2a-1",
+          "recipeSlug": "banana-flax-muffins",
+          "recipeTitle": "Banana Flax Muffins",
+          "sourceReviewed": true,
+          "recommendationReady": false,
+          "servicePattern": "advance-breakfast-prep",
+          "mealRequirementIds": [
+            "meal-requirement-2026-11-29-breakfast"
+          ],
+          "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-29T05:35:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
+          "status": "review-needed",
+          "reasons": [
+            {
+              "code": "recommendation-readiness-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "source.rights.factualMetadataUse",
+                "review.recommendationDecisions.ingredientNormalization",
+                "review.recommendationDecisions.mealPortions",
+                "review.recommendationDecisions.effort"
+              ]
+            },
+            {
+              "code": "ingredient-selection-grocery-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "groceryDemand.ingredientSelections"
+              ]
+            },
+            {
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
+            }
+          ],
+          "reasonCodes": [
+            "ingredient-selection-grocery-review-required",
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
+          ],
+          "missingFields": [
+            "groceryDemand.ingredientSelections",
+            "recipe.suitability.storageModes",
+            "review.recommendationDecisions.effort",
+            "review.recommendationDecisions.ingredientNormalization",
+            "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -11787,6 +13539,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
+          "cookingStartsAt": "2026-11-29T15:45:00.000Z",
+          "expectedReadyAt": "2026-11-29T16:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
           "reasons": [
             {
@@ -11826,7 +13581,7 @@
           }
         },
         {
-          "routeId": "route-constrained-week-2026-11-29-breakfast-overnight-oats-base-recipe",
+          "routeId": "route-constrained-week-2026-11-29-advance-breakfast-overnight-oats-base-recipe",
           "scenarioId": "scenario-constrained-week",
           "recipeId": "10000000-0000-4000-8000-000000000015",
           "recipeRevisionId": "revision-10000000-0000-4000-8000-000000000015-g2a-1",
@@ -11834,11 +13589,14 @@
           "recipeTitle": "Overnight Oats Base Recipe",
           "sourceReviewed": true,
           "recommendationReady": false,
-          "servicePattern": "fresh",
+          "servicePattern": "advance-breakfast-prep",
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-breakfast"
           ],
-          "status": "rejected",
+          "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "expectedReadyAt": "2026-11-29T13:05:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
+          "status": "review-needed",
           "reasons": [
             {
               "code": "recommendation-readiness-required",
@@ -11851,19 +13609,31 @@
               ]
             },
             {
-              "code": "batch-output-insufficient",
-              "disposition": "rejected",
-              "missingFields": []
+              "code": "service-effort-review-required",
+              "disposition": "review-needed",
+              "missingFields": [
+                "serviceAssessment.activeMinutes"
+              ]
+            },
+            {
+              "code": "storage-evidence-missing",
+              "disposition": "review-needed",
+              "missingFields": [
+                "recipe.suitability.storageModes"
+              ]
             }
           ],
           "reasonCodes": [
-            "batch-output-insufficient",
-            "recommendation-readiness-required"
+            "recommendation-readiness-required",
+            "service-effort-review-required",
+            "storage-evidence-missing"
           ],
           "missingFields": [
+            "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
+            "serviceAssessment.activeMinutes",
             "source.rights.factualMetadataUse"
           ],
           "groceryDemand": {
@@ -11886,6 +13656,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:05:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -11943,6 +13716,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:30:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "rejected",
           "reasons": [
             {
@@ -12011,6 +13787,9 @@
           "mealRequirementIds": [
             "meal-requirement-2026-11-29-dinner"
           ],
+          "cookingStartsAt": "2026-11-30T02:35:00.000Z",
+          "expectedReadyAt": "2026-11-30T03:00:00.000Z",
+          "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
           "reasons": [
             {

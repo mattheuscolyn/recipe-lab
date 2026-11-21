@@ -8,9 +8,9 @@ Scope: [Issue #30](https://github.com/mattheuscolyn/recipe-lab/issues/30), towar
 
 The ordinary scenario requests two-person breakfasts and dinners plus alternating one- and two-portion weekday office lunches. Weekend lunches are explicitly skipped. The constrained scenario adds a locked Wednesday dinner, a skipped Friday dinner, a 25-active-minute/45-elapsed-minute dinner limit, and an example beef ingredient constraint. Neither scenario contains household taste votes; preference state is therefore `unknown`, not inferred from publisher ratings.
 
-The report evaluates fresh breakfast/dinner routes, Sunday dedicated-prep office lunches, and prior-dinner refrigerated leftovers. It records per-route batch grocery demand as quantified, review-needed, or unavailable. This is candidate-level demand only: consolidating selected routes into one week and one shopping list remains G3 work.
+The report evaluates fresh breakfast/dinner routes, advance-prepared breakfasts, Sunday dedicated-prep office lunches, and prior-dinner refrigerated leftovers. Fresh breakfast preparation is limited to 6:30–8:00 a.m. Pacific. A recipe whose reviewed elapsed time exceeds that 90-minute window is not probed as fresh. Recipes with reviewed prepare-ahead suitability or long elapsed time instead receive a distinct 9:00 p.m.–6:00 a.m. Pacific advance window, using `dedicated-prep` plus refrigerated service until breakfast so G1 must verify prepare-ahead, storage, and service-effort evidence. It records per-route batch grocery demand as quantified, review-needed, or unavailable. This is candidate-level demand only: consolidating selected routes into one week and one shopping list remains G3 work.
 
-All 25 recipes contribute to route counts and per-slot blocker aggregates. To keep the committed artifact reviewable, detailed route rows are retained for source-reviewed recipes and for any eligible route; an eligible route can therefore never disappear into aggregation.
+All 25 recipes contribute to route counts and per-slot blocker aggregates. To keep the committed artifact reviewable, detailed route rows are retained for source-reviewed recipes and for any eligible route; an eligible route can therefore never disappear into aggregation. A slot's `blockerScope` is `whole-routes-touching-slot`: blockers summarize complete multi-meal routes that touch the slot, so a dinner may display an office-lunch blocker when the proposed route couples that dinner to a later lunch. These are route blockers, not claims that every blocker applies directly to the named slot.
 
 Reproduce the report with:
 
@@ -31,7 +31,9 @@ Committed output: [`data/G2B2A_REAL_CATALOG_COVERAGE.json`](data/G2B2A_REAL_CATA
 | Recipes with any eligible G1 route | 0 |
 | Complete scenarios | 0 of 2 |
 
-The ordinary scenario evaluates 311 routes over 19 required and two skipped slots. The constrained scenario evaluates 295 routes over 18 required and three skipped slots. Both have zero covered required slots.
+The ordinary scenario evaluates 318 routes over 19 required and two skipped slots. The constrained scenario evaluates 302 routes over 18 required and three skipped slots. Both have zero covered required slots.
+
+Regression coverage also runs an isolated, fully reviewed synthetic dinner through this same evaluator. It proves that an eligible fresh route increments `recipesWithEligibleRoutes`, `eligibleRouteCount`, and `coveredSlotCount`, while a locked different dinner remains uncovered and unsupported stored routes remain ineligible. The fixture is never inserted into the production catalog or approval manifest.
 
 Every non-skipped slot is reported as uncovered. A source-reviewed record is not called recommendation-ready, and a recommendation-ready fresh route would not automatically qualify for storage or office service.
 
