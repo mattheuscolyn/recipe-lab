@@ -26,6 +26,7 @@ const routeSchema = z.object({
   servicePattern: z.enum(['fresh', 'advance-breakfast-prep', 'dedicated-prep', 'prior-dinner-leftovers']),
   mealRequirementIds: z.array(z.string()).min(1),
   cookingStartsAt: z.iso.datetime(),
+  storageStartsAt: z.iso.datetime().nullable(),
   expectedReadyAt: z.iso.datetime().nullable(),
   cookingWindowId: z.string().nullable(),
   status: z.enum(['eligible', 'review-needed', 'rejected']),
@@ -193,6 +194,12 @@ function cookingStart(recipe: RecipeV3, mealTime: string, fallbackMinutes: numbe
   return new Date(Date.parse(mealTime) - duration * 60_000).toISOString()
 }
 
+function expectedStorageStart(recipe: RecipeV3, cookingStartsAt: string) {
+  const totalMinutes = recipe.effort.totalMinutes
+  if (typeof totalMinutes.value !== 'number' || !['reported', 'reviewed'].includes(totalMinutes.confidence) || totalMinutes.evidenceIds.length === 0) return null
+  return new Date(Date.parse(cookingStartsAt) + totalMinutes.value * 60_000).toISOString()
+}
+
 function supportsFreshBreakfastProbe(recipe: RecipeV3) {
   return typeof recipe.effort.totalMinutes.value !== 'number' || recipe.effort.totalMinutes.value <= 90
 }
@@ -252,6 +259,7 @@ function routeProbes(scenario: RealCatalogCoverageScenario): RouteProbe[] {
               candidateId: `candidate-${suffix}`,
               strategy: 'dedicated-prep',
               cookingStartsAt: `${requirement.date}T05:00:00.000Z`,
+              storageStartsAt: `${requirement.date}T05:00:00.000Z`,
               allocations: [{ mealRequirementId: requirement.mealRequirementId, mealPortions: requirement.requestedPortions, service: 'refrigerated-leftover' }],
               originMealRequirementId: null,
               serviceAssessmentId: assessment?.assessmentId ?? null,
@@ -284,13 +292,15 @@ function routeProbes(scenario: RealCatalogCoverageScenario): RouteProbe[] {
     for (const recipe of request.recipeSnapshot.filter(({ mealRoles }) => mealRoles.primary.some((role) => role === 'lunch' || role === 'dinner'))) {
       const assessment = assessmentFor(request, recipe, 'refrigerated-leftover')
       const suffix = `${scenario.scenarioId.replace(/^scenario-/, '')}-${requirement.date}-prep-${recipe.identity.slug}`
+      const cookingStartsAt = '2026-11-22T18:00:00.000Z'
       probes.push({
         routeId: `route-${suffix}`,
         servicePattern: 'dedicated-prep',
         candidate: candidate(recipe, {
           candidateId: `candidate-${suffix}`,
           strategy: 'dedicated-prep',
-          cookingStartsAt: '2026-11-22T18:00:00.000Z',
+          cookingStartsAt,
+          storageStartsAt: expectedStorageStart(recipe, cookingStartsAt),
           allocations: [{ mealRequirementId: requirement.mealRequirementId, mealPortions: requirement.requestedPortions, service: 'refrigerated-leftover' }],
           originMealRequirementId: null,
           serviceAssessmentId: assessment?.assessmentId ?? null,
@@ -388,6 +398,7 @@ export function buildRealCatalogCoverageReport(input: {
         servicePattern: probe.servicePattern,
         mealRequirementIds: probe.candidate.allocations.map(({ mealRequirementId }) => mealRequirementId),
         cookingStartsAt: probe.candidate.cookingStartsAt,
+        storageStartsAt: probe.candidate.storageStartsAt ?? null,
         expectedReadyAt: result.timing?.expectedReadyAt ?? null,
         cookingWindowId: result.timing?.cookingWindowId ?? null,
         status: result.status,

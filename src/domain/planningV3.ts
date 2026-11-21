@@ -268,17 +268,19 @@ function reviewedStorage(recipe: RecipeV3, service: MealAllocation['service']): 
   return storage
 }
 
-function validateAllocationTiming(recipe: RecipeV3, event: CookEvent, requirement: MealRequirement, service: MealAllocation['service']): string[] {
+function validateAllocationTiming(recipe: RecipeV3, event: CookEvent, requirement: MealRequirement, service: MealAllocation['service'], storageStartedAt?: string | null): string[] {
   const cookDate = localDateForInstant(event.intendedAt, requirement.timeZone)
   if (service === 'fresh' && requirement.date !== cookDate) throw new Error('Fresh allocation must be served on the cook-event date')
   if (!requirement.intendedAt) {
     if (service === 'fresh') return []
     throw new Error('Stored allocation needs an exact intended meal time')
   }
-  const elapsedHours = (Date.parse(requirement.intendedAt) - Date.parse(event.intendedAt)) / 3_600_000
-  if (elapsedHours < 0) throw new Error('A meal cannot consume food before the cook event')
+  const readyElapsedHours = (Date.parse(requirement.intendedAt) - Date.parse(event.intendedAt)) / 3_600_000
+  if (readyElapsedHours < 0) throw new Error('A meal cannot consume food before the cook event')
   const storage = reviewedStorage(recipe, service)
-  if (storage && elapsedHours > storage.maxDurationHours!) throw new Error('Storage window is exceeded')
+  const storageElapsedHours = storage ? (Date.parse(requirement.intendedAt) - Date.parse(storageStartedAt ?? event.intendedAt)) / 3_600_000 : 0
+  if (storageElapsedHours < 0) throw new Error('A meal cannot consume food before storage begins')
+  if (storage && storageElapsedHours > storage.maxDurationHours!) throw new Error('Storage window is exceeded')
   return storage?.evidenceIds ?? []
 }
 
@@ -287,6 +289,7 @@ export type MealAllocationRequest = {
   requirement: MealRequirement
   mealPortions: number
   service: MealAllocation['service']
+  storageStartedAt?: string | null
 }
 
 export function allocateBatchToMeals(recipe: RecipeV3, batch: Batch, event: CookEvent, requests: MealAllocationRequest[]): { allocations: MealAllocation[]; mealRequirements: MealRequirement[]; remainder: OutputAmount } {
@@ -307,7 +310,7 @@ export function allocateBatchToMeals(recipe: RecipeV3, batch: Batch, event: Cook
       amount: outputForMealPortions(recipe, request.mealPortions),
       mealPortionsSatisfied: request.mealPortions,
       service: request.service,
-      storageEvidenceIds: validateAllocationTiming(recipe, event, requirement, request.service),
+      storageEvidenceIds: validateAllocationTiming(recipe, event, requirement, request.service, request.storageStartedAt),
       state: 'proposed',
     })
   })

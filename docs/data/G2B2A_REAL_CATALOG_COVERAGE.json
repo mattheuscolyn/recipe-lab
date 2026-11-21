@@ -1330,6 +1330,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-23T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
@@ -1384,6 +1385,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "storageStartsAt": "2026-11-23T05:00:00.000Z",
           "expectedReadyAt": "2026-11-23T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
           "status": "review-needed",
@@ -1456,6 +1458,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-23T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
@@ -1510,6 +1513,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "storageStartsAt": "2026-11-23T05:00:00.000Z",
           "expectedReadyAt": "2026-11-23T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
           "status": "review-needed",
@@ -1573,6 +1577,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -1665,6 +1670,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -1757,6 +1763,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -1811,6 +1818,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -1894,6 +1902,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -1948,6 +1957,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -2002,6 +2012,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -2047,6 +2058,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
@@ -2101,6 +2113,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "storageStartsAt": "2026-11-24T05:00:00.000Z",
           "expectedReadyAt": "2026-11-24T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
           "status": "review-needed",
@@ -2173,6 +2186,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
@@ -2227,6 +2241,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "storageStartsAt": "2026-11-24T05:00:00.000Z",
           "expectedReadyAt": "2026-11-24T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
           "status": "review-needed",
@@ -2290,6 +2305,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -2382,6 +2398,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -2474,6 +2491,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -2528,6 +2546,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -2612,6 +2631,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -2705,6 +2725,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -2798,6 +2819,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -2881,6 +2903,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -2935,6 +2958,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -2989,6 +3013,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -3034,6 +3059,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
@@ -3088,6 +3114,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "storageStartsAt": "2026-11-25T05:00:00.000Z",
           "expectedReadyAt": "2026-11-25T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
           "status": "review-needed",
@@ -3160,6 +3187,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
@@ -3214,6 +3242,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "storageStartsAt": "2026-11-25T05:00:00.000Z",
           "expectedReadyAt": "2026-11-25T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
           "status": "review-needed",
@@ -3277,6 +3306,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -3369,6 +3399,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -3461,6 +3492,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -3521,6 +3553,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -3605,6 +3638,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -3698,6 +3732,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -3791,6 +3826,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -3874,6 +3910,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -3928,6 +3965,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -3982,6 +4020,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -4027,6 +4066,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
@@ -4081,6 +4121,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "storageStartsAt": "2026-11-26T05:00:00.000Z",
           "expectedReadyAt": "2026-11-26T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
           "status": "review-needed",
@@ -4153,6 +4194,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
@@ -4207,6 +4249,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "storageStartsAt": "2026-11-26T05:00:00.000Z",
           "expectedReadyAt": "2026-11-26T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
           "status": "review-needed",
@@ -4270,6 +4313,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -4362,6 +4406,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -4454,6 +4499,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -4514,6 +4560,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -4598,6 +4645,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -4691,6 +4739,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -4784,6 +4833,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "review-needed",
@@ -4867,6 +4917,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -4921,6 +4972,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -4975,6 +5027,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -5020,6 +5073,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
@@ -5074,6 +5128,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "storageStartsAt": "2026-11-27T05:00:00.000Z",
           "expectedReadyAt": "2026-11-27T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
           "status": "review-needed",
@@ -5146,6 +5201,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
@@ -5200,6 +5256,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "storageStartsAt": "2026-11-27T05:00:00.000Z",
           "expectedReadyAt": "2026-11-27T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
           "status": "review-needed",
@@ -5263,6 +5320,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -5355,6 +5413,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -5447,6 +5506,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -5507,6 +5567,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -5591,6 +5652,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -5684,6 +5746,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -5777,6 +5840,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -5860,6 +5924,7 @@
             "meal-requirement-2026-11-27-dinner"
           ],
           "cookingStartsAt": "2026-11-28T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
@@ -5914,6 +5979,7 @@
             "meal-requirement-2026-11-27-dinner"
           ],
           "cookingStartsAt": "2026-11-28T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
@@ -5968,6 +6034,7 @@
             "meal-requirement-2026-11-27-dinner"
           ],
           "cookingStartsAt": "2026-11-28T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-dinner",
           "status": "review-needed",
@@ -6013,6 +6080,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
@@ -6067,6 +6135,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "storageStartsAt": "2026-11-28T05:00:00.000Z",
           "expectedReadyAt": "2026-11-28T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
           "status": "review-needed",
@@ -6139,6 +6208,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
@@ -6193,6 +6263,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "storageStartsAt": "2026-11-28T05:00:00.000Z",
           "expectedReadyAt": "2026-11-28T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
           "status": "review-needed",
@@ -6256,6 +6327,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
@@ -6310,6 +6382,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
@@ -6364,6 +6437,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
@@ -6409,6 +6483,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
@@ -6463,6 +6538,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "storageStartsAt": "2026-11-29T05:00:00.000Z",
           "expectedReadyAt": "2026-11-29T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
           "status": "review-needed",
@@ -6535,6 +6611,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
@@ -6589,6 +6666,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "storageStartsAt": "2026-11-29T05:00:00.000Z",
           "expectedReadyAt": "2026-11-29T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
           "status": "review-needed",
@@ -6652,6 +6730,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
@@ -6706,6 +6785,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
@@ -6760,6 +6840,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",
@@ -8227,6 +8308,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-23T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
@@ -8281,6 +8363,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "storageStartsAt": "2026-11-23T05:00:00.000Z",
           "expectedReadyAt": "2026-11-23T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
           "status": "review-needed",
@@ -8353,6 +8436,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-23T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-breakfast",
           "status": "review-needed",
@@ -8407,6 +8491,7 @@
             "meal-requirement-2026-11-23-breakfast"
           ],
           "cookingStartsAt": "2026-11-23T05:00:00.000Z",
+          "storageStartsAt": "2026-11-23T05:00:00.000Z",
           "expectedReadyAt": "2026-11-23T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-advance-breakfast",
           "status": "review-needed",
@@ -8470,6 +8555,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -8562,6 +8648,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -8660,6 +8747,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -8714,6 +8802,7 @@
             "meal-requirement-2026-11-23-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -8797,6 +8886,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
@@ -8857,6 +8947,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
@@ -8928,6 +9019,7 @@
             "meal-requirement-2026-11-23-dinner"
           ],
           "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -8973,6 +9065,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
@@ -9027,6 +9120,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "storageStartsAt": "2026-11-24T05:00:00.000Z",
           "expectedReadyAt": "2026-11-24T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
           "status": "review-needed",
@@ -9099,6 +9193,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-breakfast",
           "status": "review-needed",
@@ -9153,6 +9248,7 @@
             "meal-requirement-2026-11-24-breakfast"
           ],
           "cookingStartsAt": "2026-11-24T05:00:00.000Z",
+          "storageStartsAt": "2026-11-24T05:00:00.000Z",
           "expectedReadyAt": "2026-11-24T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-advance-breakfast",
           "status": "review-needed",
@@ -9216,6 +9312,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -9308,6 +9405,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -9406,6 +9504,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -9460,6 +9559,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -9544,6 +9644,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
@@ -9643,6 +9744,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "rejected",
@@ -9753,6 +9855,7 @@
             "meal-requirement-2026-11-24-lunch"
           ],
           "cookingStartsAt": "2026-11-24T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-24T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-23-dinner",
           "status": "review-needed",
@@ -9836,6 +9939,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
@@ -9896,6 +10000,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
@@ -9967,6 +10072,7 @@
             "meal-requirement-2026-11-24-dinner"
           ],
           "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -10012,6 +10118,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
@@ -10066,6 +10173,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "storageStartsAt": "2026-11-25T05:00:00.000Z",
           "expectedReadyAt": "2026-11-25T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
           "status": "review-needed",
@@ -10138,6 +10246,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-breakfast",
           "status": "review-needed",
@@ -10192,6 +10301,7 @@
             "meal-requirement-2026-11-25-breakfast"
           ],
           "cookingStartsAt": "2026-11-25T05:00:00.000Z",
+          "storageStartsAt": "2026-11-25T05:00:00.000Z",
           "expectedReadyAt": "2026-11-25T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-advance-breakfast",
           "status": "review-needed",
@@ -10255,6 +10365,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -10347,6 +10458,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -10445,6 +10557,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -10505,6 +10618,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -10589,6 +10703,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
@@ -10688,6 +10803,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "rejected",
@@ -10798,6 +10914,7 @@
             "meal-requirement-2026-11-25-lunch"
           ],
           "cookingStartsAt": "2026-11-25T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-25T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-24-dinner",
           "status": "review-needed",
@@ -10881,6 +10998,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -10941,6 +11059,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -11018,6 +11137,7 @@
             "meal-requirement-2026-11-25-dinner"
           ],
           "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -11069,6 +11189,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
@@ -11123,6 +11244,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "storageStartsAt": "2026-11-26T05:00:00.000Z",
           "expectedReadyAt": "2026-11-26T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
           "status": "review-needed",
@@ -11195,6 +11317,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-breakfast",
           "status": "review-needed",
@@ -11249,6 +11372,7 @@
             "meal-requirement-2026-11-26-breakfast"
           ],
           "cookingStartsAt": "2026-11-26T05:00:00.000Z",
+          "storageStartsAt": "2026-11-26T05:00:00.000Z",
           "expectedReadyAt": "2026-11-26T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-advance-breakfast",
           "status": "review-needed",
@@ -11312,6 +11436,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -11404,6 +11529,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -11502,6 +11628,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -11562,6 +11689,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -11646,6 +11774,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -11745,6 +11874,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -11861,6 +11991,7 @@
             "meal-requirement-2026-11-26-lunch"
           ],
           "cookingStartsAt": "2026-11-26T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-26T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-25-dinner",
           "status": "rejected",
@@ -11950,6 +12081,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
@@ -12010,6 +12142,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
@@ -12081,6 +12214,7 @@
             "meal-requirement-2026-11-26-dinner"
           ],
           "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -12126,6 +12260,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
@@ -12180,6 +12315,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "storageStartsAt": "2026-11-27T05:00:00.000Z",
           "expectedReadyAt": "2026-11-27T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
           "status": "review-needed",
@@ -12252,6 +12388,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-breakfast",
           "status": "review-needed",
@@ -12306,6 +12443,7 @@
             "meal-requirement-2026-11-27-breakfast"
           ],
           "cookingStartsAt": "2026-11-27T05:00:00.000Z",
+          "storageStartsAt": "2026-11-27T05:00:00.000Z",
           "expectedReadyAt": "2026-11-27T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-27-advance-breakfast",
           "status": "review-needed",
@@ -12369,6 +12507,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:55:00.000Z",
           "expectedReadyAt": "2026-11-22T18:55:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -12461,6 +12600,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:30:00.000Z",
           "expectedReadyAt": "2026-11-22T18:30:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -12559,6 +12699,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T19:00:00.000Z",
           "expectedReadyAt": "2026-11-22T19:00:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "rejected",
@@ -12619,6 +12760,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-22T18:00:00.000Z",
+          "storageStartsAt": "2026-11-22T18:25:00.000Z",
           "expectedReadyAt": "2026-11-22T18:25:00.000Z",
           "cookingWindowId": "cooking-window-sunday-prep",
           "status": "review-needed",
@@ -12703,6 +12845,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
@@ -12802,6 +12945,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "rejected",
@@ -12912,6 +13056,7 @@
             "meal-requirement-2026-11-27-lunch"
           ],
           "cookingStartsAt": "2026-11-27T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-27T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-26-dinner",
           "status": "review-needed",
@@ -12995,6 +13140,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
@@ -13049,6 +13195,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "storageStartsAt": "2026-11-28T05:00:00.000Z",
           "expectedReadyAt": "2026-11-28T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
           "status": "review-needed",
@@ -13121,6 +13268,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-28T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-breakfast",
           "status": "review-needed",
@@ -13175,6 +13323,7 @@
             "meal-requirement-2026-11-28-breakfast"
           ],
           "cookingStartsAt": "2026-11-28T05:00:00.000Z",
+          "storageStartsAt": "2026-11-28T05:00:00.000Z",
           "expectedReadyAt": "2026-11-28T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-advance-breakfast",
           "status": "review-needed",
@@ -13238,6 +13387,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "rejected",
@@ -13298,6 +13448,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "rejected",
@@ -13369,6 +13520,7 @@
             "meal-requirement-2026-11-28-dinner"
           ],
           "cookingStartsAt": "2026-11-29T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-28-dinner",
           "status": "review-needed",
@@ -13414,6 +13566,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T15:25:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
@@ -13468,6 +13621,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "storageStartsAt": "2026-11-29T05:00:00.000Z",
           "expectedReadyAt": "2026-11-29T05:35:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
           "status": "review-needed",
@@ -13540,6 +13694,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T15:45:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-29T16:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-breakfast",
           "status": "review-needed",
@@ -13594,6 +13749,7 @@
             "meal-requirement-2026-11-29-breakfast"
           ],
           "cookingStartsAt": "2026-11-29T05:00:00.000Z",
+          "storageStartsAt": "2026-11-29T05:00:00.000Z",
           "expectedReadyAt": "2026-11-29T13:05:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-advance-breakfast",
           "status": "review-needed",
@@ -13657,6 +13813,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:05:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "rejected",
@@ -13717,6 +13874,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:30:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "rejected",
@@ -13788,6 +13946,7 @@
             "meal-requirement-2026-11-29-dinner"
           ],
           "cookingStartsAt": "2026-11-30T02:35:00.000Z",
+          "storageStartsAt": null,
           "expectedReadyAt": "2026-11-30T03:00:00.000Z",
           "cookingWindowId": "cooking-window-2026-11-29-dinner",
           "status": "review-needed",

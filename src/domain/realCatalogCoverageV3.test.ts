@@ -17,14 +17,16 @@ const build = () => buildRealCatalogCoverageReport({
 let report: ReturnType<typeof build>
 beforeAll(() => { report = build() }, 15_000)
 
-function positiveDinnerFixture() {
-  const recipe = structuredClone(generatorFixtureRecipes.dinner)
+function syntheticReviewedFixture(kind: 'dinner' | 'quick-breakfast' | 'overnight-breakfast') {
+  const role = kind === 'dinner' ? 'dinner' : 'breakfast'
+  const suffix = kind === 'dinner' ? 'positive-coverage-dinner' : kind
+  const recipe = structuredClone(kind === 'dinner' ? generatorFixtureRecipes.dinner : generatorFixtureRecipes.breakfast)
   recipe.identity = {
     ...recipe.identity,
-    recipeId: '20000000-0000-4000-8000-000000000003',
-    revisionId: 'revision-synthetic-positive-coverage-dinner-v1',
-    slug: 'synthetic-positive-coverage-dinner',
-    title: 'Synthetic positive coverage dinner',
+    recipeId: kind === 'dinner' ? '20000000-0000-4000-8000-000000000003' : kind === 'quick-breakfast' ? '20000000-0000-4000-8000-000000000001' : '20000000-0000-4000-8000-000000000002',
+    revisionId: `revision-synthetic-${suffix}-v1`,
+    slug: `synthetic-${suffix}`,
+    title: `Synthetic ${kind.replace('-', ' ')}`,
   }
   recipe.requirements = recipe.requirements.filter(({ optional }) => !optional).map((requirement) => ({
     ...requirement,
@@ -32,13 +34,20 @@ function positiveDinnerFixture() {
     confidence: 'reviewed' as const,
     reviewNote: null,
   }))
+  if (kind === 'overnight-breakfast') {
+    const evidenceIds = recipe.effort.totalMinutes.evidenceIds
+    recipe.effort.totalMinutes = { value: 485, evidenceIds, confidence: 'reviewed', unknownReason: null }
+    recipe.effort.activeMinutes = { value: 5, evidenceIds, confidence: 'reviewed', unknownReason: null }
+    recipe.effort.passiveMinutes = { value: 480, evidenceIds, confidence: 'reviewed', unknownReason: null }
+    recipe.suitability.storageModes = [{ mode: 'refrigerated', maxDurationHours: 4, evidenceIds, confidence: 'reviewed' }]
+  }
   recipe.review.readiness = computeRecipeV3Readiness(recipe)
   const parsedRecipe = recipeV3Schema.parse(recipe)
   const evidenceId = parsedRecipe.source.evidence[0].evidenceId
   const artifact = recipeReviewArtifactSchema.parse({
-    reviewId: 'recipe-review-synthetic-positive-coverage-dinner',
+    reviewId: `recipe-review-synthetic-${suffix}`,
     recipeId: parsedRecipe.identity.recipeId,
-    baseRevisionId: 'revision-synthetic-positive-coverage-dinner-v0',
+    baseRevisionId: `revision-synthetic-${suffix}-v0`,
     revisionId: parsedRecipe.identity.revisionId,
     reviewedAt: '2026-11-20T20:00:00.000Z',
     reviewer: 'Synthetic coverage regression fixture',
@@ -54,16 +63,16 @@ function positiveDinnerFixture() {
     },
     evidence: [parsedRecipe.source.evidence[0]],
     editorialDecisions: [
-      { decisionId: 'decision-synthetic-positive-ingredients', subject: 'ingredient-normalization', status: 'approved', rationale: 'Synthetic-only ingredient approval for coverage regression.', evidenceIds: [evidenceId] },
-      { decisionId: 'decision-synthetic-positive-scaling', subject: 'scaling', status: 'approved', rationale: 'Synthetic-only scaling approval for coverage regression.', evidenceIds: [evidenceId] },
-      { decisionId: 'decision-synthetic-positive-portions', subject: 'meal-portions', status: 'approved', rationale: 'Synthetic-only portion approval for coverage regression.', evidenceIds: [evidenceId] },
-      { decisionId: 'decision-synthetic-positive-effort', subject: 'effort', status: 'approved', rationale: 'Synthetic-only effort approval for coverage regression.', evidenceIds: [evidenceId] },
+      { decisionId: `decision-${suffix}-ingredients`, subject: 'ingredient-normalization', status: 'approved', rationale: 'Synthetic-only ingredient approval for coverage regression.', evidenceIds: [evidenceId] },
+      { decisionId: `decision-${suffix}-scaling`, subject: 'scaling', status: 'approved', rationale: 'Synthetic-only scaling approval for coverage regression.', evidenceIds: [evidenceId] },
+      { decisionId: `decision-${suffix}-portions`, subject: 'meal-portions', status: 'approved', rationale: 'Synthetic-only portion approval for coverage regression.', evidenceIds: [evidenceId] },
+      { decisionId: `decision-${suffix}-effort`, subject: 'effort', status: 'approved', rationale: 'Synthetic-only effort approval for coverage regression.', evidenceIds: [evidenceId] },
     ],
     unresolvedIssues: [],
     reviewedRecipe: parsedRecipe,
     serviceAssessments: [],
   })
-  return { recipe: parsedRecipe, artifact }
+  return { recipe: parsedRecipe, artifact, role }
 }
 
 describe('G2B2a real-catalog weekly coverage', () => {
@@ -115,29 +124,43 @@ describe('G2B2a real-catalog weekly coverage', () => {
     expect(routes).toContainEqual(expect.objectContaining({ recipeSlug: 'southwest-tofu-scramble', servicePattern: 'fresh', cookingStartsAt: '2026-11-23T15:45:00.000Z', cookingWindowId: 'cooking-window-2026-11-23-breakfast' }))
   })
 
-  it('counts isolated synthetic eligible routes and covers only their actual meal slots', () => {
-    const synthetic = positiveDinnerFixture()
+  it('counts isolated synthetic eligible routes and uses conservative overnight storage timing', () => {
+    const synthetic = syntheticReviewedFixture('dinner')
+    const quickBreakfast = syntheticReviewedFixture('quick-breakfast')
+    const overnightBreakfast = syntheticReviewedFixture('overnight-breakfast')
     const positive = buildRealCatalogCoverageReport({
-      baseRecipes: [...reviewedRecipeCatalogV3, synthetic.recipe],
-      reviewArtifacts: [...realRecipeReviewArtifacts, synthetic.artifact],
+      baseRecipes: [...reviewedRecipeCatalogV3, synthetic.recipe, quickBreakfast.recipe, overnightBreakfast.recipe],
+      reviewArtifacts: [...realRecipeReviewArtifacts, synthetic.artifact, quickBreakfast.artifact, overnightBreakfast.artifact],
       serviceAssessments: reviewedRecipeServiceAssessments,
       productionManifest: recipeApprovalManifestV3,
     })
     const ordinary = positive.scenarios.find(({ scenarioId }) => scenarioId === 'scenario-ordinary-week')!
     const constrained = positive.scenarios.find(({ scenarioId }) => scenarioId === 'scenario-constrained-week')!
     const mondayDinner = ordinary.slots.find(({ mealRequirementId }) => mealRequirementId === 'meal-requirement-2026-11-23-dinner')!
+    const mondayBreakfast = ordinary.slots.find(({ mealRequirementId }) => mealRequirementId === 'meal-requirement-2026-11-23-breakfast')!
     const lockedDinner = constrained.slots.find(({ mealRequirementId }) => mealRequirementId === 'meal-requirement-2026-11-25-dinner')!
     const syntheticRoutes = positive.scenarios.flatMap(({ routes }) => routes.filter(({ recipeId }) => recipeId === synthetic.recipe.identity.recipeId))
+    const quickRoute = ordinary.routes.find(({ recipeId, servicePattern }) => recipeId === quickBreakfast.recipe.identity.recipeId && servicePattern === 'fresh')!
+    const overnightRoute = ordinary.routes.find(({ recipeId, servicePattern }) => recipeId === overnightBreakfast.recipe.identity.recipeId && servicePattern === 'advance-breakfast-prep')!
 
     expect(recipeApprovalManifestV3.bundles).toEqual([])
-    expect(positive.catalog).toMatchObject({ productionApprovalBundleCount: 0, productionRecommendationReadyCount: 1, recipesWithEligibleRoutes: 1 })
+    expect(positive.catalog).toMatchObject({ productionApprovalBundleCount: 0, productionRecommendationReadyCount: 3, recipesWithEligibleRoutes: 2 })
     expect(ordinary.eligibleRouteCount).toBeGreaterThan(0)
-    expect(ordinary.coveredSlotCount).toBe(7)
+    expect(ordinary.coveredSlotCount).toBe(14)
     expect(mondayDinner.coverage).toBe('eligible')
+    expect(mondayBreakfast.coverage).toBe('eligible')
     expect(mondayDinner.eligibleRouteIds).toContain('route-ordinary-week-2026-11-23-dinner-synthetic-positive-coverage-dinner')
+    expect(quickRoute).toMatchObject({ status: 'eligible', cookingStartsAt: '2026-11-23T15:20:00.000Z', storageStartsAt: null })
+    expect(overnightRoute).toMatchObject({
+      cookingStartsAt: '2026-11-23T05:00:00.000Z',
+      storageStartsAt: '2026-11-23T05:00:00.000Z',
+      expectedReadyAt: '2026-11-23T13:05:00.000Z',
+      status: 'rejected',
+    })
+    expect(overnightRoute.reasonCodes).toContain('storage-window-exceeded')
     expect(lockedDinner.coverage).toBe('uncovered')
     expect(syntheticRoutes.filter(({ servicePattern }) => servicePattern !== 'fresh').every(({ status }) => status !== 'eligible')).toBe(true)
-  }, 15_000)
+  }, 20_000)
 
   it('preserves unknown household preference state and real lock constraints', () => {
     expect(report.preferenceHandling).toBe('unknown-unless-explicitly-provided')
