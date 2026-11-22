@@ -72,13 +72,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "cooking-duration-review-required",
               "count": 2,
               "missingFields": [
@@ -160,13 +153,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 7,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 3,
               "missingFields": [
@@ -233,13 +219,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 3,
               "missingFields": [
@@ -274,13 +253,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -372,13 +344,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 6,
               "missingFields": [
@@ -445,13 +410,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 3,
               "missingFields": [
@@ -486,13 +444,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -584,13 +535,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 6,
               "missingFields": [
@@ -662,13 +606,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 3,
               "missingFields": [
@@ -703,13 +640,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -801,13 +731,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 6,
               "missingFields": [
@@ -879,13 +802,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 3,
               "missingFields": [
@@ -920,13 +836,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -1018,13 +927,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "storage-evidence-missing",
               "count": 6,
               "missingFields": [
@@ -1072,13 +974,6 @@
               "missingFields": [
                 "recipe.effort.activeMinutes"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 6,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ]
         },
@@ -1108,13 +1003,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -1188,13 +1076,6 @@
               "missingFields": [
                 "recipe.effort.activeMinutes"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 6,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ]
         },
@@ -1224,13 +1105,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -1304,13 +1178,6 @@
               "missingFields": [
                 "recipe.effort.activeMinutes"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 6,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ]
         }
@@ -1344,21 +1211,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -1401,13 +1259,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -1423,13 +1274,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -1472,21 +1321,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -1593,13 +1433,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -1630,7 +1463,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -1638,7 +1470,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -1686,13 +1517,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -1723,7 +1547,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -1731,7 +1554,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -1916,21 +1738,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -1971,21 +1784,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -2072,21 +1876,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -2129,13 +1924,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -2151,13 +1939,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -2200,21 +1986,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -2321,13 +2098,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -2358,7 +2128,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -2366,7 +2135,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -2414,13 +2182,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -2451,7 +2212,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -2459,7 +2219,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -2647,13 +2406,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -2684,7 +2436,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -2692,7 +2443,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -2741,13 +2491,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -2778,7 +2521,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -2786,7 +2528,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -2917,21 +2658,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -2972,21 +2704,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -3073,21 +2796,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -3130,13 +2844,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -3152,13 +2859,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -3201,21 +2906,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -3322,13 +3018,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -3359,7 +3048,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -3367,7 +3055,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -3415,13 +3102,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -3452,7 +3132,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -3460,7 +3139,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -3654,13 +3332,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -3691,7 +3362,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -3699,7 +3369,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -3748,13 +3417,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -3785,7 +3447,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -3793,7 +3454,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -3924,21 +3584,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -3979,21 +3630,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -4080,21 +3722,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -4137,13 +3770,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -4159,13 +3785,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -4208,21 +3832,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -4329,13 +3944,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -4366,7 +3974,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -4374,7 +3981,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -4422,13 +4028,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -4459,7 +4058,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -4467,7 +4065,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -4661,13 +4258,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -4698,7 +4288,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -4706,7 +4295,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -4755,13 +4343,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -4792,7 +4373,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -4800,7 +4380,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -4931,21 +4510,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -4986,21 +4556,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -5087,21 +4648,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -5144,13 +4696,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -5166,13 +4711,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -5215,21 +4758,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -5336,13 +4870,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -5373,7 +4900,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -5381,7 +4907,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -5429,13 +4954,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -5466,7 +4984,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -5474,7 +4991,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -5668,13 +5184,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -5705,7 +5214,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -5713,7 +5221,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -5762,13 +5269,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "leftover-quality-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -5799,7 +5299,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -5807,7 +5306,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -5938,21 +5436,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -5993,21 +5482,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6094,21 +5574,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6151,13 +5622,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -6173,13 +5637,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -6222,21 +5684,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6341,21 +5794,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6396,21 +5840,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6497,21 +5932,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6554,13 +5980,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -6576,13 +5995,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -6625,21 +6042,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6744,21 +6152,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6799,21 +6198,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -6915,13 +6305,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "cooking-duration-review-required",
               "count": 2,
               "missingFields": [
@@ -7003,13 +6386,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 7,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "hard-ingredient-avoid",
               "count": 3,
               "missingFields": []
@@ -7081,13 +6457,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 8,
               "missingFields": []
@@ -7137,13 +6506,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -7235,13 +6597,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "hard-ingredient-avoid",
               "count": 6,
               "missingFields": []
@@ -7323,13 +6678,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 8,
               "missingFields": []
@@ -7379,13 +6727,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -7474,13 +6815,6 @@
               "count": 16,
               "missingFields": [
                 "recipe.suitability.leftoverQuality"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -7575,13 +6909,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 8,
               "missingFields": []
@@ -7631,13 +6958,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -7734,13 +7054,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "hard-ingredient-avoid",
               "count": 6,
               "missingFields": []
@@ -7827,13 +7140,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 12,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 8,
               "missingFields": []
@@ -7883,13 +7189,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -7981,13 +7280,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 13,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "hard-ingredient-avoid",
               "count": 6,
               "missingFields": []
@@ -8056,13 +7348,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -8138,13 +7423,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 6,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 4,
               "missingFields": []
@@ -8187,13 +7465,6 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.outputScaling",
                 "source.rights.factualMetadataUse"
-              ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 4,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
               ]
             },
             {
@@ -8269,13 +7540,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "count": 6,
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "count": 4,
               "missingFields": []
@@ -8322,21 +7586,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -8379,13 +7634,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -8401,13 +7649,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -8450,21 +7696,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -8571,13 +7808,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -8608,7 +7838,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -8616,7 +7845,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -8669,13 +7897,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -8707,7 +7928,6 @@
           ],
           "reasonCodes": [
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -8715,7 +7935,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -8902,13 +8121,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -8916,11 +8128,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -8968,13 +8178,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -8988,11 +8191,9 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -9079,21 +8280,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -9136,13 +8328,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -9158,13 +8343,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -9207,21 +8390,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -9328,13 +8502,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -9365,7 +8532,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -9373,7 +8539,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -9426,13 +8591,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -9464,7 +8622,6 @@
           ],
           "reasonCodes": [
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -9472,7 +8629,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -9660,13 +8816,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -9703,7 +8852,6 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -9711,7 +8859,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -9765,13 +8912,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -9814,7 +8954,6 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -9822,7 +8961,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -9955,13 +9093,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -9969,11 +9100,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -10021,13 +9150,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -10041,11 +9163,9 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -10132,21 +9252,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -10189,13 +9300,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -10211,13 +9315,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -10260,21 +9362,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -10381,13 +9474,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -10418,7 +9504,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -10426,7 +9511,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -10479,13 +9563,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -10517,7 +9594,6 @@
           ],
           "reasonCodes": [
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -10525,7 +9601,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -10719,13 +9794,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -10762,7 +9830,6 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -10770,7 +9837,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -10824,13 +9890,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -10873,7 +9932,6 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -10881,7 +9939,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -11014,13 +10071,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -11028,11 +10078,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -11080,13 +10128,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -11105,12 +10146,10 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "locked-choice-mismatch",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -11203,21 +10242,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -11260,13 +10290,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -11282,13 +10305,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -11331,21 +10352,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -11452,13 +10464,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -11489,7 +10494,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -11497,7 +10501,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -11550,13 +10553,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -11588,7 +10584,6 @@
           ],
           "reasonCodes": [
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -11596,7 +10591,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -11790,13 +10784,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -11833,7 +10820,6 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -11841,7 +10827,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -11895,13 +10880,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -11949,7 +10927,6 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "locked-choice-mismatch",
             "office-suitability-review-required",
@@ -11958,7 +10935,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -12097,13 +11073,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -12111,11 +11080,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -12163,13 +11130,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -12183,11 +11143,9 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -12274,21 +11232,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -12331,13 +11280,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -12353,13 +11295,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -12402,21 +11342,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -12523,13 +11454,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -12560,7 +11484,6 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -12568,7 +11491,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -12621,13 +11543,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "prepare-ahead-not-approved",
               "disposition": "review-needed",
               "missingFields": [
@@ -12659,7 +11574,6 @@
           ],
           "reasonCodes": [
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "office-suitability-review-required",
             "prepare-ahead-not-approved",
             "recommendation-readiness-required",
@@ -12667,7 +11581,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.prepareAhead",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -12861,13 +11774,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -12904,7 +11810,6 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -12912,7 +11817,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -12966,13 +11870,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -13015,7 +11912,6 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "leftover-quality-not-approved",
             "office-suitability-review-required",
             "recommendation-readiness-required",
@@ -13023,7 +11919,6 @@
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.leftoverQuality",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
@@ -13154,21 +12049,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13211,13 +12097,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -13233,13 +12112,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -13282,21 +12159,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13403,13 +12271,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -13417,11 +12278,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13469,13 +12328,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -13489,11 +12341,9 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13580,21 +12430,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13637,13 +12478,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "service-effort-review-required",
               "disposition": "review-needed",
               "missingFields": [
@@ -13659,13 +12493,11 @@
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required",
             "service-effort-review-required",
             "storage-evidence-missing"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "recipe.suitability.storageModes",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
@@ -13708,21 +12540,12 @@
                 "review.recommendationDecisions.mealPortions",
                 "review.recommendationDecisions.effort"
               ]
-            },
-            {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
             }
           ],
           "reasonCodes": [
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13829,13 +12652,6 @@
               ]
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "elapsed-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -13843,11 +12659,9 @@
           ],
           "reasonCodes": [
             "elapsed-time-exceeded",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",
@@ -13895,13 +12709,6 @@
               "missingFields": []
             },
             {
-              "code": "ingredient-selection-grocery-review-required",
-              "disposition": "review-needed",
-              "missingFields": [
-                "groceryDemand.ingredientSelections"
-              ]
-            },
-            {
               "code": "active-time-exceeded",
               "disposition": "rejected",
               "missingFields": []
@@ -13915,11 +12722,9 @@
           "reasonCodes": [
             "active-time-exceeded",
             "hard-ingredient-avoid",
-            "ingredient-selection-grocery-review-required",
             "recommendation-readiness-required"
           ],
           "missingFields": [
-            "groceryDemand.ingredientSelections",
             "review.recommendationDecisions.effort",
             "review.recommendationDecisions.ingredientNormalization",
             "review.recommendationDecisions.mealPortions",

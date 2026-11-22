@@ -39,7 +39,8 @@ function sourceYieldSelection(): GeneratorCandidate['sourceYieldSelection'] {
 function ingredientSelections(recipe: RecipeV3): GeneratorCandidate['ingredientSelections'] {
   const selections: GeneratorCandidate['ingredientSelections'] = []
   for (const requirement of recipe.requirements) {
-    if (!requirement.optional && requirement.alternatives.length) selections.push({ requirementId: requirement.requirementId, selection: 'primary', alternativeId: null })
+    if (requirement.optional) selections.push({ requirementId: requirement.requirementId, selection: 'excluded-optional', alternativeId: null })
+    else if (requirement.alternatives.length) selections.push({ requirementId: requirement.requirementId, selection: 'primary', alternativeId: null })
   }
   return selections
 }

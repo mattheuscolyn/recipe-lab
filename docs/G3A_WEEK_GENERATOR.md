@@ -1,6 +1,6 @@
 # G3a weekly recommendation engine
 
-G3a adds the first deterministic end-to-end `generateWeekDraft` domain function. It accepts an arbitrary validated `PlanningRequest`, canonical ingredient snapshot, and explicit search bounds. It returns either a complete proposal or an explicitly incomplete proposal with unmet requirements and aggregated blockers. It does not persist, activate, or display recommendations in the live v2 application.
+G3a adds the first deterministic end-to-end `generateWeekDraft` domain function. It accepts an arbitrary validated `PlanningRequest`, canonical ingredient snapshot, and explicit search bounds. It returns either a complete proposal or an explicitly incomplete proposal with unmet requirements and aggregated blockers. The later opt-in interactive integration is documented in [`GENERATE_WEEK_PREVIEW.md`](./GENERATE_WEEK_PREVIEW.md); it remains separate from the live v2 planner and does not persist proposals.
 
 ## Implemented vertical slice
 
@@ -57,4 +57,4 @@ Dedicated-prep enumeration uses the preparation start as the conservative storag
 
 Prepared inventory may be proposed only when its exact recipe revision is recommendation-ready, the lot has an explicit best-use end, service falls before both that end and `storedAt +` the recipe-reviewed storage maximum, the storage mode matches, office-service facts pass the request policy, and remaining output covers the allocation. Missing or expired metadata becomes an explicit unmet-slot blocker. Frozen lots additionally require reviewed no-thaw handling and reviewed reheating suitability; thaw-required routes remain blocked until S06 can schedule the work. The draft leaves the input lot unchanged; actual reservation/persistence remains future acceptance work.
 
-Out of scope: live v2 changes, v3 planner writes, user acceptance/persistence, UI activation, production approvals, recipe collection, and deployment. G3b still needs broader production-catalog hardening, selected alternative-aware grocery substitution, richer scoring calibration/top alternatives, and evidence-backed S06 prep/defrost tasks before G4 exposes a read-only product preview.
+Out of scope: live v2 changes, v3 planner writes, user acceptance/persistence, production approvals, recipe collection, and deployment. The opt-in preview now provides selected-branch grocery substitution, explicit shopping readiness, a modest consecutive-dinner penalty, and arbitrary-week demo/real modes. Evidence-backed S06 thaw tasks and production catalog authorization remain future work.

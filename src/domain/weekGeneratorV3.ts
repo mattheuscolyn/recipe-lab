@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { unitCodeSchema, type CanonicalIngredient } from './catalog'
 import { enumerateGeneratorCandidates, type CandidateEnumerationOptions, type EnumeratedCandidateRoute } from './candidateEnumerationV3'
 import { planningRequestSchema, rejectedReasonSchema, type PlanningRequest } from './generatorV3'
-import { buildBatchGroceryDemand, type BatchGroceryDemand } from './planningGroceryV3'
+import { buildBatchGroceryDemand, type BatchGroceryDemand, type BatchIngredientSelection } from './planningGroceryV3'
 import { allocateBatchToMeals, batchSchema, cookEventSchema, mealAllocationSchema, planCookingBatch, scheduleCookEvent, type Batch, type CookEvent, type MealAllocation } from './planningV3'
 
 const id = (prefix: string) => z.string().regex(new RegExp(`^${prefix}-[a-z0-9-]+$`))
@@ -36,6 +36,7 @@ const scoreSchema = z.object({
   likedMealCount: z.number().int().nonnegative(),
   dislikedMealCount: z.number().int().nonnegative(),
   dinnerRepeatCount: z.number().int().nonnegative(),
+  consecutiveDinnerRepeatCount: z.number().int().nonnegative(),
   breakfastRepeatCount: z.number().int().nonnegative(),
   activeCookingMinutes: z.number().nonnegative(),
   pantryMatchedRequirementCount: z.number().int().nonnegative(),
@@ -49,12 +50,13 @@ export const weekDraftSchema = z.object({
   status: z.enum(['complete', 'incomplete']),
   search: z.object({ bounded: z.literal(true), nodesVisited: z.number().int().positive(), nodeLimit: z.number().int().positive(), routeLimit: z.number().int().positive(), routeLimitReached: z.boolean(), enumeratedRouteCount: z.number().int().nonnegative(), eligibleRouteCount: z.number().int().nonnegative(), completeSolutionsEvaluated: z.number().int().nonnegative(), completeSolutionLimit: z.number().int().positive(), backtrackCount: z.number().int().nonnegative(), exhausted: z.boolean() }),
   score: scoreSchema,
-  selectedRoutes: z.array(z.object({ routeId: id('route'), pattern: z.enum(['fresh', 'dedicated-prep', 'prior-meal-leftovers', 'prepared-inventory']), candidateId: id('candidate').nullable(), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')).min(1), cookingStartsAt: z.iso.datetime().nullable(), expectedReadyAt: z.iso.datetime().nullable(), cookingWindowId: id('cooking-window').nullable(), activeMinutes: z.number().nonnegative(), preparedFoodLotId: id('prepared-lot').nullable(), explanations: z.array(z.string()) })),
+  selectedRoutes: z.array(z.object({ routeId: id('route'), pattern: z.enum(['fresh', 'dedicated-prep', 'prior-meal-leftovers', 'prepared-inventory']), candidateId: id('candidate').nullable(), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')).min(1), cookingStartsAt: z.iso.datetime().nullable(), expectedReadyAt: z.iso.datetime().nullable(), cookingWindowId: id('cooking-window').nullable(), activeMinutes: z.number().nonnegative(), preparedFoodLotId: id('prepared-lot').nullable(), ingredientSelections: z.array(z.object({ requirementId: id('requirement'), selection: z.enum(['primary', 'alternative', 'excluded-optional']), alternativeId: id('alternative').nullable() })), explanations: z.array(z.string()) })),
   meals: z.array(z.object({ mealRequirementId: id('meal-requirement'), date: z.iso.date(), meal: z.enum(['breakfast', 'lunch', 'dinner']), requestedPortions: z.number().int().nonnegative(), status: z.enum(['planned', 'skipped', 'unmet']), recipeId: z.string().uuid().nullable(), recipeRevisionId: id('revision').nullable(), allocationId: id('allocation').nullable(), service: z.enum(['fresh', 'refrigerated-leftover', 'frozen-leftover']).nullable(), routeId: id('route').nullable() })),
   cookEvents: z.array(cookEventSchema),
   batches: z.array(batchSchema),
   allocations: z.array(mealAllocationSchema),
   groceryDemand: groceryDemandSchema,
+  shoppingReadiness: z.object({ status: z.enum(['ready', 'review-needed']), unresolvedLineCount: z.number().int().nonnegative(), uncertaintyCount: z.number().int().nonnegative(), pricesAvailable: z.literal(false) }),
   explanations: z.array(z.object({ code: z.string(), message: z.string(), entityIds: z.array(z.string()) })),
   rejectedAlternatives: z.array(z.object({ routeId: id('route'), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')), status: z.enum(['rejected', 'review-needed']), reasons: z.array(rejectedReasonSchema) })),
   unselectedEligibleAlternatives: z.array(z.object({ routeId: id('route'), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')), reason: z.enum(['slot-already-covered', 'cooking-conflict', 'lower-score']) })),
@@ -290,10 +292,11 @@ function routeCompatible(request: PlanningRequest, route: RealizedRoute, state: 
 function planScore(request: PlanningRequest, routes: RealizedRoute[]): z.infer<typeof scoreSchema> {
   const recipeById = new Map(request.recipeSnapshot.map((recipe) => [recipe.identity.recipeId, recipe]))
   const requirementById = new Map(request.mealRequirements.map((requirement) => [requirement.mealRequirementId, requirement]))
-  const dinnerMeals = routes.flatMap((route) => route.allocations.filter(({ mealRequirementId }) => requirementById.get(mealRequirementId)?.meal === 'dinner').map(() => route.recipeId))
+  const dinnerMeals = routes.flatMap((route) => route.allocations.filter(({ mealRequirementId }) => requirementById.get(mealRequirementId)?.meal === 'dinner').map(({ mealRequirementId }) => ({ recipeId: route.recipeId, intendedAt: requirementById.get(mealRequirementId)?.intendedAt ?? requirementById.get(mealRequirementId)?.date ?? '' }))).sort((left, right) => left.intendedAt.localeCompare(right.intendedAt)).map(({ recipeId }) => recipeId)
   const breakfastMeals = routes.flatMap((route) => route.allocations.filter(({ mealRequirementId }) => requirementById.get(mealRequirementId)?.meal === 'breakfast').map(() => route.recipeId))
   const distinctDinners = new Set(dinnerMeals).size
   const dinnerRepeatCount = dinnerMeals.length - distinctDinners
+  const consecutiveDinnerRepeatCount = dinnerMeals.slice(1).filter((recipeId, index) => recipeId === dinnerMeals[index]).length
   const breakfastRepeatCount = breakfastMeals.length - new Set(breakfastMeals).size
   let preferredMealCount = 0
   let likedMealCount = 0
@@ -312,8 +315,8 @@ function planScore(request: PlanningRequest, routes: RealizedRoute[]): z.infer<t
   const coveredRequirements = new Set(routes.flatMap(({ allocations }) => allocations.map(({ mealRequirementId }) => mealRequirementId))).size
   const activeCookingMinutes = routes.reduce((sum, route) => sum + route.activeMinutes, 0)
   const plannedRemainder = routes.reduce((sum, route) => sum + route.remainder, 0)
-  const total = coveredRequirements * 100_000 + distinctDinners * 10_000 + preferredMealCount * 2_000 + likedMealCount * 2_000 - dislikedMealCount * 50_000 - dinnerRepeatCount * 1_000 - breakfastRepeatCount * 25 - activeCookingMinutes * 5 + pantryMatchedRequirementCount * 10 - plannedRemainder * 20
-  return { total, coveredRequirements, distinctDinners, preferredMealCount, likedMealCount, dislikedMealCount, dinnerRepeatCount, breakfastRepeatCount, activeCookingMinutes, pantryMatchedRequirementCount, plannedRemainder }
+  const total = coveredRequirements * 100_000 + distinctDinners * 10_000 + preferredMealCount * 2_000 + likedMealCount * 2_000 - dislikedMealCount * 50_000 - dinnerRepeatCount * 1_000 - consecutiveDinnerRepeatCount * 4_000 - breakfastRepeatCount * 25 - activeCookingMinutes * 5 + pantryMatchedRequirementCount * 10 - plannedRemainder * 20
+  return { total, coveredRequirements, distinctDinners, preferredMealCount, likedMealCount, dislikedMealCount, dinnerRepeatCount, consecutiveDinnerRepeatCount, breakfastRepeatCount, activeCookingMinutes, pantryMatchedRequirementCount, plannedRemainder }
 }
 
 function routeOrderingScore(request: PlanningRequest, route: RealizedRoute, state: SearchState): number {
@@ -402,7 +405,9 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
   const allocations = best.routes.flatMap(({ allocations: routeAllocations }) => routeAllocations)
   const allocationByRequirement = new Map(allocations.map((allocation) => [allocation.mealRequirementId, allocation]))
   const batches = best.routes.map(({ batch }) => batch).filter((batch): batch is Batch => batch !== null)
-  const groceryDemand = buildBatchGroceryDemand({ recipes: request.recipeSnapshot, ingredients: input.ingredients, batches, scope: 'outstanding', pantry: request.pantry, includeOptional: false })
+  const ingredientSelections: BatchIngredientSelection[] = best.routes.flatMap((route) => route.batch && route.candidate ? route.candidate.ingredientSelections.map((selection) => ({ batchId: route.batch!.batchId, ...selection })) : [])
+  const groceryDemand = buildBatchGroceryDemand({ recipes: request.recipeSnapshot, ingredients: input.ingredients, batches, scope: 'outstanding', pantry: request.pantry, includeOptional: false, ingredientSelections })
+  const shoppingReadiness = { status: groceryDemand.lines.some(({ unresolved }) => unresolved) || groceryDemand.uncertainties.length ? 'review-needed' as const : 'ready' as const, unresolvedLineCount: groceryDemand.lines.filter(({ unresolved }) => unresolved).length, uncertaintyCount: groceryDemand.uncertainties.length, pricesAvailable: false as const }
   const rejectedAlternatives = enumerated.filter(({ feasibility }) => feasibility.status !== 'eligible').slice(0, 50).map((route) => ({
     routeId: route.routeId,
     recipeId: route.candidate.recipeId,
@@ -441,7 +446,7 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
     status: complete ? 'complete' : 'incomplete',
     search: { bounded: true, nodesVisited: Math.max(1, nodesVisited), nodeLimit: options.maxSearchNodes, routeLimit: options.maxRoutes, routeLimitReached, enumeratedRouteCount: enumerated.length, eligibleRouteCount: eligible.length, completeSolutionsEvaluated, completeSolutionLimit: options.maxCompleteSolutions, backtrackCount, exhausted },
     score: planScore(request, best.routes),
-    selectedRoutes: best.routes.map((route) => ({ routeId: route.routeId, pattern: route.pattern, candidateId: route.candidate?.candidateId ?? null, recipeId: route.recipeId, recipeRevisionId: route.recipeRevisionId, mealRequirementIds: route.allocations.map(({ mealRequirementId }) => mealRequirementId), cookingStartsAt: route.cookingStartsAt, expectedReadyAt: route.expectedReadyAt, cookingWindowId: route.cookingWindowId, activeMinutes: route.activeMinutes, preparedFoodLotId: route.preparedFoodLotId, explanations: selectedRouteExplanation(request, route) })),
+    selectedRoutes: best.routes.map((route) => ({ routeId: route.routeId, pattern: route.pattern, candidateId: route.candidate?.candidateId ?? null, recipeId: route.recipeId, recipeRevisionId: route.recipeRevisionId, mealRequirementIds: route.allocations.map(({ mealRequirementId }) => mealRequirementId), cookingStartsAt: route.cookingStartsAt, expectedReadyAt: route.expectedReadyAt, cookingWindowId: route.cookingWindowId, activeMinutes: route.activeMinutes, preparedFoodLotId: route.preparedFoodLotId, ingredientSelections: route.candidate?.ingredientSelections ?? [], explanations: selectedRouteExplanation(request, route) })),
     meals: request.mealRequirements.map((requirement) => {
       if (requirement.status === 'skipped') return { mealRequirementId: requirement.mealRequirementId, date: requirement.date, meal: requirement.meal, requestedPortions: requirement.requestedPortions, status: 'skipped', recipeId: null, recipeRevisionId: null, allocationId: null, service: null, routeId: null }
       const route = selectedRouteByRequirement.get(requirement.mealRequirementId)
@@ -452,9 +457,10 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
     batches,
     allocations,
     groceryDemand,
+    shoppingReadiness,
     explanations: [
       { code: complete ? 'complete-week' : 'incomplete-week', message: complete ? 'Every non-skipped requirement has one feasible allocation.' : `${unmetRequirements.length} requirement(s) remain explicitly unmet.`, entityIds: [request.requestId] },
-      { code: 'score-priority', message: 'Completion, explicit household acceptability, and dinner variety precede effort, repeats, pantry reuse, and waste; unknown preferences receive no positive score.', entityIds: [request.requestId] },
+      { code: 'score-priority', message: 'Completion, explicit household acceptability, and dinner variety precede effort, repeats, pantry reuse, and waste; dislikes are penalties, unknown preferences receive no positive score, and consecutive identical dinners receive an extra penalty.', entityIds: [request.requestId] },
       { code: 'grocery-once-per-batch', message: 'Grocery demand is derived once from each selected cooking batch; leftover allocations add no duplicate demand.', entityIds: batches.map(({ batchId }) => batchId) },
     ],
     rejectedAlternatives,

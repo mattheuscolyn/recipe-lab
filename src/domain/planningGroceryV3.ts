@@ -18,6 +18,13 @@ export const pantryAvailabilitySchema = z.object({
 
 export type PantryAvailability = z.infer<typeof pantryAvailabilitySchema>
 
+export type BatchIngredientSelection = {
+  batchId: string
+  requirementId: string
+  selection: 'primary' | 'alternative' | 'excluded-optional'
+  alternativeId: string | null
+}
+
 export type BatchGroceryContribution = {
   batchId: string
   recipeId: string
@@ -70,6 +77,7 @@ export function buildBatchGroceryDemand(input: {
   scope: 'historical' | 'outstanding'
   pantry?: PantryAvailability[]
   includeOptional?: boolean
+  ingredientSelections?: BatchIngredientSelection[]
 }): BatchGroceryDemand {
   if (!['historical', 'outstanding'].includes(input.scope)) throw new Error('Grocery demand scope must be historical or outstanding')
   const recipes = new Map(input.recipes.map((recipe) => [revisionKey(recipe.identity.recipeId, recipe.identity.revisionId), recipe]))
@@ -78,6 +86,15 @@ export function buildBatchGroceryDemand(input: {
   if (new Set(pantry.map(({ availabilityId }) => availabilityId)).size !== pantry.length) throw new Error('Pantry availability may offset demand only once')
   const activeBatches = input.batches.filter((batch) => input.scope === 'historical' ? batch.state !== 'cancelled' : batch.state === 'planned')
   if (new Set(activeBatches.map(({ batchId }) => batchId)).size !== activeBatches.length) throw new Error('A batch may contribute grocery demand only once')
+  const batchIds = new Set(activeBatches.map(({ batchId }) => batchId))
+  const selections = new Map<string, BatchIngredientSelection>()
+  for (const selection of input.ingredientSelections ?? []) {
+    if (!batchIds.has(selection.batchId)) throw new Error(`Ingredient selection references inactive or unknown batch ${selection.batchId}`)
+    const key = `${selection.batchId}:${selection.requirementId}`
+    if (selections.has(key)) throw new Error(`Ingredient requirement ${selection.requirementId} is selected more than once for ${selection.batchId}`)
+    if ((selection.selection === 'alternative') !== (selection.alternativeId !== null)) throw new Error('Only an alternative selection names an alternative id')
+    selections.set(key, selection)
+  }
 
   const grouped = new Map<string, { ingredient: CanonicalIngredient; variantId: string; contributions: BatchGroceryContribution[]; uncertainties: string[] }>()
   const globalUncertainties: string[] = []
@@ -85,16 +102,28 @@ export function buildBatchGroceryDemand(input: {
     const recipe = recipes.get(revisionKey(batch.recipeId, batch.recipeRevisionId))
     if (!recipe) throw new Error(`Missing exact recipe revision for batch ${batch.batchId}`)
     for (const requirement of recipe.requirements) {
-      if (requirement.optional && !input.includeOptional) continue
-      const ingredient = ingredients.get(requirement.canonicalIngredientId)
-      if (!ingredient) throw new Error(`Unknown ingredient ${requirement.canonicalIngredientId}`)
-      const variant = ingredient.variants.find(({ id }) => id === requirement.variantId)
+      const selection = selections.get(`${batch.batchId}:${requirement.requirementId}`)
+      if (selection?.selection === 'excluded-optional') {
+        if (!requirement.optional) throw new Error(`Required ingredient ${requirement.requirementId} cannot be excluded`)
+        continue
+      }
+      if (requirement.optional && !selection && !input.includeOptional) continue
+      if (!selection && requirement.alternatives.length) throw new Error(`Ingredient branch ${requirement.requirementId} needs an explicit batch selection`)
+      const alternative = selection?.selection === 'alternative'
+        ? requirement.alternatives.find(({ alternativeId }) => alternativeId === selection.alternativeId)
+        : null
+      if (selection?.selection === 'alternative' && !alternative) throw new Error(`Unknown alternative ${selection.alternativeId} for ${requirement.requirementId}`)
+      const canonicalIngredientId = alternative?.canonicalIngredientId ?? requirement.canonicalIngredientId
+      const variantId = alternative?.variantId ?? requirement.variantId
+      const ingredient = ingredients.get(canonicalIngredientId)
+      if (!ingredient) throw new Error(`Unknown ingredient ${canonicalIngredientId}`)
+      const variant = ingredient.variants.find(({ id }) => id === variantId)
       if (!variant) throw new Error(`Unknown variant ${requirement.variantId} for ${ingredient.id}`)
       const key = `${ingredient.id}:${variant.id}`
       const entry = grouped.get(key) ?? { ingredient, variantId: variant.id, contributions: [], uncertainties: [] }
       let amount: number | null = null
       let note: string | null = null
-      const quantity = requirement.selectedPlanningQuantity
+      const quantity = alternative ? alternative.quantity : requirement.selectedPlanningQuantity
       if (!quantity || quantity.amount === null) {
         note = quantity?.range ? 'A reviewed planning quantity is still required for this source range.' : `Non-quantified requirement: ${requirement.nonQuantified ?? 'unknown amount'}.`
       } else {
@@ -112,11 +141,11 @@ export function buildBatchGroceryDemand(input: {
         recipeId: batch.recipeId,
         recipeRevisionId: batch.recipeRevisionId,
         requirementId: requirement.requirementId,
-        originalText: requirement.originalText,
+        originalText: alternative ? `${requirement.originalText} → ${alternative.label}` : requirement.originalText,
         amount,
         unit: ingredient.baseUnit,
         approximate: quantity?.approximate ?? false,
-        optional: requirement.optional,
+        optional: requirement.optional || alternative?.relationship === 'optional-addition',
         confidence: requirement.confidence,
         note,
       })

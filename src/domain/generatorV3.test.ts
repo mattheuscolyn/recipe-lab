@@ -217,8 +217,7 @@ describe('G1 candidate feasibility and S12', () => {
       ? { ...requirement, constraints: { ...requirement.constraints, mustUseIngredientIds: [alternative.canonicalIngredientId] } }
       : requirement)
     const selectedResult = evaluateCandidateFeasibility(request, selected)
-    expect(selectedResult.status).toBe('review-needed')
-    expect(selectedResult.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
+    expect(selectedResult.status).toBe('eligible')
     expect(selectedResult.reasons.map(({ code }) => code)).not.toContain('must-use-ingredient-missing')
     const unresolved = structuredClone(selected)
     unresolved.candidateId = 'candidate-unresolved-alternative'
@@ -232,9 +231,8 @@ describe('G1 candidate feasibility and S12', () => {
     const { request, candidate, alternativeRequirement } = selectedAlternativeFixture()
     request.hardConstraints.avoidedIngredientIds = [alternativeRequirement.canonicalIngredientId]
     const result = evaluateCandidateFeasibility(request, candidate)
-    expect(result.status).toBe('review-needed')
+    expect(result.status).toBe('eligible')
     expect(result.reasons.map(({ code }) => code)).not.toContain('hard-ingredient-avoid')
-    expect(result.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
   })
 
   it('rejects a selected substitute when that substitute is avoided', () => {
@@ -271,7 +269,6 @@ describe('G1 candidate feasibility and S12', () => {
     const selectedResult = evaluateCandidateFeasibility(request, selected)
     expect(selectedResult.status).toBe('rejected')
     expect(selectedResult.reasons.map(({ code }) => code)).toContain('hard-ingredient-avoid')
-    expect(selectedResult.reasons.map(({ code }) => code)).toContain('ingredient-selection-grocery-review-required')
   })
 
   it('rejects a must-use ingredient absent from the selected recipe', () => {
