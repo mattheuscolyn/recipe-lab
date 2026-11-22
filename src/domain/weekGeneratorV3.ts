@@ -47,9 +47,9 @@ export const weekDraftSchema = z.object({
   proposalId: id('proposal'),
   requestId: id('planning-request'),
   status: z.enum(['complete', 'incomplete']),
-  search: z.object({ bounded: z.literal(true), nodesVisited: z.number().int().positive(), nodeLimit: z.number().int().positive(), routeLimit: z.number().int().positive(), routeLimitReached: z.boolean(), enumeratedRouteCount: z.number().int().nonnegative(), eligibleRouteCount: z.number().int().nonnegative(), exhausted: z.boolean() }),
+  search: z.object({ bounded: z.literal(true), nodesVisited: z.number().int().positive(), nodeLimit: z.number().int().positive(), routeLimit: z.number().int().positive(), routeLimitReached: z.boolean(), enumeratedRouteCount: z.number().int().nonnegative(), eligibleRouteCount: z.number().int().nonnegative(), completeSolutionsEvaluated: z.number().int().nonnegative(), completeSolutionLimit: z.number().int().positive(), backtrackCount: z.number().int().nonnegative(), exhausted: z.boolean() }),
   score: scoreSchema,
-  selectedRoutes: z.array(z.object({ routeId: id('route'), pattern: z.enum(['fresh', 'dedicated-prep', 'prior-meal-leftovers', 'prepared-inventory']), candidateId: id('candidate').nullable(), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')).min(1), cookingStartsAt: z.iso.datetime().nullable(), expectedReadyAt: z.iso.datetime().nullable(), preparedFoodLotId: id('prepared-lot').nullable(), explanations: z.array(z.string()) })),
+  selectedRoutes: z.array(z.object({ routeId: id('route'), pattern: z.enum(['fresh', 'dedicated-prep', 'prior-meal-leftovers', 'prepared-inventory']), candidateId: id('candidate').nullable(), recipeId: z.string().uuid(), recipeRevisionId: id('revision'), mealRequirementIds: z.array(id('meal-requirement')).min(1), cookingStartsAt: z.iso.datetime().nullable(), expectedReadyAt: z.iso.datetime().nullable(), cookingWindowId: id('cooking-window').nullable(), activeMinutes: z.number().nonnegative(), preparedFoodLotId: id('prepared-lot').nullable(), explanations: z.array(z.string()) })),
   meals: z.array(z.object({ mealRequirementId: id('meal-requirement'), date: z.iso.date(), meal: z.enum(['breakfast', 'lunch', 'dinner']), requestedPortions: z.number().int().nonnegative(), status: z.enum(['planned', 'skipped', 'unmet']), recipeId: z.string().uuid().nullable(), recipeRevisionId: id('revision').nullable(), allocationId: id('allocation').nullable(), service: z.enum(['fresh', 'refrigerated-leftover', 'frozen-leftover']).nullable(), routeId: id('route').nullable() })),
   cookEvents: z.array(cookEventSchema),
   batches: z.array(batchSchema),
@@ -66,6 +66,7 @@ export type WeekDraft = z.infer<typeof weekDraftSchema>
 export type GenerateWeekDraftOptions = CandidateEnumerationOptions & {
   maxSearchNodes?: number
   maxOptionsPerRequirement?: number
+  maxCompleteSolutions?: number
 }
 
 type RealizedRoute = {
@@ -88,7 +89,7 @@ type RealizedRoute = {
 
 type SearchState = { routes: RealizedRoute[]; covered: Set<string> }
 
-const DEFAULT_SEARCH = { maxSearchNodes: 40_000, maxOptionsPerRequirement: 16, maxRoutes: 2_000 }
+const DEFAULT_SEARCH = { maxSearchNodes: 40_000, maxOptionsPerRequirement: 16, maxCompleteSolutions: 25, maxRoutes: 2_000 }
 
 function realizeRoute(request: PlanningRequest, route: EnumeratedCandidateRoute): RealizedRoute | null {
   if (route.feasibility.status !== 'eligible' || !route.feasibility.timing) return null
@@ -147,8 +148,16 @@ function inventoryServiceAllowed(request: PlanningRequest, recipeId: string, rec
   return true
 }
 
-function inventoryRoutes(request: PlanningRequest): RealizedRoute[] {
+type InventoryEnumeration = { routes: RealizedRoute[]; blockers: Map<string, Set<string>> }
+
+function inventoryRoutes(request: PlanningRequest): InventoryEnumeration {
   const routes: RealizedRoute[] = []
+  const blockers = new Map<string, Set<string>>()
+  const addBlocker = (requirementIds: string[], code: string) => requirementIds.forEach((requirementId) => {
+    const values = blockers.get(requirementId) ?? new Set<string>()
+    values.add(code)
+    blockers.set(requirementId, values)
+  })
   for (const lot of request.preparedLots.filter(({ state }) => state === 'available')) {
     const recipe = request.recipeSnapshot.find(({ identity }) => identity.recipeId === lot.recipeId && identity.revisionId === lot.recipeRevisionId)
     if (!recipe?.review.readiness.recommendationReady) continue
@@ -161,21 +170,55 @@ function inventoryRoutes(request: PlanningRequest): RealizedRoute[] {
     const servingsPerPortion = guidance.value
     const service: MealAllocation['service'] | null = lot.storageMode === 'refrigerated' ? 'refrigerated-leftover' : lot.storageMode === 'frozen' ? 'frozen-leftover' : null
     if (!service) continue
-    const storage = recipe.suitability.storageModes.find(({ mode }) => mode === lot.storageMode)
-    if (!storage || storage.maxDurationHours === null || !['reported', 'reviewed'].includes(storage.confidence) || !storage.evidenceIds.length || lot.bestUseWindow.evidenceIds.some((evidenceId) => !storage.evidenceIds.includes(evidenceId))) continue
-    const expectedOutputKind = recipe.output.kind === 'discrete-items' ? 'discrete-item' : recipe.output.kind === 'fixed-portions' ? 'fixed-portion' : 'source-serving'
-    if (lot.remainingAmount.kind !== expectedOutputKind) continue
-    const matching = request.mealRequirements.filter((requirement) => {
+    const potential = request.mealRequirements.filter((requirement) => {
       if (requirement.status === 'skipped' || !requirement.intendedAt || requirement.requestedPortions <= 0) return false
       const role = recipe.mealRoles.primary.includes(requirement.meal) || (requirement.meal === 'lunch' && recipe.mealRoles.primary.includes('dinner'))
       if (!role || requirement.constraints.avoidRecipeIds.includes(recipe.identity.recipeId)) return false
       const selectedIngredients = new Set(recipe.requirements.filter(({ optional }) => !optional).map(({ canonicalIngredientId }) => canonicalIngredientId))
       if (requirement.constraints.mustUseIngredientIds.some((ingredientId) => !selectedIngredients.has(ingredientId))) return false
       const lock = request.lockedChoices.find(({ mealRequirementId }) => mealRequirementId === requirement.mealRequirementId)
-      if (requirement.lock.locked && (!lock || lock.recipeId !== recipe.identity.recipeId || lock.recipeRevisionId !== recipe.identity.revisionId)) return false
-      const instant = Date.parse(requirement.intendedAt)
-      if (instant < Date.parse(lot.bestUseWindow.start) || (lot.bestUseWindow.end && instant > Date.parse(lot.bestUseWindow.end))) return false
-      return inventoryServiceAllowed(request, recipe.identity.recipeId, recipe.identity.revisionId, requirement, service)
+      return !requirement.lock.locked || Boolean(lock && lock.recipeId === recipe.identity.recipeId && lock.recipeRevisionId === recipe.identity.revisionId)
+    })
+    const potentialIds = potential.map(({ mealRequirementId }) => mealRequirementId)
+    const storage = recipe.suitability.storageModes.find(({ mode }) => mode === lot.storageMode)
+    if (!storage || storage.maxDurationHours === null || !['reported', 'reviewed'].includes(storage.confidence) || !storage.evidenceIds.length || lot.bestUseWindow.evidenceIds.some((evidenceId) => !storage.evidenceIds.includes(evidenceId))) {
+      addBlocker(potentialIds, 'prepared-inventory-storage-review-required')
+      continue
+    }
+    if (lot.bestUseWindow.end === null) {
+      addBlocker(potentialIds, 'prepared-inventory-best-use-end-required')
+      continue
+    }
+    if (service === 'frozen-leftover') {
+      if (!reviewedFact(recipe.suitability.thawRequired)) {
+        addBlocker(potentialIds, 'prepared-inventory-thaw-review-required')
+        continue
+      }
+      if (recipe.suitability.thawRequired.value === true) {
+        addBlocker(potentialIds, 'prepared-inventory-thaw-task-required')
+        continue
+      }
+      const frozenAssessment = request.serviceAssessments.find((assessment) => assessment.recipeId === recipe.identity.recipeId && assessment.recipeRevisionId === recipe.identity.revisionId && assessment.applicableServices.includes('frozen-leftover'))
+      if (!reviewedFact(recipe.suitability.reheatMethod) || !frozenAssessment || !reviewedFact(frozenAssessment.reheating) || !['not-needed', 'suitable'].includes(String(frozenAssessment.reheating.value))) {
+        addBlocker(potentialIds, 'prepared-inventory-reheat-review-required')
+        continue
+      }
+    }
+    const reviewedStorageEnd = Date.parse(lot.storedAt) + storage.maxDurationHours * 3_600_000
+    const effectiveStorageEnd = Math.min(Date.parse(lot.bestUseWindow.end), reviewedStorageEnd)
+    const expectedOutputKind = recipe.output.kind === 'discrete-items' ? 'discrete-item' : recipe.output.kind === 'fixed-portions' ? 'fixed-portion' : 'source-serving'
+    if (lot.remainingAmount.kind !== expectedOutputKind) continue
+    const matching = potential.filter((requirement) => {
+      const instant = Date.parse(requirement.intendedAt!)
+      if (instant < Date.parse(lot.bestUseWindow.start) || instant > effectiveStorageEnd) {
+        addBlocker([requirement.mealRequirementId], 'prepared-inventory-storage-expired')
+        return false
+      }
+      if (!inventoryServiceAllowed(request, recipe.identity.recipeId, recipe.identity.revisionId, requirement, service)) {
+        addBlocker([requirement.mealRequirementId], 'prepared-inventory-service-review-required')
+        return false
+      }
+      return true
     }).sort((left, right) => left.intendedAt!.localeCompare(right.intendedAt!))
     for (let start = 0; start < matching.length; start += 1) {
       let amount = 0
@@ -215,7 +258,7 @@ function inventoryRoutes(request: PlanningRequest): RealizedRoute[] {
       }
     }
   }
-  return routes
+  return { routes, blockers }
 }
 
 function overlaps(left: RealizedRoute, right: RealizedRoute): boolean {
@@ -227,10 +270,21 @@ function overlaps(left: RealizedRoute, right: RealizedRoute): boolean {
   return leftStart < rightEnd && rightStart < leftEnd
 }
 
-function routeCompatible(route: RealizedRoute, state: SearchState): boolean {
-  if (route.allocations.some(({ mealRequirementId }) => state.covered.has(mealRequirementId))) return false
-  if (route.preparedFoodLotId && state.routes.some(({ preparedFoodLotId }) => preparedFoodLotId === route.preparedFoodLotId)) return false
-  return state.routes.every((selected) => !overlaps(route, selected))
+function routeIncompatibility(request: PlanningRequest, route: RealizedRoute, state: SearchState): string | null {
+  if (route.allocations.some(({ mealRequirementId }) => state.covered.has(mealRequirementId))) return 'meal-already-covered'
+  if (route.preparedFoodLotId && state.routes.some(({ preparedFoodLotId }) => preparedFoodLotId === route.preparedFoodLotId)) return 'prepared-inventory-already-allocated'
+  if (route.cookingWindowId) {
+    const window = request.cookingWindows.find(({ cookingWindowId }) => cookingWindowId === route.cookingWindowId)
+    if (!window) return 'cooking-window-unavailable'
+    const activeMinutes = state.routes.filter(({ cookingWindowId }) => cookingWindowId === route.cookingWindowId).reduce((sum, selected) => sum + selected.activeMinutes, route.activeMinutes)
+    if (activeMinutes > window.maxActiveMinutes) return 'cooking-window-capacity-exceeded'
+  }
+  if (state.routes.some((selected) => overlaps(route, selected))) return 'cooking-conflict'
+  return null
+}
+
+function routeCompatible(request: PlanningRequest, route: RealizedRoute, state: SearchState): boolean {
+  return routeIncompatibility(request, route, state) === null
 }
 
 function planScore(request: PlanningRequest, routes: RealizedRoute[]): z.infer<typeof scoreSchema> {
@@ -275,15 +329,6 @@ function routeOrderingScore(request: PlanningRequest, route: RealizedRoute, stat
   return route.allocations.length * 100_000 + variety + acceptance + batchReuse + inventoryReuse - dislike - route.activeMinutes * 5 - route.remainder * 20
 }
 
-function satisfiesDemonstrationTarget(request: PlanningRequest, state: SearchState, score: z.infer<typeof scoreSchema>): boolean {
-  const requiredCount = request.mealRequirements.filter(({ status }) => status !== 'skipped').length
-  const dinnerCount = request.mealRequirements.filter(({ status, meal }) => status !== 'skipped' && meal === 'dinner').length
-  return score.coveredRequirements === requiredCount
-    && score.distinctDinners >= Math.min(5, dinnerCount)
-    && score.dislikedMealCount === 0
-    && state.routes.some(({ pattern }) => pattern === 'prior-meal-leftovers')
-}
-
 function requirementOrder(request: PlanningRequest) {
   const rank = { dinner: 0, breakfast: 1, lunch: 2 }
   return request.mealRequirements.filter(({ status }) => status !== 'skipped').sort((left, right) => Number(right.lock.locked) - Number(left.lock.locked) || rank[left.meal] - rank[right.meal] || left.date.localeCompare(right.date) || left.mealRequirementId.localeCompare(right.mealRequirementId))
@@ -302,17 +347,23 @@ function selectedRouteExplanation(request: PlanningRequest, route: RealizedRoute
 export function generateWeekDraft(input: { request: PlanningRequest; ingredients: CanonicalIngredient[]; options?: GenerateWeekDraftOptions }): WeekDraft {
   const request = planningRequestSchema.parse(input.request)
   const options = { ...DEFAULT_SEARCH, ...(input.options ?? {}) }
+  for (const [name, value] of Object.entries(options)) {
+    if (!Number.isInteger(value) || value <= 0) throw new Error(`${name} must be a positive integer`)
+  }
   const enumerated = enumerateGeneratorCandidates(request, options)
   const routeLimitReached = enumerated.length >= options.maxRoutes
   const cookedRoutes = enumerated.map((route) => realizeRoute(request, route)).filter((route): route is RealizedRoute => route !== null)
-  const eligible = [...inventoryRoutes(request), ...cookedRoutes]
+  const inventory = inventoryRoutes(request)
+  const eligible = [...inventory.routes, ...cookedRoutes]
   const required = requirementOrder(request)
   const routesByRequirement = new Map(required.map(({ mealRequirementId }) => [mealRequirementId, eligible.filter(({ allocations }) => allocations.some((allocation) => allocation.mealRequirementId === mealRequirementId))]))
   let nodesVisited = 0
   let best: SearchState = { routes: [], covered: new Set() }
   let bestScore = planScore(request, [])
   let exhausted = false
-  let satisfactory = false
+  let completeSolutionsEvaluated = 0
+  let completeSolutionLimitReached = false
+  let backtrackCount = 0
 
   const visit = (state: SearchState) => {
     if (nodesVisited >= options.maxSearchNodes) { exhausted = true; return }
@@ -322,23 +373,29 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
       best = { routes: [...state.routes], covered: new Set(state.covered) }
       bestScore = score
     }
-    if (satisfiesDemonstrationTarget(request, state, score)) { satisfactory = true; return }
     const next = required.find(({ mealRequirementId }) => !state.covered.has(mealRequirementId))
-    if (!next) return
+    if (!next) {
+      if (score.coveredRequirements === required.length) {
+        completeSolutionsEvaluated += 1
+        if (completeSolutionsEvaluated >= options.maxCompleteSolutions) completeSolutionLimitReached = true
+      }
+      return
+    }
     const choices = (routesByRequirement.get(next.mealRequirementId) ?? [])
-      .filter((route) => routeCompatible(route, state))
+      .filter((route) => routeCompatible(request, route, state))
       .sort((left, right) => routeOrderingScore(request, right, state) - routeOrderingScore(request, left, state) || left.routeId.localeCompare(right.routeId))
       .slice(0, options.maxOptionsPerRequirement)
     for (const route of choices) {
       const covered = new Set(state.covered)
       route.allocations.forEach(({ mealRequirementId }) => covered.add(mealRequirementId))
       visit({ routes: [...state.routes, route], covered })
-      if (satisfactory || nodesVisited >= options.maxSearchNodes) return
+      if (completeSolutionLimitReached || nodesVisited >= options.maxSearchNodes) return
+      backtrackCount += 1
     }
     visit({ routes: state.routes, covered: new Set([...state.covered, next.mealRequirementId]) })
   }
   visit({ routes: [], covered: new Set() })
-  if (!satisfactory && nodesVisited >= options.maxSearchNodes) exhausted = true
+  if (nodesVisited >= options.maxSearchNodes) exhausted = true
 
   const selectedRouteByRequirement = new Map<string, RealizedRoute>()
   best.routes.forEach((route) => route.allocations.forEach(({ mealRequirementId }) => selectedRouteByRequirement.set(mealRequirementId, route)))
@@ -367,6 +424,11 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
   const unmetRequirements = required.filter(({ mealRequirementId }) => !selectedRouteByRequirement.has(mealRequirementId)).map((requirement) => {
     const blockers = new Map<string, number>()
     enumerated.filter(({ candidate }) => candidate.allocations.some(({ mealRequirementId }) => mealRequirementId === requirement.mealRequirementId)).forEach(({ feasibility }) => feasibility.reasons.forEach(({ code }) => blockers.set(code, (blockers.get(code) ?? 0) + 1)))
+    eligible.filter(({ allocations: routeAllocations }) => routeAllocations.some(({ mealRequirementId }) => mealRequirementId === requirement.mealRequirementId)).forEach((route) => {
+      const code = routeIncompatibility(request, route, best)
+      if (code) blockers.set(code, (blockers.get(code) ?? 0) + 1)
+    })
+    inventory.blockers.get(requirement.mealRequirementId)?.forEach((code) => blockers.set(code, (blockers.get(code) ?? 0) + 1))
     if (routeLimitReached) blockers.set('route-enumeration-limit-reached', 1)
     if (!blockers.size) blockers.set(exhausted ? 'search-limit-exhausted' : 'no-eligible-route', 1)
     return { mealRequirementId: requirement.mealRequirementId, blockers: [...blockers].map(([code, count]) => ({ code, count })).sort((left, right) => right.count - left.count || left.code.localeCompare(right.code)) }
@@ -377,9 +439,9 @@ export function generateWeekDraft(input: { request: PlanningRequest; ingredients
     proposalId: `proposal-${request.requestId.replace(/^planning-request-/, '')}`,
     requestId: request.requestId,
     status: complete ? 'complete' : 'incomplete',
-    search: { bounded: true, nodesVisited: Math.max(1, nodesVisited), nodeLimit: options.maxSearchNodes, routeLimit: options.maxRoutes, routeLimitReached, enumeratedRouteCount: enumerated.length, eligibleRouteCount: eligible.length, exhausted },
+    search: { bounded: true, nodesVisited: Math.max(1, nodesVisited), nodeLimit: options.maxSearchNodes, routeLimit: options.maxRoutes, routeLimitReached, enumeratedRouteCount: enumerated.length, eligibleRouteCount: eligible.length, completeSolutionsEvaluated, completeSolutionLimit: options.maxCompleteSolutions, backtrackCount, exhausted },
     score: planScore(request, best.routes),
-    selectedRoutes: best.routes.map((route) => ({ routeId: route.routeId, pattern: route.pattern, candidateId: route.candidate?.candidateId ?? null, recipeId: route.recipeId, recipeRevisionId: route.recipeRevisionId, mealRequirementIds: route.allocations.map(({ mealRequirementId }) => mealRequirementId), cookingStartsAt: route.cookingStartsAt, expectedReadyAt: route.expectedReadyAt, preparedFoodLotId: route.preparedFoodLotId, explanations: selectedRouteExplanation(request, route) })),
+    selectedRoutes: best.routes.map((route) => ({ routeId: route.routeId, pattern: route.pattern, candidateId: route.candidate?.candidateId ?? null, recipeId: route.recipeId, recipeRevisionId: route.recipeRevisionId, mealRequirementIds: route.allocations.map(({ mealRequirementId }) => mealRequirementId), cookingStartsAt: route.cookingStartsAt, expectedReadyAt: route.expectedReadyAt, cookingWindowId: route.cookingWindowId, activeMinutes: route.activeMinutes, preparedFoodLotId: route.preparedFoodLotId, explanations: selectedRouteExplanation(request, route) })),
     meals: request.mealRequirements.map((requirement) => {
       if (requirement.status === 'skipped') return { mealRequirementId: requirement.mealRequirementId, date: requirement.date, meal: requirement.meal, requestedPortions: requirement.requestedPortions, status: 'skipped', recipeId: null, recipeRevisionId: null, allocationId: null, service: null, routeId: null }
       const route = selectedRouteByRequirement.get(requirement.mealRequirementId)
