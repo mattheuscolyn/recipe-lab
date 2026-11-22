@@ -9,7 +9,7 @@ const fixtureIds = {
   dinner: '10000000-0000-4000-8000-000000000003',
 } as const
 
-function reviewedFixture(sourceSlug: string, recipeId: string, role: 'breakfast' | 'lunch' | 'dinner', output: number): RecipeV3 {
+export function reviewedFixture(sourceSlug: string, recipeId: string, role: 'breakfast' | 'lunch' | 'dinner', output: number): RecipeV3 {
   const source = pilotRecipes.find(({ slug }) => slug === sourceSlug)
   if (!source) throw new Error(`Missing fixture source ${sourceSlug}`)
   const recipe = structuredClone(adaptRecipeV2ToDraftV3(source))
@@ -64,7 +64,7 @@ export const generatorFixtureRecipes = {
 }
 
 const serviceClaims = ['assembly', 'reheating', 'odor', 'rice-based', 'active-minutes', 'elapsed-minutes'] as const
-function reviewedServiceAssessment(recipe: RecipeV3, suffix: string, assembly: 'none' | 'simple' | 'intensive' = 'none'): OfficeServiceAssessment {
+export function reviewedServiceAssessment(recipe: RecipeV3, suffix: string, assembly: 'none' | 'simple' | 'intensive' = 'none'): OfficeServiceAssessment {
   const evidence = serviceClaims.map((claim) => ({
     evidenceId: `evidence-service-${suffix}-${claim}`,
     kind: 'editorial-judgment' as const,
