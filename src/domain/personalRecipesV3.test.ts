@@ -45,6 +45,29 @@ describe('private personal recipe library', () => {
     window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
   })
 
+  it('never overwrites unreadable private recipe data with an empty library', () => {
+    const broken = '{"schemaVersion":1,"recipes":['
+    window.localStorage.setItem(PERSONAL_RECIPE_STORAGE_KEY, broken)
+    try {
+      const fallback = loadPersonalRecipeLibrary(window.localStorage)
+      expect(fallback).toEqual(emptyPersonalRecipeLibrary())
+      expect(() => savePersonalRecipeRevision(window.localStorage, fallback, input(), canonicalIngredients)).toThrow(/unreadable/)
+      expect(window.localStorage.getItem(PERSONAL_RECIPE_STORAGE_KEY)).toBe(broken)
+    } finally { window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY) }
+  })
+
+  it('protects newer private recipe changes against stale editor saves', () => {
+    window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
+    try {
+      const original = savePersonalRecipeRevision(window.localStorage, emptyPersonalRecipeLibrary(), input(1), canonicalIngredients)
+      const updated = savePersonalRecipeRevision(window.localStorage, original, { ...input(2), title: 'Edited in another tab' }, canonicalIngredients)
+      const savedRaw = window.localStorage.getItem(PERSONAL_RECIPE_STORAGE_KEY)
+      expect(() => savePersonalRecipeRevision(window.localStorage, original, { ...input(3), title: 'Stale edit' }, canonicalIngredients)).toThrow(/changed since this view loaded/)
+      expect(window.localStorage.getItem(PERSONAL_RECIPE_STORAGE_KEY)).toBe(savedRaw)
+      expect(loadPersonalRecipeLibrary(window.localStorage)).toEqual(updated)
+    } finally { window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY) }
+  })
+
   it('rejects unknown ingredient variants and unsupported claims', () => {
     expect(() => buildPersonalRecipeRevision({ ...input(), ingredients: [{ ...input().ingredients[0], variantId: 'variant-not-real' }] }, canonicalIngredients)).toThrow(/not in the local catalog/)
     expect(() => buildPersonalRecipeRevision({ ...input(), authorshipConfirmed: false } as unknown as PersonalRecipeInput, canonicalIngredients)).toThrow()
