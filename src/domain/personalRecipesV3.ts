@@ -155,6 +155,14 @@ export function loadPersonalRecipeLibrary(storage: Storage | null): PersonalReci
 
 export function savePersonalRecipeRevision(storage: Storage, libraryValue: PersonalRecipeLibrary, input: PersonalRecipeInput, ingredientCatalog: CanonicalIngredient[]): PersonalRecipeLibrary {
   const library = personalRecipeLibrarySchema.parse(libraryValue)
+  // Never replace an unreadable or concurrently updated private library with an empty/stale snapshot.
+  const storedRaw = storage.getItem(PERSONAL_RECIPE_STORAGE_KEY)
+  if (storedRaw !== null) {
+    let stored: PersonalRecipeLibrary
+    try { stored = personalRecipeLibrarySchema.parse(JSON.parse(storedRaw)) }
+    catch { throw new Error('Existing personal recipes are unreadable. Nothing was overwritten; recover or export the original browser data before saving.') }
+    if (JSON.stringify(stored) !== JSON.stringify(library)) throw new Error('Personal recipes changed since this view loaded. Reload or back up the newer library before saving.')
+  }
   const recipe = buildPersonalRecipeRevision(input, ingredientCatalog)
   const existing = library.recipes.find(({ personalRecipeId }) => personalRecipeId === input.personalRecipeId)
   if (existing?.revisions.some(({ recipe: prior }) => prior.identity.revisionId === recipe.identity.revisionId)) throw new Error('A personal recipe revision is immutable and cannot be overwritten')
