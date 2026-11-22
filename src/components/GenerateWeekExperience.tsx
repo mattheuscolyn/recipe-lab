@@ -6,6 +6,8 @@ import type { PlanningRequest } from '../domain/generatorV3'
 import { generateWeekDraft, type WeekDraft } from '../domain/weekGeneratorV3'
 import { activePersonalRecipes, loadPersonalRecipeLibrary } from '../domain/personalRecipesV3'
 import { PersonalRecipeForm } from './PersonalRecipeForm'
+import type { PersonalDataV3 } from '../domain/personalDataV3'
+import { exportAcceptedWeekPlanBackup, GENERATED_PLAN_ACCEPTANCE_ENABLED, reviewWeekDraftAcceptance, type AcceptanceReview } from '../domain/weekDraftAcceptanceV3'
 
 const meals: MealKind[] = ['breakfast', 'lunch', 'dinner']
 const friendly = (date: string, options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' }) => new Intl.DateTimeFormat('en-US', options).format(new Date(`${date}T12:00:00.000Z`))
@@ -14,7 +16,7 @@ const serviceLabel = (service: WeekDraft['meals'][number]['service']) => service
 
 type Result = { request: PlanningRequest; draft: WeekDraft }
 
-export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChange }: { weekStart: string; timeZone: string; pantry: PantryAvailability[]; onWeekChange: (week: string) => void }) {
+export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChange, currentPersonalData }: { weekStart: string; timeZone: string; pantry: PantryAvailability[]; onWeekChange: (week: string) => void; currentPersonalData?: PersonalDataV3 }) {
   const [mode, setMode] = useState<GenerateWeekMode>('demo')
   const [includedMeals, setIncludedMeals] = useState<Record<MealKind, boolean>>({ breakfast: true, lunch: true, dinner: true })
   const [portions, setPortions] = useState<Record<MealKind, number>>({ breakfast: 2, lunch: 2, dinner: 2 })
@@ -27,6 +29,7 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
   const [result, setResult] = useState<Result | null>(null)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [acceptanceReview, setAcceptanceReview] = useState<AcceptanceReview | null>(null)
   const [personalLibrary, setPersonalLibrary] = useState(() => { try { return loadPersonalRecipeLibrary(window.localStorage) } catch { return loadPersonalRecipeLibrary(null) } })
   const personalRecipes = useMemo(() => activePersonalRecipes(personalLibrary), [personalLibrary])
   const catalog = useMemo(() => previewCatalog(mode, personalRecipes), [mode, personalRecipes])
@@ -40,6 +43,7 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
         const request = buildGenerateWeekPreviewRequest({ weekStart, timeZone, mode, includedMeals, portions, sundayPrep, maxDinnerActiveMinutes, officeLunches, avoidedRecipeIds, preferredRecipeIds, overrides: nextOverrides, pantry, personalRecipes })
         const draft = generateWeekDraft({ request, ingredients: canonicalIngredients, options: { maxSearchNodes: 12_000, maxOptionsPerRequirement: 8, maxCompleteSolutions: 6, maxRoutes: 900, maxPrepWindowsPerRoute: 1, maxStoredMealsPerBatch: 3 } })
         setResult({ request, draft })
+        setAcceptanceReview(null)
       } catch (caught) {
         setError(caught instanceof Error ? caught.message : 'The draft could not be generated.')
       } finally { setGenerating(false) }
@@ -60,6 +64,15 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
   const unresolvedLines = draft?.groceryDemand.lines.filter(({ unresolved }) => unresolved).length ?? 0
   const shoppingReady = Boolean(draft?.status === 'complete' && draft.shoppingReadiness.status === 'ready')
   const pantryApplied = draft?.groceryDemand.lines.reduce((sum, line) => sum + line.pantry.applied, 0) ?? 0
+  const reviewAcceptance = () => {
+    if (!visibleResult || !currentPersonalData) return
+    setAcceptanceReview(reviewWeekDraftAcceptance({ mode, request: visibleResult.request, draft: visibleResult.draft, current: currentPersonalData, acceptedAt: new Date().toISOString() }))
+  }
+  const downloadAcceptanceBackup = () => {
+    if (!acceptanceReview?.candidate) return
+    const url = URL.createObjectURL(new Blob([exportAcceptedWeekPlanBackup(acceptanceReview.candidate)], { type: 'application/json' }))
+    const anchor = document.createElement('a'); anchor.href = url; anchor.download = `recipe-lab-generated-plan-${weekStart}.json`; anchor.click(); URL.revokeObjectURL(url)
+  }
 
   return <section className="generate-week" aria-labelledby="generate-week-title">
       <div className="generate-heading"><div><p className="eyebrow">Experimental v3 planner</p><h2 id="generate-week-title">Generate a draft week.</h2><p>Configure the essentials, then inspect every meal, cooking batch, leftover, and shopping uncertainty before anything is saved.</p></div><div className="mode-switch" aria-label="Recipe mode">{(['demo', 'real'] as const).map((value) => <button type="button" key={value} aria-pressed={mode === value} onClick={() => { setMode(value); setResult(null); setOverrides({}); setAvoidedRecipeIds([]); setPreferredRecipeIds([]) }}>{value === 'demo' ? 'Interactive demo' : 'Real catalog'}</button>)}</div></div>
@@ -92,6 +105,15 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
       </div>
       <section className="why-plan"><div><p className="eyebrow">Why this draft</p><h3>Recommendations stay explainable.</h3><p>Completion and household acceptability come first, followed by dinner variety, practical batch reuse, effort, pantry reuse, and waste. Unknown preferences receive no bonus.</p></div><div>{draft.selectedRoutes.map((route) => <article key={route.routeId}><strong>{recipeById.get(route.recipeId)?.identity.title}</strong><span>{route.explanations.join(' ')}</span></article>)}{draft.rejectedAlternatives.length ? <details><summary>{draft.rejectedAlternatives.length} rejected or review-needed alternatives sampled</summary><ul>{[...new Set(draft.rejectedAlternatives.flatMap(({ reasons }) => reasons.map(({ message }) => message)))].slice(0, 8).map((message) => <li key={message}>{message}</li>)}</ul></details> : null}</div></section>
       {draft.unmetRequirements.length ? <section className="unmet-panel"><p className="eyebrow">Why slots remain open</p><h3>{draft.unmetRequirements.length} meal{draft.unmetRequirements.length === 1 ? '' : 's'} need a decision</h3><ul>{draft.unmetRequirements.map((item) => <li key={item.mealRequirementId}><strong>{item.mealRequirementId.replace('meal-requirement-', '').replaceAll('-', ' ')}</strong><span>{item.blockers.slice(0, 3).map(({ code, count }) => `${code.replaceAll('-', ' ')} (${count})`).join(' · ')}</span></li>)}</ul></section> : null}
+      <section className="v3-conversion-card generated-acceptance-review" aria-labelledby="generated-acceptance-title">
+        <div><p className="eyebrow">Acceptance safety review</p><h3 id="generated-acceptance-title">Inspect the exact proposed changes.</h3><p>The conversion preserves exact recipe revisions, selected ingredient branches, cooking events, allocations, and grocery provenance. Proposed cooking is never recorded as completed, and pantry stock is never consumed.</p></div>
+        {!acceptanceReview ? <button type="button" onClick={reviewAcceptance} disabled={!currentPersonalData}>Review proposed acceptance</button> : <div className="v3-conversion-review">
+          <dl><div><dt>Meals</dt><dd>{acceptanceReview.changes.meals} planned · {acceptanceReview.changes.skipped} skipped</dd></div><div><dt>Cooking</dt><dd>{acceptanceReview.changes.cookEvents} proposed events · {acceptanceReview.changes.batches} unprepared batches</dd></div><div><dt>Allocations</dt><dd>{acceptanceReview.changes.allocations} total · {acceptanceReview.changes.preparedLotReservations} prepared-food reservations</dd></div><div><dt>Base fingerprint</dt><dd>{acceptanceReview.baseFingerprint}</dd></div></dl>
+          {acceptanceReview.blockers.length || acceptanceReview.warnings.length ? <ul>{[...acceptanceReview.blockers, ...acceptanceReview.warnings].map((issue) => <li key={`${issue.code}:${issue.entityIds.join(':')}`}><strong>{issue.code.replaceAll('-', ' ')}</strong><span>{issue.message}</span></li>)}</ul> : <p role="status">The proposal passed the pure conversion review.</p>}
+          <div><button type="button" onClick={() => setAcceptanceReview(null)}>Close review</button>{acceptanceReview.candidate ? <button type="button" onClick={downloadAcceptanceBackup}>Download proposed-plan backup</button> : null}<button type="button" className="primary" disabled={!GENERATED_PLAN_ACCEPTANCE_ENABLED}>Accept generated week</button></div>
+          <p className="v3-commit-message">Acceptance remains disabled pending explicit owner authorization. This review does not write personal data.</p>
+        </div>}
+      </section>
     </> : <div className="generate-empty"><span>Ready when you are</span><h3>No draft has been generated.</h3><p>The interactive demo can produce a full week. Real-catalog mode stays partial until authorized recipe revisions pass every readiness gate.</p></div>}
   </section>
 }
