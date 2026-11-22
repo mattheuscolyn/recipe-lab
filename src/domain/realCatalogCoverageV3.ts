@@ -344,7 +344,7 @@ function grocerySummary(recipe: RecipeV3, probe: RouteProbe, reasons: RejectedRe
       multiplier: probe.candidate.batchMultiplier,
       sourceYieldSelection: probe.candidate.sourceYieldSelection ?? undefined,
     })
-    const demand = buildBatchGroceryDemand({ recipes: [recipe], ingredients: canonicalIngredients, batches: [batch], scope: 'outstanding', includeOptional: false })
+    const demand = buildBatchGroceryDemand({ recipes: [recipe], ingredients: canonicalIngredients, batches: [batch], scope: 'outstanding', includeOptional: false, ingredientSelections: probe.candidate.ingredientSelections.map((selection) => ({ batchId: batch.batchId, ...selection })) })
     const reviewNeeded = reasons.some(({ code }) => ['ingredient-selection-grocery-review-required', 'recommendation-readiness-required'].includes(code))
     return {
       status: reviewNeeded || demand.uncertainties.length ? 'review-needed' as const : 'quantified' as const,

@@ -97,6 +97,52 @@ describe('batch-derived grocery demand', () => {
     expect(buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'one')], scope: 'outstanding', includeOptional: true }).lines[0].optional).toBe(true)
   })
 
+  it('uses the exact selected alternative instead of silently purchasing the primary ingredient', () => {
+    const { recipe, ingredient } = parsleyFixture()
+    const alternateVariant = { id: 'variant-parsley-curly', label: 'Curly parsley', form: 'fresh' }
+    ingredient.variants.push(alternateVariant)
+    recipe.requirements[0].alternatives = [{
+      alternativeId: 'alternative-curly-parsley',
+      label: '10 g curly parsley',
+      canonicalIngredientId: ingredient.id,
+      variantId: alternateVariant.id,
+      quantity: { ...recipe.requirements[0].selectedPlanningQuantity!, amount: 10, originalText: '10 g' },
+      relationship: 'substitution',
+    }]
+    const planned = batch(recipe, 'alternative')
+    const demand = buildBatchGroceryDemand({
+      recipes: [recipe],
+      ingredients: [ingredient],
+      batches: [planned],
+      scope: 'outstanding',
+      ingredientSelections: [{ batchId: planned.batchId, requirementId: recipe.requirements[0].requirementId, selection: 'alternative', alternativeId: 'alternative-curly-parsley' }],
+    })
+    expect(demand.lines).toEqual([expect.objectContaining({ variantId: alternateVariant.id, total: 10 })])
+    expect(demand.lines[0].contributions[0].originalText).toMatch(/curly parsley/)
+  })
+
+  it('honors explicit optional inclusion and exclusion per batch', () => {
+    const { recipe, ingredient } = parsleyFixture()
+    recipe.requirements[0].optional = true
+    const included = batch(recipe, 'optional-included')
+    const excluded = batch(recipe, 'optional-excluded')
+    const demand = buildBatchGroceryDemand({
+      recipes: [recipe], ingredients: [ingredient], batches: [included, excluded], scope: 'outstanding',
+      ingredientSelections: [
+        { batchId: included.batchId, requirementId: recipe.requirements[0].requirementId, selection: 'primary', alternativeId: null },
+        { batchId: excluded.batchId, requirementId: recipe.requirements[0].requirementId, selection: 'excluded-optional', alternativeId: null },
+      ],
+    })
+    expect(demand.lines[0]).toMatchObject({ total: 20, optional: true })
+    expect(demand.lines[0].contributions.map(({ batchId }) => batchId)).toEqual([included.batchId])
+  })
+
+  it('rejects unresolved alternative branches rather than assuming the primary ingredient', () => {
+    const { recipe, ingredient } = parsleyFixture()
+    recipe.requirements[0].alternatives = [{ alternativeId: 'alternative-curly-parsley', label: 'Curly parsley', canonicalIngredientId: ingredient.id, variantId: ingredient.variants.at(-1)!.id, quantity: recipe.requirements[0].selectedPlanningQuantity, relationship: 'substitution' }]
+    expect(() => buildBatchGroceryDemand({ recipes: [recipe], ingredients: [ingredient], batches: [batch(recipe, 'unresolved-branch')], scope: 'outstanding' })).toThrow(/explicit batch selection/)
+  })
+
   it('distinguishes historical ingredient demand from outstanding shopping requirements', () => {
     const { recipe, ingredient } = parsleyFixture()
     const planned = batch(recipe, 'cooked')

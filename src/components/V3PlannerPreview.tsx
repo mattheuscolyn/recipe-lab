@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import type { RecipeV2 } from '../domain/catalog'
 import { shiftWeek, weekDates } from '../domain/mealPlan'
 import type { PersonalDataV3MigrationPreview, LoadPersonalDataV3Result } from '../domain/personalDataV3'
+import type { PantryAvailability } from '../domain/planningGroceryV3'
+import { GenerateWeekExperience } from './GenerateWeekExperience'
 
 const friendlyDate = (iso: string, options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' }) => new Intl.DateTimeFormat('en-US', options).format(new Date(`${iso}T12:00:00`))
 
@@ -25,6 +27,8 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
   const requirements = new Map(preview.data.mealRequirements.map((requirement) => [requirement.mealRequirementId, requirement]))
   const issues = new Map(preview.issues.filter((issue) => issue.entity === 'meal-slot').map((issue) => [issue.legacySlotId, issue]))
   const weekSlots = preview.data.plan.filter(({ date }) => date >= weekStart && date <= weekEnd)
+  const timeZone = preview.data.mealRequirements[0]?.timeZone ?? Intl.DateTimeFormat().resolvedOptions().timeZone ?? 'UTC'
+  const pantry: PantryAvailability[] = preview.data.pantry.map((lot) => ({ availabilityId: `availability-${lot.id.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`, canonicalIngredientId: lot.canonicalIngredientId, variantId: lot.variantId, confidence: 'confirmed-measured', quantity: { amount: lot.quantity, unit: lot.unit } }))
   const save = () => {
     const result = onCommit()
     setCommitMessage(result.persisted ? 'Preview snapshot saved separately. Your original planner is still active.' : result.error)
@@ -45,6 +49,8 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
         <span><strong>0</strong> cooking batches inferred</span>
       </aside>
     </section>
+
+    <GenerateWeekExperience weekStart={weekStart} timeZone={timeZone} pantry={pantry} onWeekChange={onWeekChange}/>
 
     {saved.error ? <section className="v3-preview-alert danger" role="status"><div><strong>Saved preview needs recovery</strong><span>{saved.error}</span></div>{saved.recoveryBackup ? <button type="button" onClick={onDownloadRecovery}>Download unreadable snapshot</button> : null}</section> : saved.data ? <section className={`v3-preview-alert ${saved.stale ? 'warning' : 'success'}`} role="status"><div><strong>{saved.stale ? 'Saved preview is out of date' : 'A v3 preview snapshot is saved'}</strong><span>{saved.stale ? 'Your original planner changed. Review a fresh snapshot before replacing the saved preview.' : 'It remains separate; the original planner is still the default and editable version.'}</span></div></section> : null}
 
@@ -71,9 +77,9 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
     {preview.issues.length ? <section className="v3-migration-issues" aria-labelledby="migration-issues-title"><div><p className="eyebrow">Needs your decision</p><h2 id="migration-issues-title">Some original records stay unchanged.</h2><p>They remain in the preview and exact recovery backup; nothing is rounded, filtered, or discarded.</p></div><ul>{preview.issues.map((issue) => <li key={issue.entity === 'meal-slot' ? `${issue.legacySlotId}:${issue.code}` : `${issue.pantryLotId}:${issue.code}`}><strong>{issue.entity === 'meal-slot' ? `${friendlyDate(issue.date)} · ${issue.meal}` : `Pantry · ${issue.pantryLotId}`}</strong><span>{issue.message}</span></li>)}</ul></section> : null}
 
     <section className="v3-capability-grid" aria-label="Preview availability">
-      <article><span>Available now</span><h3>Manual choices, portions, and locks</h3><p>Compatible meals become unallocated needs while their original recipe choices stay visible.</p></article>
-      <article><span>Not available yet</span><h3>Automatic batches and leftovers</h3><p>Current recipes still need serving and storage review, so no cooked food or grocery demand is invented.</p></article>
-      <article><span>Not available yet</span><h3>Cooking mode and optimization</h3><p>Cooking steps, safe timing, and recommendation readiness require later reviewed data.</p></article>
+      <article><span>Available now</span><h3>Generated draft exploration</h3><p>Demo and eligible private recipes use the same bounded planner with portions, locks, skips, and safe regeneration.</p></article>
+      <article><span>Available now</span><h3>Batches, leftovers, and groceries</h3><p>Only eligible routes appear; shared batches produce one selection-aware grocery demand with visible uncertainty.</p></article>
+      <article><span>Not available yet</span><h3>Accepting a generated plan</h3><p>Drafts remain ephemeral. No generated meal, pantry deduction, or prepared-food lot is written to personal data.</p></article>
     </section>
 
     <section className="v3-conversion-card">

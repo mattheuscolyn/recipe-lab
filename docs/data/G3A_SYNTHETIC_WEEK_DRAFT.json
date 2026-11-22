@@ -17,13 +17,14 @@
     "exhausted": false
   },
   "score": {
-    "total": 1946915,
+    "total": 1942915,
     "coveredRequirements": 19,
     "distinctDinners": 5,
     "preferredMealCount": 0,
     "likedMealCount": 0,
     "dislikedMealCount": 0,
     "dinnerRepeatCount": 2,
+    "consecutiveDinnerRepeatCount": 1,
     "breakfastRepeatCount": 6,
     "activeCookingMinutes": 175,
     "pantryMatchedRequirementCount": 0,
@@ -46,6 +47,18 @@
       "cookingWindowId": "cooking-window-2027-02-03-dinner",
       "activeMinutes": 25,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-beef-cabbage-sesame",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-beef-cabbage-extra-sriracha",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Beef and Cabbage for 3 meal slots.",
         "One cooking batch supplies a fresh dinner and verified later leftovers.",
@@ -68,6 +81,23 @@
       "cookingWindowId": "cooking-window-2027-02-01-dinner",
       "activeMinutes": 15,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-fajitas-onion",
+          "selection": "primary",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-sour-cream",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-cilantro",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Sheet-Pan Chicken for 3 meal slots.",
         "One cooking batch supplies a fresh dinner and verified later leftovers.",
@@ -88,6 +118,13 @@
       "cookingWindowId": "cooking-window-2027-02-02-dinner",
       "activeMinutes": 20,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-cheeseburger-pasta-green-onion",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Cheeseburger Pasta for 1 meal slot.",
         "Dinner variety is scored ahead of ingredient reuse and waste."
@@ -107,6 +144,7 @@
       "cookingWindowId": "cooking-window-2027-02-04-dinner",
       "activeMinutes": 20,
       "preparedFoodLotId": null,
+      "ingredientSelections": [],
       "explanations": [
         "Selected Synthetic Pesto Chicken for 1 meal slot.",
         "Dinner variety is scored ahead of ingredient reuse and waste."
@@ -126,6 +164,7 @@
       "cookingWindowId": "cooking-window-2027-02-05-dinner",
       "activeMinutes": 20,
       "preparedFoodLotId": null,
+      "ingredientSelections": [],
       "explanations": [
         "Selected Synthetic Sesame Chicken for 1 meal slot.",
         "Dinner variety is scored ahead of ingredient reuse and waste."
@@ -145,6 +184,23 @@
       "cookingWindowId": "cooking-window-2027-02-06-dinner",
       "activeMinutes": 15,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-fajitas-onion",
+          "selection": "primary",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-sour-cream",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-cilantro",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Sheet-Pan Chicken for 1 meal slot.",
         "Dinner variety is scored ahead of ingredient reuse and waste."
@@ -164,6 +220,23 @@
       "cookingWindowId": "cooking-window-2027-02-07-dinner",
       "activeMinutes": 15,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-fajitas-onion",
+          "selection": "primary",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-sour-cream",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-cilantro",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Sheet-Pan Chicken for 1 meal slot.",
         "Dinner variety is scored ahead of ingredient reuse and waste."
@@ -185,6 +258,13 @@
       "cookingWindowId": "cooking-window-g3a-sunday-prep",
       "activeMinutes": 10,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-tofu-scramble-turmeric",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Tofu Scramble for 3 meal slots.",
         "Advance preparation fits a cooking window and verified storage/service limits."
@@ -206,6 +286,13 @@
       "cookingWindowId": "cooking-window-2027-02-03-prep",
       "activeMinutes": 10,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-tofu-scramble-turmeric",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Tofu Scramble for 3 meal slots.",
         "Advance preparation fits a cooking window and verified storage/service limits."
@@ -225,6 +312,13 @@
       "cookingWindowId": "cooking-window-2027-02-07-breakfast",
       "activeMinutes": 10,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-tofu-scramble-turmeric",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Tofu Scramble for 1 meal slot."
       ]
@@ -243,6 +337,23 @@
       "cookingWindowId": "cooking-window-g3a-sunday-prep",
       "activeMinutes": 15,
       "preparedFoodLotId": null,
+      "ingredientSelections": [
+        {
+          "requirementId": "requirement-fajitas-onion",
+          "selection": "primary",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-sour-cream",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        },
+        {
+          "requirementId": "requirement-fajitas-cilantro",
+          "selection": "excluded-optional",
+          "alternativeId": null
+        }
+      ],
       "explanations": [
         "Selected Synthetic Sheet-Pan Chicken for 1 meal slot.",
         "Advance preparation fits a cooking window and verified storage/service limits."
@@ -3755,6 +3866,12 @@
       "batch-meal-requirement-2027-02-04-dinner-synthetic-pesto-chicken-fresh-x-0-5/requirement-pesto-chicken-tomatoes: Non-quantified requirement: as-needed."
     ]
   },
+  "shoppingReadiness": {
+    "status": "review-needed",
+    "unresolvedLineCount": 3,
+    "uncertaintyCount": 5,
+    "pricesAvailable": false
+  },
   "explanations": [
     {
       "code": "complete-week",
@@ -3765,7 +3882,7 @@
     },
     {
       "code": "score-priority",
-      "message": "Completion, explicit household acceptability, and dinner variety precede effort, repeats, pantry reuse, and waste; unknown preferences receive no positive score.",
+      "message": "Completion, explicit household acceptability, and dinner variety precede effort, repeats, pantry reuse, and waste; dislikes are penalties, unknown preferences receive no positive score, and consecutive identical dinners receive an extra penalty.",
       "entityIds": [
         "planning-request-g3a-complete-week"
       ]
