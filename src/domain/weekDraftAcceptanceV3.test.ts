@@ -11,6 +11,7 @@ import {
   personalDataV3Fingerprint,
   persistAcceptedWeekPlanTransaction,
   reviewWeekDraftAcceptance,
+  rollbackAcceptedWeekPlanTransaction,
 } from './weekDraftAcceptanceV3'
 
 class MemoryStorage {
@@ -122,6 +123,8 @@ describe('generated week acceptance foundation', () => {
     const secondCandidate = { ...candidate, acceptedAt: '2027-01-20T12:01:00.000Z', basePersonalDataFingerprint: personalDataV3Fingerprint(candidate.personalData) }
     const second = persistAcceptedWeekPlanTransaction(storage, secondCandidate, first.envelope!.fingerprint)
     expect(second.envelope).toMatchObject({ revision: 2, previous: candidate })
+    const rollback = rollbackAcceptedWeekPlanTransaction(storage, second.envelope!.fingerprint, '2027-01-20T12:02:00.000Z')
+    expect(rollback).toMatchObject({ persisted: true, envelope: { revision: 3, current: { personalData: candidate.personalData }, previous: secondCandidate } })
   })
 
   it('recovers interrupted writes and never replaces malformed data with empty state', () => {

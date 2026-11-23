@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { GenerateWeekExperience } from './GenerateWeekExperience'
@@ -54,7 +54,14 @@ describe('Generate Week interactive preview', () => {
     const user = userEvent.setup()
     render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} currentPersonalData={emptyV3} onWeekChange={() => undefined}/>)
     await user.click(screen.getByRole('button', { name: 'Generate Draft Week' }))
-    await user.click(await screen.findByRole('button', { name: 'Review proposed acceptance' }, { timeout: 30_000 }))
+    const reviewButton = await screen.findByRole('button', { name: 'Review proposed acceptance' }, { timeout: 30_000 })
+    await user.clear(screen.getByLabelText('dinner default portions'))
+    await user.type(screen.getByLabelText('dinner default portions'), '3')
+    expect(screen.getByText('Draft settings changed')).toBeInTheDocument()
+    expect(reviewButton).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: 'Regenerate now' }))
+    await waitFor(() => expect(screen.queryByText('Draft settings changed')).not.toBeInTheDocument(), { timeout: 30_000 })
+    await user.click(screen.getByRole('button', { name: 'Review proposed acceptance' }))
     expect(screen.getByText(/synthetic demo plans can be reviewed but never accepted/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Accept generated week' })).toBeDisabled()
     expect(screen.getByText(/disabled pending explicit owner authorization/i)).toBeInTheDocument()
