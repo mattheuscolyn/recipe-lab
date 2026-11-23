@@ -4,7 +4,7 @@ import { buildGenerateWeekPreviewRequest, previewCatalog, shiftIsoDate, type Gen
 import type { PantryAvailability } from '../domain/planningGroceryV3'
 import type { PlanningRequest } from '../domain/generatorV3'
 import { generateWeekDraft, type WeekDraft } from '../domain/weekGeneratorV3'
-import { activePersonalRecipes, loadPersonalRecipeLibrary } from '../domain/personalRecipesV3'
+import { activePersonalRecipes, emptyPersonalRecipeLibrary, inspectPersonalRecipeLibrary } from '../domain/personalRecipesV3'
 import { PersonalRecipeForm } from './PersonalRecipeForm'
 import type { PersonalDataV3 } from '../domain/personalDataV3'
 import { exportAcceptedWeekPlanBackup, GENERATED_PLAN_ACCEPTANCE_ENABLED, reviewWeekDraftAcceptance, type AcceptanceReview } from '../domain/weekDraftAcceptanceV3'
@@ -30,7 +30,8 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [acceptanceReview, setAcceptanceReview] = useState<AcceptanceReview | null>(null)
-  const [personalLibrary, setPersonalLibrary] = useState(() => { try { return loadPersonalRecipeLibrary(window.localStorage) } catch { return loadPersonalRecipeLibrary(null) } })
+  const [personalLoad] = useState(() => inspectPersonalRecipeLibrary(window.localStorage))
+  const [personalLibrary, setPersonalLibrary] = useState(() => personalLoad.library ?? emptyPersonalRecipeLibrary())
   const personalRecipes = useMemo(() => activePersonalRecipes(personalLibrary), [personalLibrary])
   const catalog = useMemo(() => previewCatalog(mode, personalRecipes), [mode, personalRecipes])
   const dates = useMemo(() => Array.from({ length: 7 }, (_, index) => shiftIsoDate(weekStart, index)), [weekStart])
@@ -78,7 +79,7 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
       <div className="generate-heading"><div><p className="eyebrow">Experimental v3 planner</p><h2 id="generate-week-title">Generate a draft week.</h2><p>Configure the essentials, then inspect every meal, cooking batch, leftover, and shopping uncertainty before anything is saved.</p></div><div className="mode-switch" aria-label="Recipe mode">{(['demo', 'real'] as const).map((value) => <button type="button" key={value} aria-pressed={mode === value} onClick={() => { setMode(value); setResult(null); setOverrides({}); setAvoidedRecipeIds([]); setPreferredRecipeIds([]) }}>{value === 'demo' ? 'Interactive demo' : 'Real catalog'}</button>)}</div></div>
 
     <div className={`mode-disclosure ${mode}`} role="status"><strong>{catalog.label}</strong><span>{mode === 'demo' ? 'Clearly synthetic recipes demonstrate the real engine. They cannot be accepted as production recipes.' : `${catalog.productionEligibleCount} authorized production recipe${catalog.productionEligibleCount === 1 ? '' : 's'} plus ${catalog.personalEligibleCount ?? 0} browser-local personal recipe${catalog.personalEligibleCount === 1 ? '' : 's'}. No approval safeguards are bypassed.`}</span></div>
-    {mode === 'real' ? <PersonalRecipeForm library={personalLibrary} onSaved={(next) => { setPersonalLibrary(next); setResult(null) }}/> : null}
+    {mode === 'real' ? <PersonalRecipeForm library={personalLibrary} recoveryError={personalLoad.error} recoveryRaw={personalLoad.rawRecovery} onSaved={(next) => { setPersonalLibrary(next); setResult(null); setAcceptanceReview(null) }}/> : null}
 
     <div className="generate-config">
       <div className="config-week"><span>Week</span><button type="button" aria-label="Previous generator week" onClick={() => { setResult(null); setOverrides({}); onWeekChange(shiftIsoDate(weekStart, -7)) }}>←</button><strong>{friendly(weekStart, { month: 'short', day: 'numeric' })}–{friendly(dates[6], { month: 'short', day: 'numeric' })}</strong><button type="button" aria-label="Next generator week" onClick={() => { setResult(null); setOverrides({}); onWeekChange(shiftIsoDate(weekStart, 7)) }}>→</button></div>
