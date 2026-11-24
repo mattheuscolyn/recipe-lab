@@ -109,8 +109,10 @@ export function reviewWeekDraftAcceptance(input: {
     if (!proposed || !proposed.lock.locked || proposed.requestedPortions !== existing.requestedPortions || !proposedMeal || proposedMeal.status !== 'planned') return true
     // Existing locks must retain their actual recipe, not merely the portion count.
     const allocation = current.allocations.find((item) => item.mealRequirementId === existing.mealRequirementId && item.state !== 'cancelled')
-    const batch = allocation?.source.kind === 'planned-batch' ? current.batches.find(({ batchId }) => batchId === allocation.source.batchId) : null
-    const lot = allocation?.source.kind === 'prepared-lot' ? current.preparedFoodLots.find(({ preparedFoodLotId }) => preparedFoodLotId === allocation.source.preparedFoodLotId) : null
+    const sourceBatchId = allocation?.source.kind === 'planned-batch' ? allocation.source.batchId : null
+    const sourceLotId = allocation?.source.kind === 'prepared-lot' ? allocation.source.preparedFoodLotId : null
+    const batch = sourceBatchId ? current.batches.find(({ batchId }) => batchId === sourceBatchId) : null
+    const lot = sourceLotId ? current.preparedFoodLots.find(({ preparedFoodLotId }) => preparedFoodLotId === sourceLotId) : null
     const legacy = current.legacyRecipeChoices.find(({ mealRequirementId }) => mealRequirementId === existing.mealRequirementId)
     const previousRecipeId = batch?.recipeId ?? lot?.recipeId ?? legacy?.recipeId
     const previousRevisionId = batch?.recipeRevisionId ?? lot?.recipeRevisionId ?? null
