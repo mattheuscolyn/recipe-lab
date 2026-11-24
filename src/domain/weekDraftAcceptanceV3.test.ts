@@ -96,6 +96,20 @@ describe('generated week acceptance foundation', () => {
     expect(servedReview.blockers.map(({ code }) => code)).toContain('served-history-protected')
   })
 
+  it('preserves locked recipe identity, not merely matching portions', () => {
+    const request = authorizedTestRequest()
+    const readyDraft = resolvedDraft()
+    const breakfast = request.mealRequirements.find(({ meal }) => meal === 'breakfast')!
+    const plannedBreakfast = readyDraft.meals.find(({ mealRequirementId }) => mealRequirementId === breakfast.mealRequirementId)!
+    const otherBreakfast = request.recipeSnapshot.find(({ identity, mealRoles }) => mealRoles.primary.includes('breakfast') && identity.recipeId !== plannedBreakfast.recipeId)!
+    const existing = emptyPersonalData()
+    existing.mealRequirements = [{ ...breakfast, lock: { locked: true, reason: 'Keep our manually selected breakfast.' } }]
+    existing.plan = [{ id: 'manual-locked-breakfast', date: breakfast.date, meal: 'Breakfast', servings: breakfast.requestedPortions, recipeId: otherBreakfast.identity.recipeId, locked: true }]
+    existing.legacyRecipeChoices = [{ legacySlotId: 'manual-locked-breakfast', mealRequirementId: breakfast.mealRequirementId, recipeId: otherBreakfast.identity.recipeId }]
+    const review = reviewWeekDraftAcceptance({ mode: 'real', request, draft: readyDraft, current: existing, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
+    expect(review.blockers.map(({ code }) => code)).toContain('locked-meal-conflict')
+  })
+
   it('requires explicit replacement confirmation for prospective edits', () => {
     const request = authorizedTestRequest()
     const current = emptyPersonalData()
