@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { canonicalIngredients } from '../data/pilotCatalog'
-import { buildGenerateWeekPreviewRequest, localDateTimeToIso, previewCatalog } from './generateWeekPreview'
+import { buildGenerateWeekPreviewRequest, generateWeekConfigurationFingerprint, localDateTimeToIso, previewCatalog } from './generateWeekPreview'
 import { generateWeekDraft } from './weekGeneratorV3'
 
 const configuration = {
@@ -28,6 +28,20 @@ describe('interactive Generate Week request builder', () => {
     expect(request.mealRequirements).toHaveLength(21)
     expect(request.mealRequirements[0]).toMatchObject({ date: '2027-06-07', intendedAt: '2027-06-07T15:00:00.000Z', requestedPortions: 2 })
     expect(request.cookingWindows.some(({ cookingWindowId }) => cookingWindowId === 'cooking-window-sunday-prep')).toBe(true)
+  })
+
+  it('captures two-person preference conflicts without turning unknowns into likes', () => {
+    const recipeId = previewCatalog('demo').recipes[0].identity.recipeId
+    const request = buildGenerateWeekPreviewRequest({ ...configuration, householdVotes: { [recipeId]: { personA: 'like', personB: 'dislike' } } })
+    expect(request.preferences.householdRecipePreferences).toContainEqual({ recipeId, likedVotes: 1, dislikedVotes: 1, unknownVotes: 0 })
+    const unknown = buildGenerateWeekPreviewRequest({ ...configuration, householdVotes: { [recipeId]: { personA: 'unknown', personB: 'unknown' } } })
+    expect(unknown.preferences.householdRecipePreferences).toContainEqual({ recipeId, likedVotes: 0, dislikedVotes: 0, unknownVotes: 2 })
+  })
+
+  it('fingerprints every planning input deterministically for stale-draft detection', () => {
+    expect(generateWeekConfigurationFingerprint(configuration)).toBe(generateWeekConfigurationFingerprint(structuredClone(configuration)))
+    expect(generateWeekConfigurationFingerprint(configuration)).not.toBe(generateWeekConfigurationFingerprint({ ...configuration, portions: { ...configuration.portions, dinner: 3 } }))
+    expect(generateWeekConfigurationFingerprint(configuration)).not.toBe(generateWeekConfigurationFingerprint({ ...configuration, householdVotes: { [previewCatalog('demo').recipes[0].identity.recipeId]: { personA: 'like', personB: 'unknown' } } }))
   })
 
   it('keeps the real production catalog empty until authorized revisions are eligible', () => {

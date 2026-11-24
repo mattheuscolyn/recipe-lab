@@ -8,6 +8,7 @@ import type { RecipeV3 } from './recipeV3'
 
 export type GenerateWeekMode = 'demo' | 'real'
 export type MealKind = 'breakfast' | 'lunch' | 'dinner'
+export type HouseholdVote = 'like' | 'dislike' | 'unknown'
 export type MealOverride = { skipped?: boolean; portions?: number; lockedRecipeId?: string | null; avoidRecipeIds?: string[] }
 
 export type GenerateWeekPreviewConfiguration = {
@@ -21,6 +22,7 @@ export type GenerateWeekPreviewConfiguration = {
   officeLunches: boolean
   avoidedRecipeIds: string[]
   preferredRecipeIds: string[]
+  householdVotes?: Record<string, { personA: HouseholdVote; personB: HouseholdVote }>
   overrides?: Record<string, MealOverride>
   pantry?: PantryAvailability[]
   personalRecipes?: RecipeV3[]
@@ -120,8 +122,33 @@ export function buildGenerateWeekPreviewRequest(configuration: GenerateWeekPrevi
     cookingWindows,
     serviceAssessments: catalog.assessments,
     hardConstraints: { avoidedRecipeIds: configuration.avoidedRecipeIds, avoidedIngredientIds: [] },
-    preferences: { preferredRecipeIds: configuration.preferredRecipeIds, householdRecipePreferences: [] },
+    preferences: {
+      preferredRecipeIds: configuration.preferredRecipeIds,
+      householdRecipePreferences: Object.entries(configuration.householdVotes ?? {}).map(([recipeId, votes]) => ({
+        recipeId,
+        likedVotes: [votes.personA, votes.personB].filter((vote) => vote === 'like').length,
+        dislikedVotes: [votes.personA, votes.personB].filter((vote) => vote === 'dislike').length,
+        unknownVotes: [votes.personA, votes.personB].filter((vote) => vote === 'unknown').length,
+      })).filter(({ recipeId }) => recipeById.has(recipeId)),
+    },
     lockedChoices,
     officeLunchPolicy: { enabled: configuration.officeLunches, maxAssembly: 'none', requireReheatingSuitable: true, allowIntrusiveOdors: false, allowRiceBased: false },
   })
+}
+
+function canonicalize(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalize)
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value as Record<string, unknown>).sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => [key, canonicalize(item)]))
+  return value
+}
+
+export function generateWeekConfigurationFingerprint(configuration: GenerateWeekPreviewConfiguration): string {
+  const stable = {
+    ...configuration,
+    personalRecipes: (configuration.personalRecipes ?? []).map(({ identity }) => ({ recipeId: identity.recipeId, revisionId: identity.revisionId })).sort((left, right) => left.recipeId.localeCompare(right.recipeId)),
+  }
+  const text = JSON.stringify(canonicalize(stable))
+  let hash = 0x811c9dc5
+  for (let index = 0; index < text.length; index += 1) { hash ^= text.charCodeAt(index); hash = Math.imul(hash, 0x01000193) }
+  return `config-${(hash >>> 0).toString(16).padStart(8, '0')}`
 }

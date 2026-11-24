@@ -43,7 +43,7 @@ export type AcceptanceReview = {
   status: 'ready' | 'blocked'
   blockers: AcceptanceIssue[]
   warnings: AcceptanceIssue[]
-  changes: { meals: number; skipped: number; cookEvents: number; batches: number; allocations: number; preparedLotReservations: number }
+  changes: { meals: number; skipped: number; cookEvents: number; batches: number; allocations: number; preparedLotReservations: number; existingMealsReplaced: number; existingLocksPreserved: number; existingMealsUntouched: number }
   baseFingerprint: string
   candidate: AcceptedWeekPlan | null
 }
@@ -105,7 +105,18 @@ export function reviewWeekDraftAcceptance(input: {
   if (existingProspective.length && !input.confirmReplaceProspective) warnings.push({ code: 'existing-prospective-plan', message: 'This week already contains prospective or manual planning data. Explicit replacement confirmation is required.', entityIds: existingProspective.map(({ mealRequirementId }) => mealRequirementId) })
   const lockedConflicts = existingProspective.filter(({ lock }) => lock.locked).filter((existing) => {
     const proposed = request.mealRequirements.find((item) => item.date === existing.date && item.meal === existing.meal)
-    return !proposed || proposed.requestedPortions !== existing.requestedPortions
+    const proposedMeal = draft.meals.find((item) => item.date === existing.date && item.meal === existing.meal)
+    if (!proposed || !proposed.lock.locked || proposed.requestedPortions !== existing.requestedPortions || !proposedMeal || proposedMeal.status !== 'planned') return true
+    // Existing locks must retain their actual recipe, not merely the portion count.
+    const allocation = current.allocations.find((item) => item.mealRequirementId === existing.mealRequirementId && item.state !== 'cancelled')
+    const sourceBatchId = allocation?.source.kind === 'planned-batch' ? allocation.source.batchId : null
+    const sourceLotId = allocation?.source.kind === 'prepared-lot' ? allocation.source.preparedFoodLotId : null
+    const batch = sourceBatchId ? current.batches.find(({ batchId }) => batchId === sourceBatchId) : null
+    const lot = sourceLotId ? current.preparedFoodLots.find(({ preparedFoodLotId }) => preparedFoodLotId === sourceLotId) : null
+    const legacy = current.legacyRecipeChoices.find(({ mealRequirementId }) => mealRequirementId === existing.mealRequirementId)
+    const previousRecipeId = batch?.recipeId ?? lot?.recipeId ?? legacy?.recipeId
+    const previousRevisionId = batch?.recipeRevisionId ?? lot?.recipeRevisionId ?? null
+    return !previousRecipeId || proposedMeal.recipeId !== previousRecipeId || (previousRevisionId !== null && proposedMeal.recipeRevisionId !== previousRevisionId)
   })
   if (lockedConflicts.length) blockers.push({ code: 'locked-meal-conflict', message: 'A generated proposal cannot replace an incompatible locked meal.', entityIds: lockedConflicts.map(({ mealRequirementId }) => mealRequirementId) })
   const mutableRequirementIds = new Set(existingProspective.map(({ mealRequirementId }) => mealRequirementId))
@@ -118,7 +129,8 @@ export function reviewWeekDraftAcceptance(input: {
   const affectedTasks = current.tasks.filter((task) => (task.mealRequirementId && mutableRequirementIds.has(task.mealRequirementId)) || (task.cookEventId && current.cookEvents.some(({ cookEventId, batchId }) => cookEventId === task.cookEventId && affectedBatchIds.has(batchId))))
   if (affectedTasks.some(({ state }) => state === 'done')) blockers.push({ code: 'completed-task-history-protected', message: 'Completed preparation tasks are history and cannot be removed by regeneration.', entityIds: affectedTasks.filter(({ state }) => state === 'done').map(({ taskId }) => taskId) })
 
-  if (warnings.length || blockers.length) return { status: 'blocked', blockers, warnings, changes: summarize(draft), baseFingerprint, candidate: null }
+  const changes = summarize(draft, current, request, existingProspective, lockedConflicts)
+  if (warnings.length || blockers.length) return { status: 'blocked', blockers, warnings, changes, baseFingerprint, candidate: null }
 
   const removableAllocationIds = new Set(affectedAllocations.map(({ allocationId }) => allocationId))
   const removableBatchIds = new Set(affectedAllocations.flatMap((allocation) => allocation.source.kind === 'planned-batch' ? [allocation.source.batchId] : []))
@@ -155,10 +167,10 @@ export function reviewWeekDraftAcceptance(input: {
     basePersonalDataFingerprint: baseFingerprint,
     groceryProvenance: { scope: 'outstanding', demand: draft.groceryDemand, batchIds: draft.batches.map(({ batchId }) => batchId) },
   })
-  return { status: 'ready', blockers, warnings, changes: summarize(draft), baseFingerprint, candidate }
+  return { status: 'ready', blockers, warnings, changes, baseFingerprint, candidate }
 }
 
-function summarize(draft: WeekDraft): AcceptanceReview['changes'] {
+function summarize(draft: WeekDraft, current: PersonalDataV3, request: PlanningRequest, existingProspective: PersonalDataV3['mealRequirements'], lockedConflicts: PersonalDataV3['mealRequirements']): AcceptanceReview['changes'] {
   return {
     meals: draft.meals.filter(({ status }) => status === 'planned').length,
     skipped: draft.meals.filter(({ status }) => status === 'skipped').length,
@@ -166,6 +178,9 @@ function summarize(draft: WeekDraft): AcceptanceReview['changes'] {
     batches: draft.batches.length,
     allocations: draft.allocations.length,
     preparedLotReservations: draft.allocations.filter(({ source }) => source.kind === 'prepared-lot').length,
+    existingMealsReplaced: existingProspective.length,
+    existingLocksPreserved: existingProspective.filter(({ lock }) => lock.locked).length - lockedConflicts.length,
+    existingMealsUntouched: current.mealRequirements.filter(({ date }) => !inHorizon(date, request)).length,
   }
 }
 
@@ -215,6 +230,15 @@ export function persistAcceptedWeekPlanTransaction(storage: AcceptanceStorage | 
     storage.removeItem(ACCEPTED_WEEK_PLAN_PENDING_KEY)
     return { persisted: true, envelope, error: null }
   } catch { return { persisted: false, envelope: null, error: 'The atomic save did not complete. The previous accepted plan remains authoritative; a recovery copy may be available.' } }
+}
+
+export function rollbackAcceptedWeekPlanTransaction(storage: AcceptanceStorage | null, expectedFingerprint: string, rolledBackAt: string): { persisted: boolean; envelope: AcceptedWeekPlanEnvelope | null; error: string | null } {
+  const loaded = loadAcceptedWeekPlan(storage)
+  if (loaded.error || loaded.recovery || !loaded.envelope) return { persisted: false, envelope: null, error: loaded.error ?? 'There is no accepted plan to roll back.' }
+  if (loaded.envelope.fingerprint !== expectedFingerprint) return { persisted: false, envelope: null, error: 'The accepted plan changed in another tab. Reload before rolling back.' }
+  if (!loaded.envelope.previous) return { persisted: false, envelope: null, error: 'No previous accepted plan snapshot is available.' }
+  const candidate = acceptedWeekPlanSchema.parse({ ...loaded.envelope.previous, acceptedAt: rolledBackAt, basePersonalDataFingerprint: personalDataV3Fingerprint(loaded.envelope.current.personalData) })
+  return persistAcceptedWeekPlanTransaction(storage, candidate, expectedFingerprint)
 }
 
 export const exportAcceptedWeekPlanBackup = (value: AcceptedWeekPlanEnvelope | AcceptedWeekPlan): string => JSON.stringify(value, null, 2)

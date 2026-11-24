@@ -11,6 +11,7 @@ import {
   personalDataV3Fingerprint,
   persistAcceptedWeekPlanTransaction,
   reviewWeekDraftAcceptance,
+  rollbackAcceptedWeekPlanTransaction,
 } from './weekDraftAcceptanceV3'
 
 class MemoryStorage {
@@ -95,6 +96,31 @@ describe('generated week acceptance foundation', () => {
     expect(servedReview.blockers.map(({ code }) => code)).toContain('served-history-protected')
   })
 
+  it('preserves locked recipe identity, not merely matching portions', () => {
+    const request = authorizedTestRequest()
+    const readyDraft = resolvedDraft()
+    const breakfast = request.mealRequirements.find(({ meal }) => meal === 'breakfast')!
+    const plannedBreakfast = readyDraft.meals.find(({ mealRequirementId }) => mealRequirementId === breakfast.mealRequirementId)!
+    const otherBreakfast = request.recipeSnapshot.find(({ identity, mealRoles }) => mealRoles.primary.includes('breakfast') && identity.recipeId !== plannedBreakfast.recipeId)!
+    const existing = emptyPersonalData()
+    existing.mealRequirements = [{ ...breakfast, lock: { locked: true, reason: 'Keep our manually selected breakfast.' } }]
+    existing.plan = [{ id: 'manual-locked-breakfast', date: breakfast.date, meal: 'Breakfast', servings: breakfast.requestedPortions, recipeId: otherBreakfast.identity.recipeId, locked: true }]
+    existing.legacyRecipeChoices = [{ legacySlotId: 'manual-locked-breakfast', mealRequirementId: breakfast.mealRequirementId, recipeId: otherBreakfast.identity.recipeId }]
+    const lockedRequest = structuredClone(request)
+    lockedRequest.mealRequirements = lockedRequest.mealRequirements.map((item) => item.mealRequirementId === breakfast.mealRequirementId
+      ? { ...item, lock: { locked: true, reason: 'Keep the same proposed breakfast.' } }
+      : item)
+    lockedRequest.lockedChoices.push({ mealRequirementId: breakfast.mealRequirementId, recipeId: plannedBreakfast.recipeId!, recipeRevisionId: plannedBreakfast.recipeRevisionId! })
+    const review = reviewWeekDraftAcceptance({ mode: 'real', request: lockedRequest, draft: readyDraft, current: existing, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
+    expect(review.blockers.map(({ code }) => code)).toContain('locked-meal-conflict')
+    const compatible = structuredClone(existing)
+    compatible.plan[0].recipeId = plannedBreakfast.recipeId!
+    compatible.legacyRecipeChoices[0].recipeId = plannedBreakfast.recipeId!
+    const accepted = reviewWeekDraftAcceptance({ mode: 'real', request: lockedRequest, draft: readyDraft, current: compatible, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
+    expect(accepted.status).toBe('ready')
+    expect(accepted.changes.existingLocksPreserved).toBe(1)
+  })
+
   it('requires explicit replacement confirmation for prospective edits', () => {
     const request = authorizedTestRequest()
     const current = emptyPersonalData()
@@ -122,6 +148,8 @@ describe('generated week acceptance foundation', () => {
     const secondCandidate = { ...candidate, acceptedAt: '2027-01-20T12:01:00.000Z', basePersonalDataFingerprint: personalDataV3Fingerprint(candidate.personalData) }
     const second = persistAcceptedWeekPlanTransaction(storage, secondCandidate, first.envelope!.fingerprint)
     expect(second.envelope).toMatchObject({ revision: 2, previous: candidate })
+    const rollback = rollbackAcceptedWeekPlanTransaction(storage, second.envelope!.fingerprint, '2027-01-20T12:02:00.000Z')
+    expect(rollback).toMatchObject({ persisted: true, envelope: { revision: 3, current: { personalData: candidate.personalData }, previous: secondCandidate } })
   })
 
   it('recovers interrupted writes and never replaces malformed data with empty state', () => {
