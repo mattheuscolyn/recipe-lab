@@ -106,8 +106,19 @@ describe('generated week acceptance foundation', () => {
     existing.mealRequirements = [{ ...breakfast, lock: { locked: true, reason: 'Keep our manually selected breakfast.' } }]
     existing.plan = [{ id: 'manual-locked-breakfast', date: breakfast.date, meal: 'Breakfast', servings: breakfast.requestedPortions, recipeId: otherBreakfast.identity.recipeId, locked: true }]
     existing.legacyRecipeChoices = [{ legacySlotId: 'manual-locked-breakfast', mealRequirementId: breakfast.mealRequirementId, recipeId: otherBreakfast.identity.recipeId }]
-    const review = reviewWeekDraftAcceptance({ mode: 'real', request, draft: readyDraft, current: existing, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
+    const lockedRequest = structuredClone(request)
+    lockedRequest.mealRequirements = lockedRequest.mealRequirements.map((item) => item.mealRequirementId === breakfast.mealRequirementId
+      ? { ...item, lock: { locked: true, reason: 'Keep the same proposed breakfast.' } }
+      : item)
+    lockedRequest.lockedChoices.push({ mealRequirementId: breakfast.mealRequirementId, recipeId: plannedBreakfast.recipeId!, recipeRevisionId: plannedBreakfast.recipeRevisionId! })
+    const review = reviewWeekDraftAcceptance({ mode: 'real', request: lockedRequest, draft: readyDraft, current: existing, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
     expect(review.blockers.map(({ code }) => code)).toContain('locked-meal-conflict')
+    const compatible = structuredClone(existing)
+    compatible.plan[0].recipeId = plannedBreakfast.recipeId!
+    compatible.legacyRecipeChoices[0].recipeId = plannedBreakfast.recipeId!
+    const accepted = reviewWeekDraftAcceptance({ mode: 'real', request: lockedRequest, draft: readyDraft, current: compatible, acceptedAt: '2027-01-20T12:00:00.000Z', confirmReplaceProspective: true })
+    expect(accepted.status).toBe('ready')
+    expect(accepted.changes.existingLocksPreserved).toBe(1)
   })
 
   it('requires explicit replacement confirmation for prospective edits', () => {
