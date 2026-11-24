@@ -213,6 +213,10 @@ export function persistPersonalRecipeLibrary(storage: Storage, expectedCurrent: 
   const expected = personalRecipeLibrarySchema.parse(expectedCurrent)
   const next = personalRecipeLibrarySchema.parse(nextValue)
   const raw = storage.getItem(PERSONAL_RECIPE_STORAGE_KEY)
+  // A pending write with different contents may be the only recoverable copy of an interrupted import.
+  // Never replace that journal with a new create/edit/import/delete transaction.
+  const pendingRaw = storage.getItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY)
+  if (pendingRaw !== null && pendingRaw !== raw) throw new Error('An interrupted personal-recipe write needs recovery. Download the recovery bundle before making further changes.')
   if (raw !== null) {
     let current: PersonalRecipeLibrary
     try { current = personalRecipeLibrarySchema.parse(JSON.parse(raw)) } catch { throw new Error('Existing personal recipes are unreadable. Nothing was overwritten; export the recovery data first.') }
