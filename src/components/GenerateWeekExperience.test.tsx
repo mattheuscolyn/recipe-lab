@@ -19,20 +19,22 @@ describe('Generate Week interactive preview', () => {
     expect(screen.getByRole('heading', { name: /21 meals need a decision/i })).toBeInTheDocument()
   })
 
-  it('exposes a local-only personal recipe path with explicit rights and fresh-use boundaries', async () => {
+  it('exposes a streamlined local-only recipe path with explicit fresh-use boundaries', async () => {
     const user = userEvent.setup()
     render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} onWeekChange={() => undefined}/>)
-    await user.click(screen.getByRole('button', { name: /Add personal recipe/i }))
+    await user.click(screen.getByRole('button', { name: /Add recipe/i }))
     expect(screen.getByRole('heading', { name: 'Add a personal recipe' })).toBeInTheDocument()
-    expect(screen.getByText(/does not grant publisher rights, verify food safety, or approve leftovers/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Save private recipe' })).toBeDisabled()
-    expect(screen.getByLabelText(/I wrote this recipe or have permission/i)).not.toBeChecked()
+    expect(screen.getByText(/Storage notes remain notes until separately safety-reviewed/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Save recipe' })).toBeDisabled()
+    expect(screen.getByLabelText(/I confirm I can use this recipe privately/i)).not.toBeChecked()
+    expect(screen.getByLabelText('Search ingredient 1')).toBeInTheDocument()
+    expect(screen.getByLabelText(/Source or reference URL/i)).toBeInTheDocument()
   })
 
   it('browses immutable personal history and opens edits as a new revision', async () => {
     const ingredient = canonicalIngredients[0]
     savePersonalRecipeRevision(window.localStorage, emptyPersonalRecipeLibrary(), {
-      personalRecipeId: '90000000-0000-4000-8000-000000000099', revision: 1, title: 'Our Test Tacos', description: 'A household taco dinner for lifecycle testing.', emoji: '🌮', servings: 2, activeMinutes: 20, totalMinutes: 30, mealRoles: ['dinner'], ingredients: [{ ingredientId: ingredient.id, variantId: ingredient.variants[0].id, amount: 2, unit: ingredient.baseUnit, optional: false }], authorshipConfirmed: true, authorshipStatement: 'I wrote this household recipe and can use it privately.', freshUseReviewed: true, createdAt: '2026-11-22T12:00:00.000Z', updatedAt: '2026-11-22T12:00:00.000Z',
+      personalRecipeId: '90000000-0000-4000-8000-000000000099', revision: 1, title: 'Our Test Tacos', description: 'A household taco dinner for lifecycle testing.', sourceUrl: null, notes: '', storageNotes: '', emoji: '🌮', servings: 2, activeMinutes: 20, totalMinutes: 30, mealRoles: ['dinner'], ingredients: [{ ingredientId: ingredient.id, variantId: ingredient.variants[0].id, amount: 2, unit: ingredient.baseUnit, optional: false }], authorshipConfirmed: true, authorshipStatement: 'I wrote this household recipe and can use it privately.', freshUseReviewed: true, createdAt: '2026-11-22T12:00:00.000Z', updatedAt: '2026-11-22T12:00:00.000Z',
     }, canonicalIngredients)
     try {
       const user = userEvent.setup()

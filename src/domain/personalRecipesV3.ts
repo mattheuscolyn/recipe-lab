@@ -12,6 +12,9 @@ export const personalRecipeInputSchema = z.object({
   revision: z.number().int().positive(),
   title: z.string().trim().min(1).max(120),
   description: z.string().trim().min(1).max(500),
+  sourceUrl: z.url().nullable().default(null),
+  notes: z.string().trim().max(2000).default(''),
+  storageNotes: z.string().trim().max(1000).default(''),
   emoji: z.string().trim().min(1).max(8),
   servings: z.number().int().positive().max(100),
   activeMinutes: z.number().int().nonnegative().max(1440),
@@ -108,14 +111,14 @@ export function buildPersonalRecipeRevision(inputValue: PersonalRecipeInput, ing
     times: { prepMinutes: input.activeMinutes, cookMinutes: 0, totalMinutes: input.totalMinutes },
     requirements,
     methodSummary: ['Follow your own private recipe method. Recipe Lab stores planning facts, not an invented method.'],
-    source: { publisher: 'Personal recipe', author: null, url: `https://local.recipe-lab.invalid/${recipeSlug}`, checkedAt, selectionRationale: 'Added privately by the household for local meal planning.', rating: null, reviewCount: null },
+    source: { publisher: 'Personal recipe', author: null, url: input.sourceUrl ?? `https://local.recipe-lab.invalid/${recipeSlug}`, checkedAt, selectionRationale: 'Added privately by the household for local meal planning.', rating: null, reviewCount: null },
     review: { status: 'source-reviewed', reviewedAt: checkedAt, ingredientCompletenessReviewed: true, methodIndependentlyWritten: true },
   }))
   base.identity = { ...base.identity, revisionId, lifecycle: 'source-reviewed' }
   base.source.publisher = 'Household-provided personal recipe'
   base.source.author = null
   base.source.rights = { factualMetadataUse: 'approved', methodTextUse: 'independent-summary-only', imageUse: 'none', note: `The user confirmed authorship or permission: ${input.authorshipStatement}` }
-  base.source.evidence = [{ evidenceId, kind: 'user-entered', sourceUrl: null, capturedAt: input.updatedAt, sourceLabel: 'Private household recipe entry', confidence: 'reviewed', reviewerNote: 'Household-provided facts; not independently verified by Recipe Lab.' }]
+  base.source.evidence = [{ evidenceId, kind: 'user-entered', sourceUrl: input.sourceUrl, capturedAt: input.updatedAt, sourceLabel: 'Private household recipe entry', confidence: 'reviewed', reviewerNote: `Household-provided facts; not independently verified by Recipe Lab.${input.notes ? ` Household note: ${input.notes}` : ''}` }]
   base.output.sourceYield.evidenceIds = [evidenceId]
   base.output.sourceServing = { servingsPerRecipe: input.servings, servingSize: null, servingLabel: 'one household meal portion', evidenceIds: [evidenceId] }
   base.output.scaling = { policy: 'linear-reviewed', allowedMultipliers: [0.5, 1, 1.5, 2].filter((multiplier) => input.ingredients.filter(({ unit }) => ['item', 'head', 'can', 'clove'].includes(unit)).every(({ amount }) => Number.isInteger(amount * multiplier))), note: 'Household-reviewed linear scaling; whole-item quantities must remain integral.' }
@@ -145,7 +148,7 @@ export function buildPersonalRecipeRevision(inputValue: PersonalRecipeInput, ing
     storageModes: [],
     thawRequired: { value: null, evidenceIds: [], confidence: 'unknown', unknownReason: 'No frozen use was reviewed.' },
     reheatMethod: { value: null, evidenceIds: [], confidence: 'unknown', unknownReason: 'No reheating use was reviewed.' },
-    notes: ['Fresh use only. Household-entered planning facts are not independently verified.'],
+    notes: ['Fresh use only. Household-entered planning facts are not independently verified.', ...(input.storageNotes ? [`Household storage/reheating note (not safety-approved): ${input.storageNotes}`] : [])],
   }
   base.review.sourceFactsReviewedAt = checkedAt
   base.review.ingredientCompletenessReviewed = true
