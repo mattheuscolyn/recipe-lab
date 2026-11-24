@@ -12,9 +12,8 @@ describe('Generate Week interactive preview', () => {
   it('shows an honest incomplete real-catalog result without fabricating approvals', async () => {
     const user = userEvent.setup()
     render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} onWeekChange={() => undefined}/>)
-    await user.click(screen.getByRole('button', { name: 'Real catalog' }))
     expect(screen.getByText(/0 authorized production recipes plus 0 browser-local personal recipes/i)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Generate Draft Week' }))
+    await user.click(screen.getByRole('button', { name: 'Generate Week' }))
     expect(await screen.findByLabelText('Generated draft summary')).toHaveTextContent('0/21')
     expect(screen.getByText('Meal plan incomplete')).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /21 meals need a decision/i })).toBeInTheDocument()
@@ -23,7 +22,6 @@ describe('Generate Week interactive preview', () => {
   it('exposes a local-only personal recipe path with explicit rights and fresh-use boundaries', async () => {
     const user = userEvent.setup()
     render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} onWeekChange={() => undefined}/>)
-    await user.click(screen.getByRole('button', { name: 'Real catalog' }))
     await user.click(screen.getByRole('button', { name: /Add personal recipe/i }))
     expect(screen.getByRole('heading', { name: 'Add a personal recipe' })).toBeInTheDocument()
     expect(screen.getByText(/does not grant publisher rights, verify food safety, or approve leftovers/i)).toBeInTheDocument()
@@ -39,7 +37,6 @@ describe('Generate Week interactive preview', () => {
     try {
       const user = userEvent.setup()
       render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} onWeekChange={() => undefined}/>)
-      await user.click(screen.getByRole('button', { name: 'Real catalog' }))
       expect(screen.getByText('Our Test Tacos')).toBeInTheDocument()
       await user.click(screen.getByText('History'))
       expect(screen.getByText(/r1 · Our Test Tacos/)).toBeInTheDocument()
@@ -50,10 +47,11 @@ describe('Generate Week interactive preview', () => {
     } finally { window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY) }
   })
 
-  it('shows a reviewable but disabled acceptance path for synthetic plans', async () => {
+  it('shows a reviewable but blocked acceptance path for synthetic plans', async () => {
     const user = userEvent.setup()
     render(<GenerateWeekExperience weekStart="2027-06-07" timeZone="America/Los_Angeles" pantry={[]} currentPersonalData={emptyV3} onWeekChange={() => undefined}/>)
-    await user.click(screen.getByRole('button', { name: 'Generate Draft Week' }))
+    await user.click(screen.getByRole('button', { name: 'Try synthetic demo' }))
+    await user.click(screen.getByRole('button', { name: 'Generate Week' }))
     const reviewButton = await screen.findByRole('button', { name: 'Review proposed acceptance' }, { timeout: 30_000 })
     await user.clear(screen.getByLabelText('dinner default portions'))
     await user.type(screen.getByLabelText('dinner default portions'), '3')
@@ -63,7 +61,7 @@ describe('Generate Week interactive preview', () => {
     await waitFor(() => expect(screen.queryByText('Draft settings changed')).not.toBeInTheDocument(), { timeout: 30_000 })
     await user.click(screen.getByRole('button', { name: 'Review proposed acceptance' }))
     expect(screen.getByText(/synthetic demo plans can be reviewed but never accepted/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Accept generated week' })).toBeDisabled()
-    expect(screen.getByText(/disabled pending explicit owner authorization/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Save as My Week' })).toBeDisabled()
+    expect(screen.getByText(/Saving writes only to this browser/i)).toBeInTheDocument()
   }, 40_000)
 })

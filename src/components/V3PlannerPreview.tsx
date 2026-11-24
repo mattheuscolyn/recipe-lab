@@ -4,6 +4,8 @@ import { shiftWeek, weekDates } from '../domain/mealPlan'
 import type { PersonalDataV3MigrationPreview, LoadPersonalDataV3Result } from '../domain/personalDataV3'
 import type { PantryAvailability } from '../domain/planningGroceryV3'
 import { GenerateWeekExperience } from './GenerateWeekExperience'
+import { AcceptedWeekCalendar, AcceptedWeekGrocery } from './AcceptedWeekPlan'
+import { loadAcceptedWeekPlan, type AcceptedWeekPlanEnvelope } from '../domain/weekDraftAcceptanceV3'
 
 const friendlyDate = (iso: string, options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' }) => new Intl.DateTimeFormat('en-US', options).format(new Date(`${iso}T12:00:00`))
 
@@ -21,6 +23,7 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
   const [reviewing, setReviewing] = useState(false)
   const [confirmed, setConfirmed] = useState(false)
   const [commitMessage, setCommitMessage] = useState<string | null>(null)
+  const [acceptedPlan, setAcceptedPlan] = useState<AcceptedWeekPlanEnvelope | null>(() => loadAcceptedWeekPlan(window.localStorage).envelope)
   const week = useMemo(() => weekDates(weekStart), [weekStart])
   const weekEnd = week[6]
   const choices = new Map(preview.data.legacyRecipeChoices.map((choice) => [choice.legacySlotId, choice]))
@@ -38,23 +41,25 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
   return <main className="content-page v3-preview-page">
     <section className="v3-preview-hero">
       <div>
-        <p className="eyebrow">Optional planning preview · read-only until confirmed</p>
-        <h1>A safer look at your week.</h1>
-        <p>Your current planner stays in charge. This preview translates compatible meals into whole portions without guessing cooking, leftovers, or meal times.</p>
-        <div className="v3-preview-actions"><button type="button" className="primary" onClick={onExit}>← Return to original planner</button><button type="button" onClick={onDownloadBackup}>Download original backup</button></div>
+        <p className="eyebrow">Your weekly plan</p>
+        <h1>Plan once. Cook with confidence.</h1>
+        <p>Generate a practical week from eligible recipes, keep the choices you like, and shop from one pantry-aware list.</p>
+        <div className="v3-preview-actions"><button type="button" onClick={onDownloadBackup}>Download personal-data backup</button><button type="button" onClick={onExit}>Open classic manual planner</button></div>
       </div>
       <aside aria-label="Migration preview summary">
-        <span><strong>{preview.summary.convertedMeals}</strong> meals ready</span>
-        <span><strong>{preview.summary.needsReview}</strong> need review</span>
-        <span><strong>0</strong> cooking batches inferred</span>
+        <span><strong>{acceptedPlan?.current.draft.meals.filter(({ status }) => status === 'planned').length ?? 0}</strong> saved meals</span>
+        <span><strong>{acceptedPlan?.current.draft.cookEvents.length ?? 0}</strong> cook sessions</span>
+        <span><strong>{acceptedPlan ? 1 : 0}</strong> saved week</span>
       </aside>
     </section>
 
-    <GenerateWeekExperience weekStart={weekStart} timeZone={timeZone} pantry={pantry} onWeekChange={onWeekChange} currentPersonalData={saved.data ?? preview.data}/>
+    {acceptedPlan && acceptedPlan.current.request.horizon.start === weekStart ? <><AcceptedWeekCalendar envelope={acceptedPlan}/><section className="saved-plan-grocery"><div><p className="eyebrow">Saved plan + pantry</p><h2>One consolidated grocery list.</h2><p>Cooking batches are counted once. Checked items stay checked when you reopen this week.</p></div><AcceptedWeekGrocery envelope={acceptedPlan}/></section></> : null}
+
+    <GenerateWeekExperience weekStart={weekStart} timeZone={timeZone} pantry={pantry} onWeekChange={onWeekChange} currentPersonalData={acceptedPlan?.current.personalData ?? saved.data ?? preview.data} acceptedPlan={acceptedPlan} onAccepted={setAcceptedPlan}/>
 
     {saved.error ? <section className="v3-preview-alert danger" role="status"><div><strong>Saved preview needs recovery</strong><span>{saved.error}</span></div>{saved.recoveryBackup ? <button type="button" onClick={onDownloadRecovery}>Download unreadable snapshot</button> : null}</section> : saved.data ? <section className={`v3-preview-alert ${saved.stale ? 'warning' : 'success'}`} role="status"><div><strong>{saved.stale ? 'Saved preview is out of date' : 'A v3 preview snapshot is saved'}</strong><span>{saved.stale ? 'Your original planner changed. Review a fresh snapshot before replacing the saved preview.' : 'It remains separate; the original planner is still the default and editable version.'}</span></div></section> : null}
 
-    <section className="v3-week-toolbar">
+    <details className="legacy-planner-details"><summary>Classic planner migration and compatibility details</summary><section className="v3-week-toolbar">
       <div><p className="eyebrow">Previewed week</p><h2>{friendlyDate(weekStart, { month: 'long', day: 'numeric' })}–{friendlyDate(weekEnd, { month: 'long', day: 'numeric', year: 'numeric' })}</h2></div>
       <div className="v3-week-controls"><button type="button" aria-label="Previous preview week" onClick={() => onWeekChange(shiftWeek(weekStart, -1))}>←</button><button type="button" aria-label="Next preview week" onClick={() => onWeekChange(shiftWeek(weekStart, 1))}>→</button></div>
     </section>
@@ -76,10 +81,10 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
 
     {preview.issues.length ? <section className="v3-migration-issues" aria-labelledby="migration-issues-title"><div><p className="eyebrow">Needs your decision</p><h2 id="migration-issues-title">Some original records stay unchanged.</h2><p>They remain in the preview and exact recovery backup; nothing is rounded, filtered, or discarded.</p></div><ul>{preview.issues.map((issue) => <li key={issue.entity === 'meal-slot' ? `${issue.legacySlotId}:${issue.code}` : `${issue.pantryLotId}:${issue.code}`}><strong>{issue.entity === 'meal-slot' ? `${friendlyDate(issue.date)} · ${issue.meal}` : `Pantry · ${issue.pantryLotId}`}</strong><span>{issue.message}</span></li>)}</ul></section> : null}
 
-    <section className="v3-capability-grid" aria-label="Preview availability">
-      <article><span>Available now</span><h3>Generated draft exploration</h3><p>Demo and eligible private recipes use the same bounded planner with portions, locks, skips, and safe regeneration.</p></article>
-      <article><span>Available now</span><h3>Batches, leftovers, and groceries</h3><p>Only eligible routes appear; shared batches produce one selection-aware grocery demand with visible uncertainty.</p></article>
-      <article><span>Not available yet</span><h3>Accepting a generated plan</h3><p>Drafts remain ephemeral. No generated meal, pantry deduction, or prepared-food lot is written to personal data.</p></article>
+    <section className="v3-capability-grid" aria-label="Planner availability">
+      <article><span>Available now</span><h3>Generated planning</h3><p>Eligible private recipes use the bounded planner with portions, locks, skips, and safe regeneration.</p></article>
+      <article><span>Available now</span><h3>Batches, leftovers, and groceries</h3><p>Shared batches produce one selection-aware grocery demand with visible uncertainty.</p></article>
+      <article><span>Available now</span><h3>Local plan saving</h3><p>Accepted weeks remain private in this browser. Pantry quantities are never automatically consumed.</p></article>
     </section>
 
     <section className="v3-conversion-card">
@@ -91,7 +96,7 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
         <div><button type="button" onClick={() => { setReviewing(false); setConfirmed(false) }}>Cancel</button><button type="button" className="primary" disabled={!confirmed} onClick={save}>{saved.data || saved.recoveryBackup ? 'Replace saved preview snapshot' : 'Save separate preview snapshot'}</button></div>
       </div>}
       {commitMessage ? <p className="v3-commit-message" role="status">{commitMessage}</p> : null}
-    </section>
+    </section></details>
   </main>
 }
 

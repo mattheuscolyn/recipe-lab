@@ -87,7 +87,7 @@ function BrowseCard({ recipe, preference, onStatus, onOpen, onSchedule }: { reci
 
 function App() {
   const { data, setData, replaceData, storageError, recoveryBackup, loaded, persistent } = usePersonalData(knownRecipeIds, undefined, knownIngredientVariants)
-  const [showV3Preview, setShowV3Preview] = useState(false)
+  const [showV3Preview, setShowV3Preview] = useState(true)
   const [v3StorageRevision, setV3StorageRevision] = useState(0)
   const [section, setSection] = useState<Section>('discover')
   const [detail, setDetail] = useState<RecipeV2 | null>(null)
@@ -189,6 +189,12 @@ function App() {
     const frame = window.requestAnimationFrame(() => scheduleNoticeActionRef.current?.focus())
     return () => window.cancelAnimationFrame(frame)
   }, [scheduleNotice])
+
+  // Generate Week is the primary planner whenever the user enters the Plan section.
+  // The classic planner remains available as an in-section compatibility escape hatch.
+  useEffect(() => {
+    if (section === 'plan') setShowV3Preview(true)
+  }, [section])
 
   const allTags = useMemo(() => ['All', 'Breakfast', 'Lunch', 'Dinner', 'Vegetarian', 'Vegan', 'Interested', 'Saved', 'Cooked'], [])
   const libraryRecipes = useMemo(() => pilotRecipes.filter((recipe) => {

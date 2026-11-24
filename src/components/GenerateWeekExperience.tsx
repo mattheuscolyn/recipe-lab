@@ -8,7 +8,7 @@ import { generateWeekDraftAsync } from '../domain/generateWeekDraftAsync'
 import { activePersonalRecipes, emptyPersonalRecipeLibrary, inspectPersonalRecipeLibrary } from '../domain/personalRecipesV3'
 import { PersonalRecipeForm } from './PersonalRecipeForm'
 import type { PersonalDataV3 } from '../domain/personalDataV3'
-import { exportAcceptedWeekPlanBackup, GENERATED_PLAN_ACCEPTANCE_ENABLED, reviewWeekDraftAcceptance, type AcceptanceReview } from '../domain/weekDraftAcceptanceV3'
+import { commitAcceptedWeekPlan, exportAcceptedWeekPlanBackup, reviewWeekDraftAcceptance, type AcceptanceReview, type AcceptedWeekPlanEnvelope } from '../domain/weekDraftAcceptanceV3'
 
 const meals: MealKind[] = ['breakfast', 'lunch', 'dinner']
 const friendly = (date: string, options: Intl.DateTimeFormatOptions = { weekday: 'short', month: 'short', day: 'numeric' }) => new Intl.DateTimeFormat('en-US', options).format(new Date(`${date}T12:00:00.000Z`))
@@ -17,8 +17,8 @@ const serviceLabel = (service: WeekDraft['meals'][number]['service']) => service
 
 type Result = { request: PlanningRequest; draft: WeekDraft; configurationFingerprint: string }
 
-export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChange, currentPersonalData }: { weekStart: string; timeZone: string; pantry: PantryAvailability[]; onWeekChange: (week: string) => void; currentPersonalData?: PersonalDataV3 }) {
-  const [mode, setMode] = useState<GenerateWeekMode>('demo')
+export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChange, currentPersonalData, acceptedPlan, onAccepted }: { weekStart: string; timeZone: string; pantry: PantryAvailability[]; onWeekChange: (week: string) => void; currentPersonalData?: PersonalDataV3; acceptedPlan?: AcceptedWeekPlanEnvelope | null; onAccepted?: (envelope: AcceptedWeekPlanEnvelope) => void }) {
+  const [mode, setMode] = useState<GenerateWeekMode>('real')
   const [includedMeals, setIncludedMeals] = useState<Record<MealKind, boolean>>({ breakfast: true, lunch: true, dinner: true })
   const [portions, setPortions] = useState<Record<MealKind, number>>({ breakfast: 2, lunch: 2, dinner: 2 })
   const [sundayPrep, setSundayPrep] = useState(true)
@@ -32,6 +32,8 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [acceptanceReview, setAcceptanceReview] = useState<AcceptanceReview | null>(null)
+  const [acceptanceMessage, setAcceptanceMessage] = useState<string | null>(null)
+  const [confirmReplace, setConfirmReplace] = useState(false)
   const [personalLoad] = useState(() => inspectPersonalRecipeLibrary(window.localStorage))
   const [personalLibrary, setPersonalLibrary] = useState(() => personalLoad.library ?? emptyPersonalRecipeLibrary())
   const personalRecipes = useMemo(() => activePersonalRecipes(personalLibrary), [personalLibrary])
@@ -72,16 +74,22 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
   const pantryApplied = draft?.groceryDemand.lines.reduce((sum, line) => sum + line.pantry.applied, 0) ?? 0
   const reviewAcceptance = () => {
     if (!visibleResult || !currentPersonalData || configurationStale) return
-    setAcceptanceReview(reviewWeekDraftAcceptance({ mode, request: visibleResult.request, draft: visibleResult.draft, current: currentPersonalData, acceptedAt: new Date().toISOString() }))
+    setAcceptanceReview(reviewWeekDraftAcceptance({ mode, request: visibleResult.request, draft: visibleResult.draft, current: currentPersonalData, acceptedAt: new Date().toISOString(), confirmReplaceProspective: confirmReplace }))
   }
   const downloadAcceptanceBackup = () => {
     if (!acceptanceReview?.candidate) return
     const url = URL.createObjectURL(new Blob([exportAcceptedWeekPlanBackup(acceptanceReview.candidate)], { type: 'application/json' }))
     const anchor = document.createElement('a'); anchor.href = url; anchor.download = `recipe-lab-generated-plan-${weekStart}.json`; anchor.click(); URL.revokeObjectURL(url)
   }
+  const acceptWeek = () => {
+    if (!acceptanceReview?.candidate) return
+    const saved = commitAcceptedWeekPlan(window.localStorage, acceptanceReview.candidate, { expectedFingerprint: acceptedPlan?.fingerprint ?? null, activationEnabled: true })
+    setAcceptanceMessage(saved.persisted ? 'Week saved to this browser. The calendar and grocery list now use this plan.' : saved.error)
+    if (saved.envelope) onAccepted?.(saved.envelope)
+  }
 
   return <section className="generate-week" aria-labelledby="generate-week-title">
-      <div className="generate-heading"><div><p className="eyebrow">Experimental v3 planner</p><h2 id="generate-week-title">Generate a draft week.</h2><p>Configure the essentials, then inspect every meal, cooking batch, leftover, and shopping uncertainty before anything is saved.</p></div><div className="mode-switch" aria-label="Recipe mode">{(['demo', 'real'] as const).map((value) => <button type="button" key={value} aria-pressed={mode === value} onClick={() => { setMode(value); setResult(null); setOverrides({}); setAvoidedRecipeIds([]); setPreferredRecipeIds([]); setHouseholdVotes({}) }}>{value === 'demo' ? 'Interactive demo' : 'Real catalog'}</button>)}</div></div>
+      <div className="generate-heading"><div><p className="eyebrow">Weekly planner</p><h2 id="generate-week-title">Generate your week.</h2><p>Choose the essentials, generate a practical plan, then save it as your calendar and grocery list. Open meals and shopping uncertainties stay visible.</p></div><details className="mode-picker"><summary>Planner recipe source: {mode === 'real' ? 'My eligible recipes' : 'Demo recipes'}</summary><div className="mode-switch" aria-label="Recipe mode">{(['real', 'demo'] as const).map((value) => <button type="button" key={value} aria-pressed={mode === value} onClick={() => { setMode(value); setResult(null); setOverrides({}); setAvoidedRecipeIds([]); setPreferredRecipeIds([]); setHouseholdVotes({}) }}>{value === 'demo' ? 'Try synthetic demo' : 'Use my recipes'}</button>)}</div></details></div>
 
     <div className={`mode-disclosure ${mode}`} role="status"><strong>{catalog.label}</strong><span>{mode === 'demo' ? 'Clearly synthetic recipes demonstrate the real engine. They cannot be accepted as production recipes.' : `${catalog.productionEligibleCount} authorized production recipe${catalog.productionEligibleCount === 1 ? '' : 's'} plus ${catalog.personalEligibleCount ?? 0} browser-local personal recipe${catalog.personalEligibleCount === 1 ? '' : 's'}. No approval safeguards are bypassed.`}</span></div>
     {mode === 'real' ? <PersonalRecipeForm library={personalLibrary} recoveryError={personalLoad.error} recoveryRaw={personalLoad.rawRecovery} onSaved={(next) => { setPersonalLibrary(next); setResult(null); setAcceptanceReview(null) }}/> : null}
@@ -91,7 +99,7 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
       <fieldset><legend>Meals and portions</legend>{meals.map((meal) => <label key={meal}><input type="checkbox" checked={includedMeals[meal]} onChange={(event) => setIncludedMeals((current) => ({ ...current, [meal]: event.target.checked }))}/><span>{meal}</span><input aria-label={`${meal} default portions`} type="number" min="1" max="12" value={portions[meal]} onChange={(event) => setPortions((current) => ({ ...current, [meal]: Math.max(1, Number(event.target.value) || 1) }))}/></label>)}</fieldset>
       <fieldset><legend>Cooking defaults</legend><label><input type="checkbox" checked={sundayPrep} onChange={(event) => setSundayPrep(event.target.checked)}/><span>Sunday meal prep</span></label><label><input type="checkbox" checked={officeLunches} onChange={(event) => setOfficeLunches(event.target.checked)}/><span>Office-safe lunches</span></label><label><span>Dinner hands-on limit</span><select aria-label="Dinner hands-on limit" value={maxDinnerActiveMinutes} onChange={(event) => setMaxDinnerActiveMinutes(Number(event.target.value))}><option value="25">25 min</option><option value="45">45 min</option><option value="60">60 min</option></select></label></fieldset>
       <details><summary>Two-person preferences and avoidances</summary><div className="recipe-preference-grid">{catalog.recipes.map((recipe) => { const votes = householdVotes[recipe.identity.recipeId] ?? { personA: 'unknown' as const, personB: 'unknown' as const }; return <div key={recipe.identity.recipeId}><strong>{recipe.identity.emoji} {recipe.identity.title}</strong><label>Person A<select aria-label={`${recipe.identity.title} Person A preference`} value={votes.personA} onChange={(event) => setHouseholdVotes((current) => ({ ...current, [recipe.identity.recipeId]: { ...votes, personA: event.target.value as HouseholdVote } }))}><option value="unknown">Unknown</option><option value="like">Likes</option><option value="dislike">Dislikes</option></select></label><label>Person B<select aria-label={`${recipe.identity.title} Person B preference`} value={votes.personB} onChange={(event) => setHouseholdVotes((current) => ({ ...current, [recipe.identity.recipeId]: { ...votes, personB: event.target.value as HouseholdVote } }))}><option value="unknown">Unknown</option><option value="like">Likes</option><option value="dislike">Dislikes</option></select></label><label><input type="checkbox" checked={preferredRecipeIds.includes(recipe.identity.recipeId)} onChange={(event) => setPreferredRecipeIds((current) => event.target.checked ? [...current, recipe.identity.recipeId] : current.filter((id) => id !== recipe.identity.recipeId))}/> Prefer</label><label><input type="checkbox" checked={avoidedRecipeIds.includes(recipe.identity.recipeId)} onChange={(event) => setAvoidedRecipeIds((current) => event.target.checked ? [...current, recipe.identity.recipeId] : current.filter((id) => id !== recipe.identity.recipeId))}/> Hard avoid</label></div> })}</div></details>
-      <button type="button" className="primary generate-action" disabled={generating} onClick={() => generate()}>{generating ? 'Building a safe draft…' : draft ? 'Regenerate Draft Week' : 'Generate Draft Week'}</button>
+      <button type="button" className="primary generate-action" disabled={generating} onClick={() => generate()}>{generating ? 'Building a safe plan…' : draft ? 'Generate Again' : 'Generate Week'}</button>
     </div>
 
     {error ? <div className="v3-preview-alert danger" role="alert"><div><strong>Generation stopped safely</strong><span>{error}</span></div></div> : null}
@@ -117,8 +125,9 @@ export function GenerateWeekExperience({ weekStart, timeZone, pantry, onWeekChan
         {!acceptanceReview ? <button type="button" onClick={reviewAcceptance} disabled={!currentPersonalData || configurationStale}>Review proposed acceptance</button> : <div className="v3-conversion-review">
           <dl><div><dt>Proposed meals</dt><dd>{acceptanceReview.changes.meals} planned · {acceptanceReview.changes.skipped} skipped</dd></div><div><dt>Existing week</dt><dd>{acceptanceReview.changes.existingMealsReplaced} prospective meals would change · {acceptanceReview.changes.existingLocksPreserved} compatible locks retained</dd></div><div><dt>Untouched</dt><dd>{acceptanceReview.changes.existingMealsUntouched} existing requirements outside this week</dd></div><div><dt>Cooking</dt><dd>{acceptanceReview.changes.cookEvents} proposed events · {acceptanceReview.changes.batches} unprepared batches</dd></div><div><dt>Allocations</dt><dd>{acceptanceReview.changes.allocations} total · {acceptanceReview.changes.preparedLotReservations} prepared-food reservations</dd></div><div><dt>Base fingerprint</dt><dd>{acceptanceReview.baseFingerprint}</dd></div></dl>
           {acceptanceReview.blockers.length || acceptanceReview.warnings.length ? <ul>{[...acceptanceReview.blockers, ...acceptanceReview.warnings].map((issue) => <li key={`${issue.code}:${issue.entityIds.join(':')}`}><strong>{issue.code.replaceAll('-', ' ')}</strong><span>{issue.message}</span></li>)}</ul> : <p role="status">The proposal passed the pure conversion review.</p>}
-          <div><button type="button" onClick={() => setAcceptanceReview(null)}>Close review</button>{acceptanceReview.candidate ? <button type="button" onClick={downloadAcceptanceBackup}>Download proposed-plan backup</button> : null}<button type="button" className="primary" disabled={!GENERATED_PLAN_ACCEPTANCE_ENABLED}>Accept generated week</button></div>
-          <p className="v3-commit-message">Acceptance remains disabled pending explicit owner authorization. This review does not write personal data.</p>
+          {acceptanceReview.warnings.some(({ code }) => code === 'existing-prospective-plan') && !acceptanceReview.candidate ? <label><input type="checkbox" checked={confirmReplace} onChange={(event) => setConfirmReplace(event.target.checked)}/> Replace the existing unserved plan for this week. Served meals and cooking history remain protected.</label> : null}
+          <div><button type="button" onClick={() => setAcceptanceReview(null)}>Close review</button>{acceptanceReview.candidate ? <button type="button" onClick={downloadAcceptanceBackup}>Download plan backup</button> : null}{confirmReplace && !acceptanceReview.candidate ? <button type="button" onClick={reviewAcceptance}>Review replacement</button> : null}<button type="button" className="primary" disabled={!acceptanceReview.candidate} onClick={acceptWeek}>Save as My Week</button></div>
+          {acceptanceMessage ? <p className="v3-commit-message" role="status">{acceptanceMessage}</p> : <p className="v3-commit-message">Saving writes only to this browser. It never marks food cooked or deducts pantry inventory.</p>}
         </div>}
       </section>
     </> : <div className="generate-empty"><span>Ready when you are</span><h3>No draft has been generated.</h3><p>The interactive demo can produce a full week. Real-catalog mode stays partial until authorized recipe revisions pass every readiness gate.</p></div>}
