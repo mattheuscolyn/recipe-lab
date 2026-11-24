@@ -166,11 +166,29 @@ describe('generated week acceptance foundation', () => {
     expect(loadAcceptedWeekPlan(malformed)).toEqual({ envelope: null, recovery: null, error: expect.stringContaining('could not be read safely') })
   })
 
-  it('keeps the owner activation gate disabled even when a caller requests activation', () => {
+  it('persists an owner-authorized real plan through the public activation boundary', () => {
     const request = authorizedTestRequest()
     const candidate = reviewWeekDraftAcceptance({ mode: 'real', request, draft: resolvedDraft(), current: emptyPersonalData(), acceptedAt: '2027-01-20T12:00:00.000Z' }).candidate!
     const storage = new MemoryStorage()
-    expect(commitAcceptedWeekPlan(storage, candidate, { expectedFingerprint: null, activationEnabled: true })).toMatchObject({ persisted: false, error: expect.stringContaining('disabled') })
-    expect(storage.values.size).toBe(0)
+    expect(commitAcceptedWeekPlan(storage, candidate, { expectedFingerprint: null, activationEnabled: true })).toMatchObject({ persisted: true, envelope: { revision: 1 }, error: null })
+    expect(storage.getItem(ACCEPTED_WEEK_PLAN_KEY)).not.toBeNull()
+  })
+
+  it('allows partial plans and unresolved groceries with explicit warnings', () => {
+    const request = authorizedTestRequest()
+    const partial = structuredClone(draft)
+    partial.status = 'incomplete'
+    const planned = partial.meals.find(({ status }) => status === 'planned')!
+    planned.status = 'unmet'
+    planned.recipeId = null
+    planned.recipeRevisionId = null
+    planned.routeId = null
+    planned.allocationId = null
+    planned.service = null
+    partial.unmetRequirements = [{ mealRequirementId: planned.mealRequirementId, blockers: [{ code: 'no-eligible-route', count: 1 }] }]
+    const review = reviewWeekDraftAcceptance({ mode: 'real', request, draft: partial, current: emptyPersonalData(), acceptedAt: '2027-01-20T12:00:00.000Z' })
+    expect(review.status).toBe('ready')
+    expect(review.candidate).not.toBeNull()
+    expect(review.warnings.map(({ code }) => code)).toEqual(expect.arrayContaining(['incomplete-week', 'shopping-review-required']))
   })
 })

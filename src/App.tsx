@@ -87,7 +87,7 @@ function BrowseCard({ recipe, preference, onStatus, onOpen, onSchedule }: { reci
 
 function App() {
   const { data, setData, replaceData, storageError, recoveryBackup, loaded, persistent } = usePersonalData(knownRecipeIds, undefined, knownIngredientVariants)
-  const [showV3Preview, setShowV3Preview] = useState(false)
+  const [showV3Preview, setShowV3Preview] = useState(true)
   const [v3StorageRevision, setV3StorageRevision] = useState(0)
   const [section, setSection] = useState<Section>('discover')
   const [detail, setDetail] = useState<RecipeV2 | null>(null)

@@ -7,7 +7,8 @@ import type { StorageLike } from './personalData'
 
 type AcceptanceStorage = StorageLike & { removeItem(key: string): void }
 
-export const GENERATED_PLAN_ACCEPTANCE_ENABLED = false
+/** Owner-authorized in the G6 primary-planner milestone. Demo/synthetic plans remain blocked below. */
+export const GENERATED_PLAN_ACCEPTANCE_ENABLED = true
 export const ACCEPTED_WEEK_PLAN_KEY = 'recipe-lab.personal.v3.accepted-week'
 export const ACCEPTED_WEEK_PLAN_PENDING_KEY = `${ACCEPTED_WEEK_PLAN_KEY}.pending`
 
@@ -87,8 +88,8 @@ export function reviewWeekDraftAcceptance(input: {
   const blockers: AcceptanceIssue[] = []
   const warnings: AcceptanceIssue[] = []
   if (input.mode !== 'real') blockers.push({ code: 'synthetic-demo-not-acceptable', message: 'Synthetic demo plans can be reviewed but never accepted into personal planning data.', entityIds: [draft.proposalId] })
-  if (draft.status !== 'complete') blockers.push({ code: 'incomplete-week', message: 'Every required meal must be covered or explicitly skipped before acceptance.', entityIds: draft.unmetRequirements.map(({ mealRequirementId }) => mealRequirementId) })
-  if (draft.shoppingReadiness.status !== 'ready') blockers.push({ code: 'shopping-review-required', message: 'Resolve grocery quantities and ingredient selections before acceptance.', entityIds: draft.groceryDemand.lines.filter(({ unresolved }) => unresolved).flatMap(({ contributions }) => contributions.map(({ requirementId }) => requirementId)) })
+  if (draft.status !== 'complete') warnings.push({ code: 'incomplete-week', message: 'This plan has open meals. They will remain visibly unplanned after saving.', entityIds: draft.unmetRequirements.map(({ mealRequirementId }) => mealRequirementId) })
+  if (draft.shoppingReadiness.status !== 'ready') warnings.push({ code: 'shopping-review-required', message: 'Some grocery quantities or ingredient selections need review. Known demand will still be saved.', entityIds: draft.groceryDemand.lines.filter(({ unresolved }) => unresolved).flatMap(({ contributions }) => contributions.map(({ requirementId }) => requirementId)) })
   if (draft.requestId !== request.requestId) blockers.push({ code: 'request-mismatch', message: 'The proposal does not belong to this generation request.', entityIds: [request.requestId, draft.requestId] })
   const exactRecipes = new Set(request.recipeSnapshot.map(({ identity }) => `${identity.recipeId}:${identity.revisionId}`))
   const missingRevisions = draft.selectedRoutes.filter((route) => !exactRecipes.has(`${route.recipeId}:${route.recipeRevisionId}`))
@@ -130,7 +131,8 @@ export function reviewWeekDraftAcceptance(input: {
   if (affectedTasks.some(({ state }) => state === 'done')) blockers.push({ code: 'completed-task-history-protected', message: 'Completed preparation tasks are history and cannot be removed by regeneration.', entityIds: affectedTasks.filter(({ state }) => state === 'done').map(({ taskId }) => taskId) })
 
   const changes = summarize(draft, current, request, existingProspective, lockedConflicts)
-  if (warnings.length || blockers.length) return { status: 'blocked', blockers, warnings, changes, baseFingerprint, candidate: null }
+  const replacementConfirmationMissing = warnings.some(({ code }) => code === 'existing-prospective-plan')
+  if (blockers.length || replacementConfirmationMissing) return { status: 'blocked', blockers, warnings, changes, baseFingerprint, candidate: null }
 
   const removableAllocationIds = new Set(affectedAllocations.map(({ allocationId }) => allocationId))
   const removableBatchIds = new Set(affectedAllocations.flatMap((allocation) => allocation.source.kind === 'planned-batch' ? [allocation.source.batchId] : []))
