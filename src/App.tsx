@@ -190,12 +190,6 @@ function App() {
     return () => window.cancelAnimationFrame(frame)
   }, [scheduleNotice])
 
-  // Generate Week is the primary planner whenever the user enters the Plan section.
-  // The classic planner remains available as an in-section compatibility escape hatch.
-  useEffect(() => {
-    if (section === 'plan') setShowV3Preview(true)
-  }, [section])
-
   const allTags = useMemo(() => ['All', 'Breakfast', 'Lunch', 'Dinner', 'Vegetarian', 'Vegan', 'Interested', 'Saved', 'Cooked'], [])
   const libraryRecipes = useMemo(() => pilotRecipes.filter((recipe) => {
     const text = [recipe.title, recipe.description, recipe.cuisine, recipe.source.publisher, ...recipe.tags, ...recipe.requirements.map((line) => ingredientNames.get(line.canonicalIngredientId) ?? '')].join(' ').toLowerCase()
