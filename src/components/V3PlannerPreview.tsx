@@ -50,7 +50,7 @@ export function V3PlannerPreview({ preview, saved, weekStart, recipes, onWeekCha
       </aside>
     </section>
 
-    <GenerateWeekExperience weekStart={weekStart} timeZone={timeZone} pantry={pantry} onWeekChange={onWeekChange}/>
+    <GenerateWeekExperience weekStart={weekStart} timeZone={timeZone} pantry={pantry} onWeekChange={onWeekChange} currentPersonalData={saved.data ?? preview.data}/>
 
     {saved.error ? <section className="v3-preview-alert danger" role="status"><div><strong>Saved preview needs recovery</strong><span>{saved.error}</span></div>{saved.recoveryBackup ? <button type="button" onClick={onDownloadRecovery}>Download unreadable snapshot</button> : null}</section> : saved.data ? <section className={`v3-preview-alert ${saved.stale ? 'warning' : 'success'}`} role="status"><div><strong>{saved.stale ? 'Saved preview is out of date' : 'A v3 preview snapshot is saved'}</strong><span>{saved.stale ? 'Your original planner changed. Review a fresh snapshot before replacing the saved preview.' : 'It remains separate; the original planner is still the default and editable version.'}</span></div></section> : null}
 
