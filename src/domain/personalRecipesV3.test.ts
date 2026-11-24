@@ -111,6 +111,25 @@ describe('private personal recipe library', () => {
     } finally { window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY); window.localStorage.removeItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY) }
   })
 
+  it('protects an interrupted import journal from create, edit, and delete attempts', () => {
+    window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
+    window.localStorage.removeItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY)
+    try {
+      const current = savePersonalRecipeRevision(window.localStorage, emptyPersonalRecipeLibrary(), input(1), canonicalIngredients)
+      const authoritative = window.localStorage.getItem(PERSONAL_RECIPE_STORAGE_KEY)
+      const interrupted = JSON.stringify({ ...current, recipes: [] })
+      window.localStorage.setItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY, interrupted)
+      expect(() => savePersonalRecipeRevision(window.localStorage, current, input(2), canonicalIngredients)).toThrow(/interrupted.*recovery/)
+      expect(() => removePersonalRecipe(window.localStorage, current, input().personalRecipeId)).toThrow(/interrupted.*recovery/)
+      expect(window.localStorage.getItem(PERSONAL_RECIPE_STORAGE_KEY)).toBe(authoritative)
+      expect(window.localStorage.getItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY)).toBe(interrupted)
+      expect(inspectPersonalRecipeLibrary(window.localStorage).rawRecovery).toContain('interruptedImport')
+    } finally {
+      window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
+      window.localStorage.removeItem(PERSONAL_RECIPE_IMPORT_PENDING_KEY)
+    }
+  })
+
   it('protects newer private recipe changes against stale editor saves', () => {
     window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
     try {
