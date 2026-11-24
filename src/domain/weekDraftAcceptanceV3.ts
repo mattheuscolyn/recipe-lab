@@ -105,7 +105,16 @@ export function reviewWeekDraftAcceptance(input: {
   if (existingProspective.length && !input.confirmReplaceProspective) warnings.push({ code: 'existing-prospective-plan', message: 'This week already contains prospective or manual planning data. Explicit replacement confirmation is required.', entityIds: existingProspective.map(({ mealRequirementId }) => mealRequirementId) })
   const lockedConflicts = existingProspective.filter(({ lock }) => lock.locked).filter((existing) => {
     const proposed = request.mealRequirements.find((item) => item.date === existing.date && item.meal === existing.meal)
-    return !proposed || proposed.requestedPortions !== existing.requestedPortions
+    const proposedMeal = draft.meals.find((item) => item.date === existing.date && item.meal === existing.meal)
+    if (!proposed || !proposed.lock.locked || proposed.requestedPortions !== existing.requestedPortions || !proposedMeal || proposedMeal.status !== 'planned') return true
+    // Existing locks must retain their actual recipe, not merely the portion count.
+    const allocation = current.allocations.find((item) => item.mealRequirementId === existing.mealRequirementId && item.state !== 'cancelled')
+    const batch = allocation?.source.kind === 'planned-batch' ? current.batches.find(({ batchId }) => batchId === allocation.source.batchId) : null
+    const lot = allocation?.source.kind === 'prepared-lot' ? current.preparedFoodLots.find(({ preparedFoodLotId }) => preparedFoodLotId === allocation.source.preparedFoodLotId) : null
+    const legacy = current.legacyRecipeChoices.find(({ mealRequirementId }) => mealRequirementId === existing.mealRequirementId)
+    const previousRecipeId = batch?.recipeId ?? lot?.recipeId ?? legacy?.recipeId
+    const previousRevisionId = batch?.recipeRevisionId ?? lot?.recipeRevisionId ?? null
+    return !previousRecipeId || proposedMeal.recipeId !== previousRecipeId || (previousRevisionId !== null && proposedMeal.recipeRevisionId !== previousRevisionId)
   })
   if (lockedConflicts.length) blockers.push({ code: 'locked-meal-conflict', message: 'A generated proposal cannot replace an incompatible locked meal.', entityIds: lockedConflicts.map(({ mealRequirementId }) => mealRequirementId) })
   const mutableRequirementIds = new Set(existingProspective.map(({ mealRequirementId }) => mealRequirementId))
