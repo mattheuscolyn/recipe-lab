@@ -25,6 +25,7 @@ Open the local URL printed by Vite. Use `npm run check` before every pull reques
 - Generate complete or explicitly partial weeks with bounded search, portions, skips, locks, cooking windows, safe leftovers, pantry availability, and structured explanations.
 - Review and save real-recipe generated plans locally. Synthetic demo plans can demonstrate the engine but can never be saved as personal plans.
 - Reopen a saved generated calendar and batch-deduplicated pantry-aware grocery list; unresolved quantities remain visible warnings and grocery checks persist locally.
+- Add private household recipes with searchable normalized ingredients, optional source/recipe/storage notes, and immutable revisions. Household storage notes remain unapproved until separately reviewed.
 - Derive an unlimited weekly grocery list from scheduled slots and inspect every dated contribution.
 - Include optional ingredients explicitly, inspect chosen alternatives and source ranges, and distinguish canned net from assumed usable mass.
 - Keep dimensional conversions, ingredient variants, unresolved quantities, and missing prices explicit.

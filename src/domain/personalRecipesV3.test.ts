@@ -10,6 +10,9 @@ const input = (revision = 1): PersonalRecipeInput => ({
   revision,
   title: 'Our Weeknight Bowl',
   description: 'A private household dinner used for fresh meal planning.',
+  sourceUrl: null,
+  notes: '',
+  storageNotes: '',
   emoji: '🥣',
   servings: 2,
   activeMinutes: 20,
@@ -34,6 +37,14 @@ describe('private personal recipe library', () => {
     expect(recipe.suitability.leftoverQuality.value).toBeNull()
   })
 
+  it('preserves optional provenance and household notes without approving stored service', () => {
+    const recipe = buildPersonalRecipeRevision({ ...input(), sourceUrl: 'https://example.com/our-recipe', notes: 'Use the smaller pan.', storageNotes: 'We usually refrigerate and reheat this.' }, canonicalIngredients)
+    expect(recipe.source.evidence[0]).toMatchObject({ sourceUrl: 'https://example.com/our-recipe', reviewerNote: expect.stringContaining('Use the smaller pan') })
+    expect(recipe.suitability.notes).toContain('Household storage/reheating note (not safety-approved): We usually refrigerate and reheat this.')
+    expect(recipe.suitability.storageModes).toEqual([])
+    expect(recipe.review.safetyReviewed).toBe(false)
+  })
+
   it('persists immutable revisions locally and keeps prior versions', () => {
     const first = savePersonalRecipeRevision(window.localStorage, emptyPersonalRecipeLibrary(), input(1), canonicalIngredients)
     const second = savePersonalRecipeRevision(window.localStorage, first, { ...input(2), title: 'Our Weeknight Bowl v2' }, canonicalIngredients)
@@ -43,6 +54,20 @@ describe('private personal recipe library', () => {
     expect(loadPersonalRecipeLibrary(window.localStorage)).toEqual(second)
     expect(() => savePersonalRecipeRevision(window.localStorage, second, input(2), canonicalIngredients)).toThrow(/immutable/)
     window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY)
+  })
+
+  it('loads existing v1 personal recipes with empty optional fields', () => {
+    const recipe = buildPersonalRecipeRevision(input(), canonicalIngredients)
+    const legacyInput = structuredClone(input()) as Record<string, unknown>
+    delete legacyInput.sourceUrl
+    delete legacyInput.notes
+    delete legacyInput.storageNotes
+    window.localStorage.setItem(PERSONAL_RECIPE_STORAGE_KEY, JSON.stringify({ schemaVersion: 1, recipes: [{ personalRecipeId: input().personalRecipeId, activeRevisionId: recipe.identity.revisionId, revisions: [{ input: legacyInput, recipe }] }] }))
+    try {
+      const loaded = inspectPersonalRecipeLibrary(window.localStorage)
+      expect(loaded.error).toBeNull()
+      expect(loaded.library?.recipes[0].revisions[0].input).toMatchObject({ sourceUrl: null, notes: '', storageNotes: '' })
+    } finally { window.localStorage.removeItem(PERSONAL_RECIPE_STORAGE_KEY) }
   })
 
   it('never overwrites unreadable private recipe data with an empty library', () => {
